@@ -41,8 +41,9 @@ export interface Product {
   name: string;
   image: string;
   price: number;
-  categoryId: CategoryId[];
-  description?: string;
-  sale?: Sale;
-  variants?: Variant[];
+  category_id: string;
+  desc: string;
+  active: string;
+  inventory_quantity: number;
+  created_at: string
 }

@@ -5,11 +5,17 @@ import { ProductPicker } from "components/product/picker";
 import React, { FC, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { cartState } from "state";
-import { CartItem } from "types/cart";
+import { Cart, CartItem } from "types/cart";
 import { Box, Text } from "zmp-ui";
 
-export const CartItems: FC = () => {
-  const cart = useRecoilValue(cartState);
+type TCartItemProps = {
+  cart: Cart;
+  disableClick?: boolean;
+};
+export const CartItems: FC<TCartItemProps> = ({
+  cart,
+  disableClick = true,
+}) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
 
   return (
@@ -21,6 +27,9 @@ export const CartItems: FC = () => {
               items={cart}
               limit={3}
               onClick={(item) => {
+                if (disableClick) {
+                  return;
+                }
                 setEditingItem(item);
                 open();
               }}

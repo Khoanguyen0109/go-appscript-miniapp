@@ -3,6 +3,8 @@ import { Box, Header, Icon, Page, Text } from "zmp-ui";
 import subscriptionDecor from "static/subscription-decor.svg";
 import { ListRenderer } from "components/list-renderer";
 import { useToBeImplemented } from "hooks";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "./route";
 
 const Subscription: FC = () => {
   const onClick = useToBeImplemented();
@@ -24,13 +26,26 @@ const Subscription: FC = () => {
 };
 
 const Personal: FC = () => {
+  const navigate = useNavigate();
   const onClick = useToBeImplemented();
+  // const onClickItem = () => {
+  //   switch (key) {
+  //     case value:
 
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // }
+  const navigateToOrder = () => {
+    navigate(ROUTES.ORDER);
+  };
   return (
     <Box className="m-4">
       <ListRenderer
         title="Cá nhân"
-        onClick={onClick}
+        // onClick={onClick}
         items={[
           {
             left: <Icon icon="zi-user" />,
@@ -44,9 +59,10 @@ const Personal: FC = () => {
             ),
           },
           {
+            onClick: () => navigateToOrder(),
             left: <Icon icon="zi-clock-2" />,
             right: (
-              <Box flex>
+              <Box flex onClick={navigateToOrder}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Lịch sử đơn hàng
                 </Text.Header>

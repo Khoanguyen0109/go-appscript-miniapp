@@ -1,4 +1,4 @@
-# ZaUI Coffee
+# Go Appscript ECommerce
 
 <p style="display: flex; flex-wrap: wrap; gap: 4px">
   <a href="https://github.com/zalo-MiniApp/zaui-coffee/actions/workflows/zalo-mini-app.yml" style="display: flex">
@@ -29,7 +29,7 @@ Public template for building a coffee shop on Zalo Mini App. Main features:
 ### Using Zalo Mini App Studio
 
 1. [Install Zalo Mini App Studio](https://mini.zalo.me/docs/dev-tools)
-1. Click on New project > Enter your Mini App ID > Choose ZaUI Coffee template
+1. Click on New project > Enter your Mini App ID > Choose Go Appscript ECommerce template
 1. Wait until the generated project is ready and click the Start button to run the mini app 🚀
 
 ### Using Visual Studio Code
@@ -100,7 +100,7 @@ Just change the `app.title` property in `app-config.json`:
 ```json
 {
   "app": {
-    "title": "ZaUI Coffee"
+    "title": "Go Appscript ECommerce"
   }
 }
 ```

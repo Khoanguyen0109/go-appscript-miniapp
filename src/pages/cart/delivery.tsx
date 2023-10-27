@@ -10,7 +10,8 @@ export const Delivery: FC = () => {
   return (
     <Box className="space-y-3 px-4">
       <Text.Header>Hình thức nhận hàng</Text.Header>
-      <ListRenderer
+      
+      {/* <ListRenderer
         items={[
           {
             left: <Icon icon="zi-location" className="my-auto" />,
@@ -58,7 +59,7 @@ export const Delivery: FC = () => {
         limit={4}
         renderLeft={(item) => item.left}
         renderRight={(item) => item.right}
-      />
+      /> */}
     </Box>
   );
 };

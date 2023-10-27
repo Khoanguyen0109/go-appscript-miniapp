@@ -6,14 +6,17 @@ import { CartPreview } from "./preview";
 import { TermsAndPolicies } from "./term-and-policies";
 import { Delivery } from "./delivery";
 import { useVirtualKeyboardVisible } from "hooks";
+import { useRecoilValue } from "recoil";
+import { cartState } from "state";
 
 const CartPage: FC = () => {
   const keyboardVisible = useVirtualKeyboardVisible();
+  const cart = useRecoilValue(cartState);
 
   return (
     <Page className="flex flex-col">
       <Header title="Giỏ hàng" showBackIcon={false} />
-      <CartItems />
+      <CartItems cart={cart} disableClick={false} />
       <Delivery />
       <Divider size={12} />
       <TermsAndPolicies />

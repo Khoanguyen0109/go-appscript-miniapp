@@ -16,6 +16,7 @@ import { calculateDistance } from "utils/location";
 import { Store } from "types/delivery";
 import { calcFinalPrice, getDummyImage } from "utils/product";
 import { wait } from "utils/async";
+import { axiosInstance } from "api/instance";
 
 export const userState = selector({
   key: "user",
@@ -24,15 +25,11 @@ export const userState = selector({
 
 export const categoriesState = selector<Category[]>({
   key: "categories",
-  get: () => [
-    { id: "coffee", name: "Cà phê", icon: coffeeIcon },
-    { id: "matcha", name: "Trà xanh", icon: matchaIcon },
-    { id: "food", name: "Đồ ăn vặt", icon: foodIcon },
-    { id: "milktea", name: "Trà sữa", icon: milkteaIcon },
-    { id: "drinks", name: "Giải khát", icon: drinksIcon },
-    { id: "bread", name: "Bánh mỳ", icon: breadIcon },
-    { id: "juice", name: "Nước ép", icon: juiceIcon },
-  ],
+  get: async ({ get }) => {
+    const res = await axiosInstance.get("/categories");
+
+    return res.data.data;
+  },
 });
 
 const description = `There is a set of mock banners available <u>here</u> in three colours and in a range of standard banner sizes`;
@@ -40,190 +37,8 @@ const description = `There is a set of mock banners available <u>here</u> in thr
 export const productsState = selector<Product[]>({
   key: "products",
   get: async () => {
-    await wait(2000);
-    const variants: Variant[] = [
-      {
-        key: "size",
-        label: "Kích cỡ",
-        type: "single",
-        default: "m",
-        options: [
-          {
-            key: "s",
-            label: "Nhỏ",
-            priceChange: {
-              type: "percent",
-              percent: -0.2,
-            },
-          },
-          {
-            key: "m",
-            label: "Vừa",
-          },
-          {
-            key: "l",
-            label: "To",
-            priceChange: {
-              type: "percent",
-              percent: 0.2,
-            },
-          },
-        ],
-      },
-      {
-        key: "toping",
-        label: "Topping",
-        type: "multiple",
-        default: ["t1", "t4"],
-        options: [
-          {
-            key: "t1",
-            label: "Trân châu",
-            priceChange: {
-              type: "fixed",
-              amount: 5000,
-            },
-          },
-          {
-            key: "t2",
-            label: "Bánh flan",
-            priceChange: {
-              type: "fixed",
-              amount: 10000,
-            },
-          },
-          {
-            key: "t3",
-            label: "Trang trí",
-            priceChange: {
-              type: "percent",
-              percent: 0.15,
-            },
-          },
-          {
-            key: "t4",
-            label: "Không lấy đá",
-            priceChange: {
-              type: "fixed",
-              amount: -5000,
-            },
-          },
-        ],
-      },
-    ];
-    return [
-      {
-        id: 1,
-        name: "Caramel Latte",
-        price: 35000,
-        image: getDummyImage("product-square-1.jpg"),
-        description,
-        categoryId: ["coffee", "drinks"],
-        variants,
-      },
-      {
-        id: 2,
-        name: "Mocha Frappuccino",
-        price: 45000,
-        image: getDummyImage("product-square-2.jpg"),
-        description,
-        categoryId: ["coffee"],
-        variants,
-      },
-      {
-        id: 3,
-        name: "Grilled Pork Banh Mi",
-        price: 30000,
-        image: getDummyImage("product-square-3.jpg"),
-        description,
-        categoryId: ["food", "bread"],
-        variants,
-      },
-      {
-        id: 4,
-        name: "Pizza",
-        price: 28000,
-        image: getDummyImage("product-square-4.jpg"),
-        description,
-        categoryId: ["food"],
-        variants,
-      },
-      {
-        id: 5,
-        name: "Vanilla Latte",
-        price: 35000,
-        image: getDummyImage("product-square-5.jpg"),
-        description,
-        categoryId: ["coffee", "matcha"],
-        variants,
-      },
-      {
-        id: 6,
-        name: "Caramel Macchiato",
-        price: 38000,
-        image: getDummyImage("product-square-6.jpg"),
-        description,
-        categoryId: ["coffee", "milktea"],
-        variants,
-      },
-      {
-        id: 7,
-        name: "Espresso",
-        price: 32000,
-        image: getDummyImage("product-square-7.jpg"),
-        description,
-        categoryId: ["coffee"],
-        variants,
-      },
-      {
-        id: 8,
-        name: "Green Tea Latte",
-        price: 25000,
-        image: getDummyImage("product-square-8.jpg"),
-        description,
-        categoryId: ["matcha"],
-        variants,
-      },
-      {
-        id: 9,
-        name: "Bộ 3 Blue Corner Coffee siêu HOT",
-        image: getDummyImage("product-rect-1.jpg"),
-        price: 25000,
-        sale: {
-          type: "percent",
-          percent: 0.2,
-        },
-        description,
-        categoryId: ["coffee", "milktea", "drinks"],
-        variants,
-      },
-      {
-        id: 10,
-        name: "Combo Hi Tea Aroma",
-        image: getDummyImage("product-rect-2.jpg"),
-        price: 57000,
-        sale: {
-          type: "fixed",
-          amount: 7000,
-        },
-        description,
-        categoryId: ["coffee", "drinks"],
-        variants,
-      },
-      {
-        id: 11,
-        name: "Milk Tea Combo",
-        price: 55000,
-        image: getDummyImage("product-rect-3.jpg"),
-        description,
-        categoryId: ["milktea"],
-        variants,
-        sale: {
-          type: "percent",
-          percent: 0.5,
-        },
-      },
-    ];
+    const res = await axiosInstance.get("/products");
+    return res.data.data;
   },
 });
 
@@ -240,14 +55,14 @@ export const selectedCategoryIdState = atom({
   default: "coffee",
 });
 
-export const productsByCategoryState = selectorFamily<Product[], CategoryId>({
+export const productsByCategoryState = selectorFamily<Product[], string>({
   key: "productsByCategory",
   get:
     (categoryId) =>
     ({ get }) => {
       const allProducts = get(productsState);
       return allProducts.filter((product) =>
-        product.categoryId.includes(categoryId)
+        product.category_id.includes(categoryId)
       );
     },
 });
@@ -277,6 +92,28 @@ export const totalPriceState = selector({
   },
 });
 
+export const orderState = selector({
+  key: "orders",
+  get: async ({ get }) => {
+    const user = get(userState);
+    const res = await axiosInstance.get(`/orders/${user.id}`, {
+      params: { limit: 50 },
+    });
+    return res.data?.data || [];
+  },
+});
+
+export const orderDetailState = selector({
+  key: "orderDetail",
+  get: async ({ get }) => {
+    const user = get(userState);
+    const res = await axiosInstance.get(`/orders/${user.id}`, {
+      params: { limit: 50 },
+    });
+    return res.data?.data || [];
+  },
+});
+
 export const notificationsState = atom<Notification[]>({
   key: "notifications",
   default: [
@@ -285,7 +122,7 @@ export const notificationsState = atom<Notification[]>({
       image: logo,
       title: "Chào bạn mới",
       content:
-        "Cảm ơn đã sử dụng ZaUI Coffee, bạn có thể dùng ứng dụng này để tiết kiệm thời gian xây dựng",
+        "Cảm ơn đã sử dụng Go Appscript ECommerce, bạn có thể dùng ứng dụng này để tiết kiệm thời gian xây dựng",
     },
     {
       id: 2,

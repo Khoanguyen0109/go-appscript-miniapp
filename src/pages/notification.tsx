@@ -4,9 +4,19 @@ import { useRecoilValue } from "recoil";
 import { notificationsState } from "state";
 import { Box, Header, Page, Text } from "zmp-ui";
 import { Divider } from "components/divider";
+import { requestSendNotification } from "zmp-sdk";
 
 const NotificationList: FC = () => {
   const notifications = useRecoilValue(notificationsState);
+
+  const sendNotification = async () => {
+    try {
+      await requestSendNotification({});
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }
+  };
   return (
     <Box className="bg-background">
       <ListRenderer

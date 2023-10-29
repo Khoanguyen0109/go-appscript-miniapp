@@ -1,8 +1,8 @@
 import { axiosInstance } from "api/instance";
 import { DisplayPrice } from "components/display/price";
 import { ROUTES } from "pages/route";
-import React, { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { FC, useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import {
   cartState,
@@ -15,8 +15,10 @@ import pay from "utils/product";
 import { Box, Button, Text } from "zmp-ui";
 import ReactLoading from "react-loading";
 import Loading from "components/loading";
+import { Payment } from "zmp-sdk";
 
 export const CartPreview: FC = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
   const cart = useRecoilValue(cartState);
   const resetCart = useResetRecoilState(cartState);
   const navigate = useNavigate();
@@ -45,6 +47,22 @@ export const CartPreview: FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // gọi api checkTransaction để lấy thông tin giao dịch
+    Payment.checkTransaction({
+      data: Object.fromEntries([...searchParams]),
+      success: (rs) => {
+        // Kết quả giao dịch khi gọi api thành công
+        const { id, resultCode, msg, transTime, createdAt } = rs;
+      },
+      fail: (err) => {
+        // Kết quả giao dịch khi gọi api thất bại
+        console.log(err);
+      },
+    });
+  }, []);
+
   const makePayment = async () => {
     setLoading(true);
     const data = await pay(totalPrice, callBackPayment);

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { Divider } from "components/divider";
 import { Header, Page } from "zmp-ui";
 import { CartItems } from "./cart-items";

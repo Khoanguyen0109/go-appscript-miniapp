@@ -11,6 +11,7 @@ import { Box, Button, Text } from "zmp-ui";
 import { MultipleOptionPicker } from "./multiple-option-picker";
 import { QuantityPicker } from "./quantity-picker";
 import { SingleOptionPicker } from "./single-option-picker";
+import ProductVariant from "./component/product-variant";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -22,8 +23,8 @@ export interface ProductPickerProps {
 }
 
 function getDefaultOptions(product?: Product) {
-  if (product && product.variants) {
-    return product.variants.reduce(
+  if (product && product.inventories) {
+    return product.inventories.reduce(
       (options, variant) =>
         Object.assign(options, {
           [variant.key]: variant.default,
@@ -125,41 +126,44 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 <Text>
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: product.description ?? "",
+                      __html: product.desc ?? "",
                     }}
                   ></div>
                 </Text>
               </Box>
               <Box className="space-y-5">
-                {product.variants &&
-                  product.variants.map((variant) =>
-                    variant.type === "single" ? (
-                      <SingleOptionPicker
-                        key={variant.key}
-                        variant={variant}
-                        value={options[variant.key] as string}
-                        onChange={(selectedOption) =>
-                          setOptions((prevOptions) => ({
-                            ...prevOptions,
-                            [variant.key]: selectedOption,
-                          }))
-                        }
-                      />
-                    ) : (
-                      <MultipleOptionPicker
-                        key={variant.key}
-                        product={product}
-                        variant={variant}
-                        value={options[variant.key] as string[]}
-                        onChange={(selectedOption) =>
-                          setOptions((prevOptions) => ({
-                            ...prevOptions,
-                            [variant.key]: selectedOption,
-                          }))
-                        }
-                      />
+                {/* {product.inventories &&
+                  product.inventories.map(
+                    (variant) => (
+                      // variant.type === "single" ? (
+                      // <SingleOptionPicker
+                      //   key={variant.key}
+                      //   variant={variant}
+                      //   value={options[variant.id] as string}
+                      //   onChange={(selectedOption) =>
+                      //     setOptions((prevOptions) => ({
+                      //       ...prevOptions,
+                      //       [variant.id]: selectedOption,
+                      //     }))
+                      //   }
+                      // />
+                      <ProductVariant variant={variant}/>
                     )
-                  )}
+                    // ) : (
+                    //   <MultipleOptionPicker
+                    //     key={variant.key}
+                    //     product={product}
+                    //     variant={variant}
+                    //     value={options[variant.key] as string[]}
+                    //     onChange={(selectedOption) =>
+                    //       setOptions((prevOptions) => ({
+                    //         ...prevOptions,
+                    //         [variant.key]: selectedOption,
+                    //       }))
+                    //     }
+                    //   />
+                    // )
+                  )} */}
                 <QuantityPicker value={quantity} onChange={setQuantity} />
                 {selected ? (
                   <Button

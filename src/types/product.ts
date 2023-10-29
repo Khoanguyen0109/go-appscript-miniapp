@@ -39,11 +39,17 @@ export type Variant = SingleOptionVariant | MultipleOptionVariant;
 export interface Product {
   id: number;
   name: string;
+  thumbnail: string;
   image: string;
   price: number;
   category_id: string;
   desc: string;
   active: string;
   inventory_quantity: number;
-  created_at: string
+  created_at: string;
+  inventories: TProductInventory[]
+}
+
+export type TProductInventory = {
+
 }

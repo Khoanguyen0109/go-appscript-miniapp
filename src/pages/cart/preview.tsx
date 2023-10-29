@@ -13,7 +13,6 @@ import {
 } from "state";
 import pay from "utils/product";
 import { Box, Button, Text } from "zmp-ui";
-import ReactLoading from "react-loading";
 import Loading from "components/loading";
 import { Payment } from "zmp-sdk";
 
@@ -42,7 +41,6 @@ export const CartPreview: FC = () => {
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
     } catch (error) {
-      console.log("error", error);
     } finally {
       setLoading(false);
     }
@@ -66,7 +64,6 @@ export const CartPreview: FC = () => {
   const makePayment = async () => {
     setLoading(true);
     const data = await pay(totalPrice, callBackPayment);
-    console.log("data", data);
   };
   return (
     <Box flex className="sticky bottom-0 bg-background p-4 space-x-4">

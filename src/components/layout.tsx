@@ -15,6 +15,7 @@ import PaymentSuccess from "pages/payment/payment-success";
 import { ROUTES } from "pages/route";
 import Order from "pages/order/order";
 import OrderDetail from "pages/order/order-detail";
+import ProductDetail from "pages/product/product-detail";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -28,7 +29,6 @@ if (getSystemInfo().platform === "android") {
 }
 
 export const Layout: FC = () => {
-  console.log('ROUTES.ORDER_DETAIL', ROUTES.ORDER_DETAIL(':id'))
   return (
     <Box flex flexDirection="column" className="h-screen">
       <ScrollRestoration />
@@ -40,10 +40,20 @@ export const Layout: FC = () => {
           <Route path="/notification" element={<NotificationPage />}></Route>
           <Route path="/cart" element={<CartPage />}></Route>
           <Route path="/profile" element={<ProfilePage />}></Route>
-          <Route path={ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccess />}></Route>
-          <Route path={ROUTES.ORDER} element={<Order />}></Route>
-          <Route path={ROUTES.ORDER_DETAIL(':id')} element={<OrderDetail />}></Route>
+          <Route
+            path={ROUTES.PRODUCT_DETAIL(":id")}
+            element={<ProductDetail />}
+          ></Route>
 
+          <Route
+            path={ROUTES.PAYMENT_SUCCESS}
+            element={<PaymentSuccess />}
+          ></Route>
+          <Route path={ROUTES.ORDER} element={<Order />}></Route>
+          <Route
+            path={ROUTES.ORDER_DETAIL(":id")}
+            element={<OrderDetail />}
+          ></Route>
         </Routes>
       </Box>
       <Navigation />

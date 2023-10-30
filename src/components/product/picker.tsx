@@ -23,8 +23,8 @@ export interface ProductPickerProps {
 }
 
 function getDefaultOptions(product?: Product) {
-  if (product && product.inventories) {
-    return product.inventories.reduce(
+  if (product && product.variants) {
+    return product.variants.reduce(
       (options, variant) =>
         Object.assign(options, {
           [variant.key]: variant.default,
@@ -41,9 +41,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   selected,
 }) => {
   const [visible, setVisible] = useState(false);
-  const [options, setOptions] = useState<SelectedOptions>(
-    selected ? selected.options : getDefaultOptions(product)
-  );
+  const [options, setOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
   const setCart = useSetRecoilState(cartState);
 
@@ -132,23 +130,35 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 </Text>
               </Box>
               <Box className="space-y-5">
-                {/* {product.inventories &&
-                  product.inventories.map(
-                    (variant) => (
-                      // variant.type === "single" ? (
-                      // <SingleOptionPicker
-                      //   key={variant.key}
-                      //   variant={variant}
-                      //   value={options[variant.id] as string}
-                      //   onChange={(selectedOption) =>
-                      //     setOptions((prevOptions) => ({
-                      //       ...prevOptions,
-                      //       [variant.id]: selectedOption,
-                      //     }))
-                      //   }
-                      // />
-                      <ProductVariant variant={variant}/>
-                    )
+                {product.variants &&
+                  Object.keys(product.variants).map((key) => (
+                    <ProductVariant
+                      variant={key}
+                      value={options[key] as string}
+                      values={product.variants[key]}
+                      onChange={(selectedOption) => {
+                        setOptions((prevOptions) => ({
+                          ...prevOptions,
+                          [key]: selectedOption,
+                        }));
+                      }}
+                    />
+                  ))}
+                {/* {product.variants &&
+                  product.variants.map((variant) =>
+                  <ProductVariant variant={variant}/>
+                    // variant.type === "single" ? (
+                    //   <SingleOptionPicker
+                    //     key={variant.key}
+                    //     variant={variant}
+                    //     value={options[variant.key] as string}
+                    //     onChange={(selectedOption) =>
+                    //       setOptions((prevOptions) => ({
+                    //         ...prevOptions,
+                    //         [variant.key]: selectedOption,
+                    //       }))
+                    //     }
+                    //   />
                     // ) : (
                     //   <MultipleOptionPicker
                     //     key={variant.key}

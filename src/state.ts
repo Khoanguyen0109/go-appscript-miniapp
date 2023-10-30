@@ -92,9 +92,16 @@ export const totalPriceState = selector({
   },
 });
 
+export const forceOrderUpdate = atom({
+  key: "forceOrder",
+  default: 0,
+});
+
+
 export const orderState = selector({
   key: "orders",
   get: async ({ get }) => {
+    get(forceOrderUpdate);
     const user = get(userState);
     const res = await axiosInstance.get(`/orders/${user.id}`, {
       params: { limit: 50 },

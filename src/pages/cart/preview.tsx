@@ -24,6 +24,7 @@ export const CartPreview: FC = () => {
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
   const totalPrice = useRecoilValue(totalPriceState);
+  console.log('totalPrice', totalPrice)
   const user = useRecoilValue(userState);
   const phone = useRecoilValue(phoneState);
   const callBackPayment = async (data) => {

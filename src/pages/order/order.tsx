@@ -1,19 +1,29 @@
 import { ListRenderer } from "components/list-renderer";
 import { ROUTES } from "pages/route";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { orderState } from "state";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { forceOrderUpdate, orderState } from "state";
 import { Box, Header, Icon, Page, Text } from "zmp-ui";
 
 type Props = {};
 
 function Order({}: Props) {
   const navigate = useNavigate()
+  const orderUpdate = useSetRecoilState(forceOrderUpdate);
+
   const orders = useRecoilValue(orderState);
+  const forceUpdate = () => orderUpdate((n) => n + 1);
+
   const navigateToDetail = (id) =>{
     navigate((ROUTES.ORDER_DETAIL(id)))
+    
   }
+  useEffect(()=>{
+    return () =>{
+      forceUpdate()
+    }
+  },[])
   return (
     <Page>
       <Header title="Lịch sử đặt hàng" showBackIcon={true} />

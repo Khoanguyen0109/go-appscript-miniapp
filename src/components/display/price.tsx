@@ -6,7 +6,7 @@ export const DisplayPrice: FC<{ children: number | string }> = ({
 }) => {
   const symbol = getConfig((config) => config.template.currencySymbol);
   const format = new Intl.NumberFormat().format(
-    parseFloat(children.toLocaleString())
+    parseFloat(children.toString())
   );
   if (getConfig((config) => config.template.prefixCurrencySymbol)) {
     return (

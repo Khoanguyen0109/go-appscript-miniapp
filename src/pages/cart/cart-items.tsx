@@ -17,7 +17,6 @@ export const CartItems: FC<TCartItemProps> = ({
   disableClick = true,
 }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
-
   return (
     <Box className="py-3 px-4">
       {cart.length > 0 ? (
@@ -39,7 +38,7 @@ export const CartItems: FC<TCartItemProps> = ({
               renderLeft={(item) => (
                 <img
                   className="w-10 h-10 rounded-lg"
-                  src={item.product.image}
+                  src={item.product.thumbnail}
                 />
               )}
               renderRight={(item) => (

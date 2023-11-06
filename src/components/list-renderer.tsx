@@ -10,6 +10,7 @@ interface ListRendererProps<T> {
   renderKey?: (item: T) => string;
   onClick?: (item: T) => void;
   noDivider?: boolean;
+  gap?: number;
 }
 
 export function ListRenderer<T>({
@@ -21,6 +22,7 @@ export function ListRenderer<T>({
   renderKey,
   onClick,
   noDivider,
+  gap,
 }: ListRendererProps<T>) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const collapsedItems = useMemo(() => {

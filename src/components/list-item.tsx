@@ -3,7 +3,7 @@ import { Box, Icon, Text } from "zmp-ui";
 
 export interface ListItemProps {
   title: ReactNode;
-  subtitle: ReactNode;
+  subtitle?: ReactNode;
   onClick?: MouseEventHandler<HTMLDivElement>;
 }
 
@@ -14,9 +14,11 @@ export const ListItem: FC<ListItemProps> = ({ title, subtitle, onClick }) => {
         <Text size="small" className="font-medium text-sm text-primary">
           {title}
         </Text>
-        <Text size="xSmall" className="text-gray">
-          {subtitle}
-        </Text>
+        {subtitle && (
+          <Text size="xSmall" className="text-gray">
+            {subtitle}
+          </Text>
+        )}
       </Box>
       <Icon icon="zi-chevron-right" />
     </Box>

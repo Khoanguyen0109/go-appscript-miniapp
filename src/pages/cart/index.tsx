@@ -17,7 +17,8 @@ const CartPage: FC = () => {
     <Page className="flex flex-col">
       <Header title="Giỏ hàng" showBackIcon={false} />
       <CartItems cart={cart} disableClick={false} />
-      <Delivery />
+      {cart.length > 0 && <Delivery />}
+      {/* <Delivery /> */}
       <Divider size={12} />
       <TermsAndPolicies />
       <Divider size={32} className="flex-1" />

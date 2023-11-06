@@ -16,6 +16,9 @@ import { ROUTES } from "pages/route";
 import Order from "pages/order/order";
 import OrderDetail from "pages/order/order-detail";
 import ProductDetail from "pages/product/product-detail";
+import NotFound from "pages/error/not-found";
+import UserAddress from "pages/user/user-address";
+import AddUserAddress from "pages/user/add-user-address";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -54,6 +57,13 @@ export const Layout: FC = () => {
             path={ROUTES.ORDER_DETAIL(":id")}
             element={<OrderDetail />}
           ></Route>
+          <Route path={ROUTES.USER_ADDRESS} element={<UserAddress />}></Route>
+          <Route path={ROUTES.USER_ADDRESS_ADD} element={<AddUserAddress />}></Route>
+          <Route
+            path={ROUTES.USER_ADDRESS_ADD}
+            element={<UserAddress />}
+          ></Route>
+          <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
         </Routes>
       </Box>
       <Navigation />

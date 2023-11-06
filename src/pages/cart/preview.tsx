@@ -3,7 +3,7 @@ import { DisplayPrice } from "components/display/price";
 import { ROUTES } from "pages/route";
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   cartState,
   phoneState,
@@ -15,6 +15,7 @@ import pay from "utils/product";
 import { Box, Button, Text } from "zmp-ui";
 import Loading from "components/loading";
 import { Payment } from "zmp-sdk";
+import { noteState, selectedPaymentMethod } from "./state";
 
 export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -24,9 +25,12 @@ export const CartPreview: FC = () => {
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
   const totalPrice = useRecoilValue(totalPriceState);
-  console.log('totalPrice', totalPrice)
   const user = useRecoilValue(userState);
   const phone = useRecoilValue(phoneState);
+  const [note, setNote] = useRecoilState(noteState);
+  const [paymentMethod, setPaymentMethod] = useRecoilState(
+    selectedPaymentMethod
+  );
   const callBackPayment = async (data) => {
     try {
       const res = await axiosInstance.post("/orders", {
@@ -36,6 +40,8 @@ export const CartPreview: FC = () => {
           acc.push({ product_id: value.product.id, quantity: value.quantity });
           return acc;
         }, []),
+        note,
+        paymentMethod,
         orderId: data.orderId,
         total: totalPrice,
       });

@@ -28,19 +28,14 @@ const Subscription: FC = () => {
 const Personal: FC = () => {
   const navigate = useNavigate();
   const onClick = useToBeImplemented();
-  // const onClickItem = () => {
-  //   switch (key) {
-  //     case value:
 
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  // }
   const navigateToOrder = () => {
     navigate(ROUTES.ORDER);
   };
+
+  const navigateToUserAddress = () =>{
+    navigate(ROUTES.USER_ADDRESS)
+  }
   return (
     <Box className="m-4">
       <ListRenderer
@@ -50,7 +45,7 @@ const Personal: FC = () => {
           {
             left: <Icon icon="zi-user" />,
             right: (
-              <Box flex>
+              <Box flex onClick={onClick}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Thông tin tài khoản
                 </Text.Header>
@@ -59,12 +54,23 @@ const Personal: FC = () => {
             ),
           },
           {
-            onClick: () => navigateToOrder(),
             left: <Icon icon="zi-clock-2" />,
             right: (
               <Box flex onClick={navigateToOrder}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Lịch sử đơn hàng
+                </Text.Header>
+                <Icon icon="zi-chevron-right" />
+              </Box>
+            ),
+          },
+          {
+            onClick: () => navigateToUserAddress(),
+            left: <Icon icon="zi-home" />,
+            right: (
+              <Box flex onClick={navigateToUserAddress}>
+                <Text.Header className="flex-1 items-center font-normal">
+                  Địa chỉ 
                 </Text.Header>
                 <Icon icon="zi-chevron-right" />
               </Box>

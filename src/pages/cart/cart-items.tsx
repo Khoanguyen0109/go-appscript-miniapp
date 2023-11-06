@@ -1,4 +1,5 @@
 import { FinalPrice } from "components/display/final-price";
+import { DisplayPrice } from "components/display/price";
 import { DisplaySelectedOptions } from "components/display/selected-options";
 import { ListRenderer } from "components/list-renderer";
 import { ProductPicker } from "components/product/picker";
@@ -17,6 +18,7 @@ export const CartItems: FC<TCartItemProps> = ({
   disableClick = true,
 }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
+  console.log('disableClick', cart)
   return (
     <Box className="py-3 px-4">
       {cart.length > 0 ? (
@@ -46,9 +48,13 @@ export const CartItems: FC<TCartItemProps> = ({
                   <Box className="space-y-1 flex-1">
                     <Text size="small">{item.product.name}</Text>
                     <Text className="text-gray" size="xSmall">
-                      <FinalPrice options={item.options}>
-                        {item.product}
-                      </FinalPrice>
+                      {disableClick ? (
+                        <DisplayPrice>{item.product.total}</DisplayPrice>
+                      ) : (
+                        <FinalPrice options={item.options}>
+                          {item.product}
+                        </FinalPrice>
+                      )}
                     </Text>
                     <Text className="text-gray" size="xxxSmall">
                       <DisplaySelectedOptions options={item.options}>

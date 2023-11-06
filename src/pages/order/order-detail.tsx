@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import { Box, Header, Page, Text } from "zmp-ui";
+import OrderStatus from "./order-status";
 
 type Props = {};
 
@@ -21,7 +22,6 @@ function OrderDetail({}: Props) {
     try {
       setLoading(true);
       const res = await axiosInstance.get(`/orders/${user.id}/details/${id}`);
-      console.log("res", res);
       setDetail(res.data.data);
     } catch (error) {
     } finally {
@@ -40,6 +40,7 @@ function OrderDetail({}: Props) {
   return (
     <Page className="flex flex-col">
       <Header title="Chi tiết đơn hàng" showBackIcon={true} />
+      <OrderStatus status={detail?.status} />
       <CartItems cart={detail?.detail || []} />
       <Divider size={32} className="flex-1" />
 

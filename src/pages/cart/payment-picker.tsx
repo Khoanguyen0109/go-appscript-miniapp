@@ -31,7 +31,7 @@ function PaymentPicker({}: Props) {
     <>
       <ListItem
         onClick={() => setVisible(true)}
-        title={paymentMethod?.label}
+        title={paymentMethod?.label || "Chọn phương thức thanh toán"}
         subtitle={paymentMethod?.subtitle}
       />
       {createPortal(

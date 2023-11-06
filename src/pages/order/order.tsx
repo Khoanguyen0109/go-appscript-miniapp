@@ -1,52 +1,83 @@
 import { ListRenderer } from "components/list-renderer";
 import { ROUTES } from "pages/route";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { forceOrderUpdate, orderState } from "state";
 import { Box, Header, Icon, Page, Text } from "zmp-ui";
+import { EOrderStatus } from "./order-status";
 
 type Props = {};
 
 function Order({}: Props) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const orderUpdate = useSetRecoilState(forceOrderUpdate);
 
   const orders = useRecoilValue(orderState);
   const forceUpdate = () => orderUpdate((n) => n + 1);
 
-  const navigateToDetail = (id) =>{
-    navigate((ROUTES.ORDER_DETAIL(id)))
-    
-  }
-  useEffect(()=>{
-    return () =>{
-      forceUpdate()
+  const navigateToDetail = (id) => {
+    navigate(ROUTES.ORDER_DETAIL(id));
+  };
+  useEffect(() => {
+    return () => {
+      forceUpdate();
+    };
+  }, []);
+  const iconStatus = (status) => {
+    switch (status) {
+      case EOrderStatus.WAITING:
+        return {
+          icon: "zi-clock-1",
+          color: "text-grey",
+        };
+      case EOrderStatus.DELIVERING:
+        return { icon: "zi-leave", color: "text-yellow" };
+      case EOrderStatus.DELIVERED:
+        return {
+          icon: "zi-check-circle",
+          color: " text-green",
+        };
+
+      case EOrderStatus.CANCEL:
+        return {
+          icon: "zi-close",
+          color: "text-red",
+        };
+      default:
+        break;
     }
-  },[])
+  };
   return (
     <Page>
       <Header title="Lịch sử đặt hàng" showBackIcon={true} />
       <Box className="py-3 px-4">
         <ListRenderer
           items={orders}
-          onClick={(item)=> {
-            console.log('item', item)
-            navigateToDetail(item.id)
+          onClick={(item) => {
+            console.log("item", item);
+            navigateToDetail(item.id);
           }}
           renderKey={(item) => item.id}
-          renderLeft={(item) => (
-            <Text> MDH: {item.id}</Text>
-            // <img className="w-10 h-10 rounded-lg" src={item.product.image} />
-          )}
+          renderLeft={(item) => {
+            const { icon, color } = iconStatus(item.status);
+            return (
+              <Box>
+                <Icon icon={icon} className={`${color}`} />
+              </Box>
+              // <img className="w-10 h-10 rounded-lg" src={item.product.image} />
+            );
+          }}
           renderRight={(item) => (
-            <Box flex className="space-x-3 text-right">
+            <Box flex className="space-x-3 ">
               <Box className="space-y-1 flex-1">
-                <Text size="small"> {item.created_at}</Text>
-                <Text size="small">{item.total} VND</Text>
+                <Text className="font-semibold"> MDH: {item.id}</Text>
+
+                <Text size="small">Ngày đặt: {item.created_at}</Text>
+                <Text size="small">Tổng: {item.total} VND</Text>
               </Box>
               <Box className="ml-12">
-                <Icon icon="zi-chevron-right"/>
+                <Icon icon="zi-chevron-right" />
               </Box>
             </Box>
           )}

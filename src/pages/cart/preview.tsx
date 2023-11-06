@@ -15,7 +15,11 @@ import pay from "utils/product";
 import { Box, Button, Text } from "zmp-ui";
 import Loading from "components/loading";
 import { Payment } from "zmp-sdk";
-import { noteState, selectedPaymentMethod } from "./state";
+import {
+  addressSelectedState,
+  noteState,
+  selectedPaymentMethod,
+} from "./state";
 
 export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -31,6 +35,9 @@ export const CartPreview: FC = () => {
   const [paymentMethod, setPaymentMethod] = useRecoilState(
     selectedPaymentMethod
   );
+
+  const [address, setAddressSelected] = useRecoilState(addressSelectedState);
+
   const callBackPayment = async (data) => {
     try {
       const res = await axiosInstance.post("/orders", {
@@ -42,6 +49,7 @@ export const CartPreview: FC = () => {
         }, []),
         note,
         paymentMethod,
+        addressId: address.id,
         orderId: data.orderId,
         total: totalPrice,
       });

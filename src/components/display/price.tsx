@@ -4,6 +4,7 @@ import { getConfig } from "utils/config";
 export const DisplayPrice: FC<{ children: number | string }> = ({
   children,
 }) => {
+  console.log('children', children)
   const symbol = getConfig((config) => config.template.currencySymbol);
   const format = new Intl.NumberFormat().format(
     parseFloat(children.toString())

@@ -22,9 +22,9 @@ const HomePage: React.FunctionComponent = () => {
         <Suspense>
           <Categories />
         </Suspense>
-        <Divider />
-        <Recommend />
-        <Divider />
+        {/* <Divider /> */}
+        {/* <Recommend /> */}
+        {/* <Divider /> */}
         <ProductList />
         <Divider />
       </Box>

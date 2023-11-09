@@ -10,7 +10,6 @@ export const Divider: FC<{ size?: number; className?: string } & BoxProps> = ({
     <Box
       style={{
         minHeight: size,
-        backgroundColor: "var(--zmp-background-color)",
       }}
       {...props}
     />

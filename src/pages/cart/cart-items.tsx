@@ -18,7 +18,6 @@ export const CartItems: FC<TCartItemProps> = ({
   disableClick = true,
 }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
-  console.log('disableClick', cart)
   return (
     <Box className="py-3 px-4">
       {cart.length > 0 ? (

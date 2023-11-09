@@ -20,20 +20,22 @@ export const ProductItem: FC<{ product: Product }> = ({ product }) => {
     // <ProductPicker product={product}>
     //   {({ open }) => (
     <div
-      className="space-y-2"
+      className="space-y-2 shadow-xl rounded-xl"
       onClick={() => navigateProductDetail(product.id)}
     >
       <Box className="w-full aspect-square relative">
         <img
           loading="lazy"
           src={product.thumbnail}
-          className="absolute left-0 right-0 top-0 bottom-0 w-full h-full object-cover object-center rounded-lg bg-skeleton"
+          className="absolute left-0 right-0 top-0 bottom-0 w-full h-full object-cover object-center rounded-t-xl bg-skeleton"
         />
       </Box>
-      <Text>{product.name}</Text>
-      <Text size="xxSmall" className="text-gray pb-2">
-        <FinalPrice>{product}</FinalPrice>
-      </Text>
+      <Box className="p-2 0">
+        <Text>{product.name}</Text>
+        <Text size="xLarge" color="" className=" pb-2 text-blue-500 font-bold">
+          <FinalPrice>{product}</FinalPrice>
+        </Text>
+      </Box>
     </div>
     // )}
     // </ProductPicker>

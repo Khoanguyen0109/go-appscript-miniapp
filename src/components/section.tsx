@@ -21,7 +21,11 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({
       }`}
       {...props}
     >
-      <Text.Title className={`${padding === "title-only" ? "px-4" : ""}`}>
+      <Text.Title
+        className={`${
+          padding === "title-only" ? "px-4" : ""
+        } font-bold text-lg`}
+      >
         {title}
       </Text.Title>
       {children}

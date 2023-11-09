@@ -7,7 +7,7 @@ import { cartState } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
 import { isIdentical } from "utils/product";
-import { Box, Button, Text } from "zmp-ui";
+import { Box, Button, Icon, Text } from "zmp-ui";
 import { MultipleOptionPicker } from "./multiple-option-picker";
 import { QuantityPicker } from "./quantity-picker";
 import { SingleOptionPicker } from "./single-option-picker";
@@ -117,17 +117,29 @@ export const ProductPicker: FC<ProductPickerProps> = ({
           {product && (
             <Box className="space-y-6 mt-2" p={4}>
               <Box className="space-y-2">
-                <Text.Title>{product.name}</Text.Title>
-                <Text>
-                  <FinalPrice options={options}>{product}</FinalPrice>
-                </Text>
-                <Text>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.desc ?? "",
-                    }}
-                  ></div>
-                </Text>
+                <Box className="flex items-start">
+                  <img
+                    loading="lazy"
+                    src={product.thumbnail}
+                    className="w-20 h-20 mr-2 rounded-xl"
+                  />
+                  <Box>
+                    <Text.Title className="font-bold">
+                      {product.name}
+                    </Text.Title>
+                    <Text className="font-bold mt-1">
+                      <FinalPrice options={options}>{product}</FinalPrice>
+                    </Text>
+                  </Box>
+                  <Box className="flex-1 text-right pr-2">
+                    <Icon
+                      icon="zi-close"
+                      onClick={() => {
+                        setVisible(false);
+                      }}
+                    />
+                  </Box>
+                </Box>
               </Box>
               <Box className="space-y-5">
                 {product.variants &&

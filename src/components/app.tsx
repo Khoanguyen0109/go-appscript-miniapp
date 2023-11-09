@@ -1,12 +1,20 @@
-import React from "react";
-import { App, ZMPRouter, SnackbarProvider } from "zmp-ui";
+import React, { useEffect, useState } from "react";
+import { App, ZMPRouter, SnackbarProvider, Modal } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import { getConfig } from "utils/config";
 import { Layout } from "./layout";
 import { ConfigProvider } from "./config-provider";
 import LoadingScreenOverLay from "./loading-screen";
+import { closeApp, offConfirmToExit, onConfirmToExit } from "zmp-sdk";
 
 const MyApp = () => {
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+
+  useEffect(() => {
+    onConfirmToExit(() => setConfirmModalVisible(true));
+    return () => offConfirmToExit();
+  }, []);
+
   return (
     <RecoilRoot>
       <React.Suspense fallback={<LoadingScreenOverLay />}>
@@ -22,6 +30,26 @@ const MyApp = () => {
                 <Layout />
               </ZMPRouter>
             </SnackbarProvider>
+            <Modal
+              visible={confirmModalVisible}
+              title="Thoát ứng dụng"
+              description="Bạn có muốn thoát ứng dụng"
+              actions={[
+                {
+                  text: "Ở lại ứng dụng",
+                  onClick: () => {
+                    setConfirmModalVisible(false);
+                  },
+                  highLight: true,
+                },
+                {
+                  text: "Có",
+                  onClick: () => {
+                    closeApp();
+                  },
+                },
+              ]}
+            />
           </App>
         </ConfigProvider>
       </React.Suspense>

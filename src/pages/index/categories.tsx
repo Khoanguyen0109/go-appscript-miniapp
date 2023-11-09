@@ -20,29 +20,35 @@ export const Categories: FC = () => {
   const fetchCategories = async () => {
     try {
       const res = await axiosInstance.get("/categories");
-      console.log('res', res)
-      setCategories(res.data.data)
+      console.log("res", res);
+      setCategories(res.data.data);
     } catch (error) {}
   };
 
-  useEffect(()=>{
-    fetchCategories()
-  },[])
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
-    <Box className="bg-white grid grid-cols-4 gap-4 p-4">
-      {categories.map((category, i) => (
-        <div
-          key={i}
-          onClick={() => gotoCategory(category.id)}
-          className="flex flex-col space-y-2 items-center"
-        >
-          <img className="w-12 h-12" src={category.image} />
-          <Text size="xxSmall" className="text-gray">
-            {category.name}
-          </Text>
-        </div>
-      ))}
+    <Box className="p-4">
+      <Text className="font-bold text-lg">Tất cả mặt hàng</Text>
+      <Box className="bg-white grid grid-cols-4 gap-4 mt-4 ">
+        {categories.map((category, i) => (
+          <div
+            key={i}
+            onClick={() => gotoCategory(category.id)}
+            className="flex flex-col space-y-2 items-center"
+          >
+            <img className="w-12 h-12" src={category.image} />
+            <Text
+              size="xxSmall"
+              className=" text-center font-bold text-slate-950"
+            >
+              {category.name}
+            </Text>
+          </div>
+        ))}
+      </Box>
     </Box>
   );
 };

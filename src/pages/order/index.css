@@ -1,3 +1,15 @@
+.zaui-tabs-tabbar {
+  overflow-x: auto;
+}
 .zaui-tabs-tabbar-item {
-  width: 20%;
+  text-align: center;
+  min-width: 170px;
+}
+
+.zaui-tab-content {
+  max-width: 100vw;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }

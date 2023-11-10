@@ -20,7 +20,7 @@ export const ListItem: FC<ListItemProps> = ({ title, subtitle, onClick }) => {
           </Text>
         )}
       </Box>
-      <Icon icon="zi-chevron-right" />
+      {onClick && <Icon icon="zi-chevron-right" />}
     </Box>
   );
 };

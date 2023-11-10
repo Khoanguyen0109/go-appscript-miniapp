@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { App, ZMPRouter, SnackbarProvider, Modal } from "zmp-ui";
+import { App, ZMPRouter, SnackbarProvider, Modal, Box } from "zmp-ui";
 import { RecoilRoot } from "recoil";
 import { getConfig } from "utils/config";
 import { Layout } from "./layout";
@@ -33,7 +33,10 @@ const MyApp = () => {
             <Modal
               visible={confirmModalVisible}
               title="Thoát ứng dụng"
-              description="Bạn có muốn thoát ứng dụng"
+              coverSrc={
+                "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8"
+              }
+              description="Bạn có muốn thoát ứng dụng?"
               actions={[
                 {
                   text: "Ở lại ứng dụng",
@@ -43,13 +46,13 @@ const MyApp = () => {
                   highLight: true,
                 },
                 {
-                  text: "Có",
+                  text: "Thoát",
                   onClick: () => {
                     closeApp();
                   },
                 },
               ]}
-            />
+            ></Modal>
           </App>
         </ConfigProvider>
       </React.Suspense>

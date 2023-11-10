@@ -1,14 +1,8 @@
+import { EOrderStatus } from "constantsapp";
 import React, { useMemo } from "react";
 import { Box, Icon, Text } from "zmp-ui";
 
 type Props = { status };
-
-export const EOrderStatus = {
-  WAITING: "waiting",
-  DELIVERING: "delivering",
-  DELIVERED: "delivered",
-  CANCEL: "cancel",
-};
 
 function OrderStatus({ status }: Props) {
   const statusItem = useMemo(() => {
@@ -16,20 +10,23 @@ function OrderStatus({ status }: Props) {
       case EOrderStatus.WAITING:
         return {
           title: "Đang xác nhận",
-          color: "bg-slate-400",
+          backgroundColor: "#FFE5D0",
+          color: "#FD7E14",
           icon: "zi-clock-1",
         };
 
       case EOrderStatus.DELIVERING:
         return {
           title: "Đang vận chuyển",
-          color: "bg-yellow",
+          backgroundColor: "#CFE2FF",
+          color: "#0A58CA",
           icon: "zi-leave",
         };
       case EOrderStatus.DELIVERED:
         return {
           title: "Đã vận chuyển",
-          color: "bg-green",
+          backgroundColor: "#D7FAE0",
+          color: "#007D3A",
           icon: "zi-check-circle",
         };
       case EOrderStatus.CANCEL:
@@ -41,18 +38,24 @@ function OrderStatus({ status }: Props) {
       default:
         return {
           title: "Đang xác nhận",
-          color: "bg-slate-400",
+          color: "#343A40",
+          backgroundColor: "#E9ECEF",
           icon: "zi-clock-1",
         };
     }
   }, [status]);
 
   return (
-    <Box className="py-3 px-4">
+    <Box className="">
       <Box
-        className={`${statusItem.color} w-52 rounded-xl p-2 items-center   text-white font-semibold flex`}
+        style={{
+          color: statusItem.color,
+          backgroundColor: statusItem.backgroundColor,
+          width: "fit-content",
+        }}
+        className={`rounded-full px-3 py-2 items-center w-auto   text-white font-semibold flex`}
       >
-        <Icon icon={statusItem.icon} className="text-white mr-2 " />
+        {/* <Icon icon={statusItem.icon} className="text-white mr-2" /> */}
         <Text className="font-semibold">{statusItem.title}</Text>
       </Box>
     </Box>

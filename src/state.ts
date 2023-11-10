@@ -97,7 +97,6 @@ export const forceOrderUpdate = atom({
   default: 0,
 });
 
-
 export const orderState = selector({
   key: "orders",
   get: async ({ get }) => {
@@ -106,6 +105,7 @@ export const orderState = selector({
     const res = await axiosInstance.get(`/orders/${user.id}`, {
       params: { limit: 50 },
     });
+    console.log("res.data.data", res.data.data);
     return res.data?.data || [];
   },
 });

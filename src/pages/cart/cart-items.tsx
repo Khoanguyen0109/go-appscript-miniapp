@@ -19,7 +19,7 @@ export const CartItems: FC<TCartItemProps> = ({
 }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
   return (
-    <Box className="py-3 px-4">
+    <Box className="pb-3 px-4">
       {cart.length > 0 ? (
         <ProductPicker product={editingItem?.product} selected={editingItem}>
           {({ open }) => (

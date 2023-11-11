@@ -47,8 +47,9 @@ function AddUserAddress({}: Props) {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm({ mode: "onChange", defaultValues: addressSelected || {} });
+  } = useForm({ mode: "onChange", defaultValues: addressSelected || { type: 'home'} });
   const onSubmit = async (value) => {
+    console.log('value', value)
     try {
       setLoading(true);
       const res = await axiosInstance.post(`users/${user.id}/address`, {
@@ -56,7 +57,9 @@ function AddUserAddress({}: Props) {
       });
       refresh();
       navigate(ROUTES.USER_ADDRESS);
-    } catch (error) {}
+    } catch (error) {
+      console.log('error', error)
+    }
   };
 
   const getFieldName = (field: string) => {
@@ -137,8 +140,8 @@ function AddUserAddress({}: Props) {
             <Option value="work" title="Văn phòng" />
           </Select>
           <ErrorText
-            show={Boolean(errors?.province)}
-            errorText={getErrorMessage("province")}
+            show={Boolean(errors?.type)}
+            errorText={getErrorMessage("type")}
           />
         </Box>
         <Box mt={4}>
@@ -225,7 +228,7 @@ function AddUserAddress({}: Props) {
         <Button
           loading={loading}
           htmlType="submit"
-          className="w-full"
+          // className="w-full"
           suffixIcon={<Icon icon="zi-add-user" />}
         >
           {addressSelected ? "Cập nhật địa chỉ" : " Thêm địa chỉ"}

@@ -2,18 +2,21 @@ import { capitalize } from "lodash";
 import React, { FC, useMemo } from "react";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
+import { getOptionString } from "utils/product";
 
 export const DisplaySelectedOptions: FC<{
   children: Product;
   options: SelectedOptions;
 }> = ({ children, options }) => {
-  console.log('first', options)
   const description = useMemo(() => {
+    if (!options) {
+      return "";
+    }
     let variants: string[] = [];
     if (children.variants) {
-      for (const [key, value] of Object.entries(options)) {
-        variants.push(`${capitalize(key.replace('_',''))}: ${value}`)
-      }
+      // for (const [key, value] of Object.entries(options)) {
+      //   variants.push(`${capitalize(key.replace('_',''))}: ${value}`)
+      // }
       // const selectedVariants = Object.keys(options);
       // children.variants
       //   .filter((v) => selectedVariants.includes(v.key))
@@ -41,7 +44,7 @@ export const DisplaySelectedOptions: FC<{
       //     // }
       //   });
     }
-    return variants.join(". ");
+    return getOptionString(options);
   }, [children]);
   return <>{description}</>;
 };

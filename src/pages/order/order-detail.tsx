@@ -23,7 +23,6 @@ function OrderDetail({}: Props) {
   const user = useRecoilValue(userState);
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState<TOrder | undefined>();
-  console.log("detail", detail);
   const fetchDetail = async () => {
     try {
       setLoading(true);

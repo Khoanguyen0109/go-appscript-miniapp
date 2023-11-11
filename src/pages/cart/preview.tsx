@@ -11,8 +11,8 @@ import {
   totalQuantityState,
   userState,
 } from "state";
-import pay from "utils/product";
-import { Box, Button, Text } from "zmp-ui";
+import pay, { getOptionString } from "utils/product";
+import { Box, Button, Text, useSnackbar } from "zmp-ui";
 import Loading from "components/loading";
 import { Payment } from "zmp-sdk";
 import {
@@ -20,6 +20,7 @@ import {
   noteState,
   selectedPaymentMethod,
 } from "./state";
+import { Product } from "types/product";
 
 export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
@@ -36,21 +37,47 @@ export const CartPreview: FC = () => {
     selectedPaymentMethod
   );
 
+  const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
+
+  console.log("cart", cart);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
   const callBackPayment = async (data) => {
     try {
+      if (!address?.id) {
+        return openSnackbar({
+          text: "Vui lòng chọn địa chỉ giao hàng",
+          type: "error",
+          icon: true,
+          duration: 3000,
+        });
+      }
+      if (!paymentMethod) {
+        return openSnackbar({
+          text: "Vui lòng chọn  phương thức thanh toán",
+          type: "error",
+          icon: true,
+          duration: 3000,
+        });
+      }
       const res = await axiosInstance.post("/orders", {
         userId: user.id,
         user: { ...user, phone },
         items: cart.reduce((acc, value) => {
-          acc.push({ product_id: value.product.id, quantity: value.quantity });
+          acc.push({
+            product_id: value.product.id,
+            name: value.product.name,
+            thumbnail: value.product.thumbnail,
+            total: parseFloat(value.product.price) * parseInt(value.quantity),
+            quantity: value.quantity,
+            options: getOptionString(value.options),
+          });
           return acc;
         }, []),
         note,
-        paymentMethod,
-        addressId: address.id,
-        orderId: data.orderId,
+        paymentMethod: paymentMethod.label,
+        addressId: address?.id,
+        orderId: data?.orderId || "",
         total: totalPrice,
       });
       resetCart();
@@ -78,7 +105,8 @@ export const CartPreview: FC = () => {
 
   const makePayment = async () => {
     setLoading(true);
-    const data = await pay(totalPrice, callBackPayment);
+    const data = callBackPayment({});
+    // const data = await pay(totalPrice, callBackPayment);
   };
   return (
     <Box flex className="sticky bottom-0 bg-background p-4 space-x-4">

@@ -3,6 +3,7 @@ import { DisplayPrice } from "components/display/price";
 import { DisplaySelectedOptions } from "components/display/selected-options";
 import { ListRenderer } from "components/list-renderer";
 import { ProductPicker } from "components/product/picker";
+import { isString } from "lodash";
 import React, { FC, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { cartState } from "state";
@@ -56,9 +57,13 @@ export const CartItems: FC<TCartItemProps> = ({
                       )}
                     </Text>
                     <Text className="text-gray" size="xxxSmall">
-                      <DisplaySelectedOptions options={item.options}>
-                        {item.product}
-                      </DisplaySelectedOptions>
+                      {isString(item.product.options) ? (
+                        item.product.options
+                      ) : (
+                        <DisplaySelectedOptions options={item.options}>
+                          {item.product}
+                        </DisplaySelectedOptions>
+                      )}
                     </Text>
                   </Box>
                   <Text className="text-primary font-medium" size="small">

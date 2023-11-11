@@ -38,10 +38,10 @@ function OrderItem({ item }: Props) {
         />
         <Box className="flex-1">
           <Text className="font-bold text-md mb-1">
-            {item?.thumbnailName || "Áo thun đặc biệt"}
+            {item?.thumbnail_name || "Áo thun đặc biệt"}
           </Text>
           <Text className=" text-md">
-            <DisplayPrice>{item?.thumbNailPrice || "4000000"}</DisplayPrice>
+            <DisplayPrice>{item?.thumbnail_price || "4000000"}</DisplayPrice>
           </Text>
         </Box>
       </Box>

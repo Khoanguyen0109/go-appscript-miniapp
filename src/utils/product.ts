@@ -2,11 +2,11 @@ import { createOrder } from "zmp-sdk";
 import { Option, Product } from "types/product";
 import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
-import { chain, isEqual, omit } from "lodash";
+import { capitalize, chain, isEqual, omit } from "lodash";
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   let finalPrice = product.price;
-  const findVariant =   product?.inventories?.find((item) => {
+  const findVariant = product?.inventories?.find((item) => {
     const object = chain(item)
       .omit([
         "id",
@@ -20,12 +20,13 @@ export function calcFinalPrice(product: Product, options?: SelectedOptions) {
         "updated_at",
         "deleted_at",
       ])
-      .omitBy((value) => value === "").value();;
-      console.log('object', object)
-      return isEqual(object, options)
+      .omitBy((value) => value === "")
+      .value();
+    console.log("object", object);
+    return isEqual(object, options);
   });
-  if(findVariant){
-    return findVariant.price
+  if (findVariant) {
+    return findVariant.price;
   }
 
   return finalPrice;
@@ -82,3 +83,14 @@ const pay = async (amount: number, callback?: any, description?: string) =>
   });
 
 export default pay;
+
+export const getOptionString = (options) => {
+  if (options) {
+    return "";
+  }
+  let variants: string[] = [];
+  for (const [key, value] of Object.entries(options)) {
+    variants.push(`${capitalize(key.replace("_", ""))}: ${value}`);
+  }
+  return variants.join(". ");
+};

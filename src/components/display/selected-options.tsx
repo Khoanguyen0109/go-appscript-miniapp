@@ -9,6 +9,7 @@ export const DisplaySelectedOptions: FC<{
   options: SelectedOptions;
 }> = ({ children, options }) => {
   const description = useMemo(() => {
+    console.log('options', options)
     if (!options) {
       return "";
     }

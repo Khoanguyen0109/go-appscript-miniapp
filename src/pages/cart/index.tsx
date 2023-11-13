@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { Divider } from "components/divider";
-import { Header, Page } from "zmp-ui";
+import { Header, Page, Text } from "zmp-ui";
 import { CartItems } from "./cart-items";
 import { CartPreview } from "./preview";
 import { TermsAndPolicies } from "./term-and-policies";
@@ -14,8 +14,9 @@ const CartPage: FC = () => {
   const cart = useRecoilValue(cartState);
 
   return (
-    <Page className="flex flex-col">
-      <Header title="Giỏ hàng" showBackIcon={false} />
+    <Page className="flex flex-col bg-background">
+      <Header className="text-center" title="Giỏ hàng" showBackIcon={false} />
+      <Text className="px-4 text-md font-bold">Chi tiết đơn hàng</Text>
       <CartItems cart={cart} disableClick={false} />
       {cart.length > 0 && <Delivery />}
       {/* <Delivery /> */}

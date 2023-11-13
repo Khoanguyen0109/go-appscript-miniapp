@@ -39,7 +39,6 @@ export const CartPreview: FC = () => {
 
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
 
-  console.log("cart", cart);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
   const callBackPayment = async (data) => {

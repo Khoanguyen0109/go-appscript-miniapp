@@ -95,6 +95,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
             });
           } else {
             res = res.concat({
+              selected: true,
               product,
               options,
               quantity,

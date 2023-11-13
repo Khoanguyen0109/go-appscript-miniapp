@@ -5,7 +5,7 @@ import { followOA } from "zmp-sdk";
 import { OA_ID } from "enviroment";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
-
+import Success from "assets/success.png";
 const PaymentSuccess: FC = () => {
   const navigate = useNavigate();
   const backHome = () => {
@@ -24,16 +24,12 @@ const PaymentSuccess: FC = () => {
   };
   return (
     <Page className="flex flex-col">
-      <Header title="Xác nhận" showBackIcon={false} />
       <div className="flex flex-1 flex-col justify-center align-middle p-10">
-        <Text.Header className="mb-4 text-center">
+        <img src={Success} />
+        <Text.Header className="mb-4 text-center mt-4 font-bold text-lg">
           Đặt hàng thành công
         </Text.Header>
-        <Icon
-          icon="zi-check-circle"
-          size={50}
-          className="mx-auto text-green mb-10"
-        />
+      
         <Button variant="primary" onClick={onClick}>
           Tiếp tục
         </Button>

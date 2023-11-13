@@ -40,10 +40,21 @@ function ProductDetail({}: Props) {
         <Text size="xLarge" className=" mt-2 pb-2 text-blue-500 font-bold">
           <DisplayPrice>{productDetail.price}</DisplayPrice>
         </Text>
-        <Text.Header className="text-md mt-5 font-bold">
+        <Text.Header className="text-md mt-5 font-bold mb-4">
           Mô tả sản phẩm
         </Text.Header>
-        <Text className="mt-3">{productDetail.desc}</Text>
+        {productDetail.desc.indexOf("</") !== -1 ? (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: productDetail.desc.replace(
+                /(<? *script)/gi,
+                "illegalscript"
+              ),
+            }}
+          ></div>
+        ) : (
+          productDetail.desc
+        )}
       </Box>
       <Divider size={32} className="flex-1" />
 
@@ -51,12 +62,21 @@ function ProductDetail({}: Props) {
         <ProductPicker product={productDetail}>
           {({ open }) => (
             <>
-              <Button className="w-full" onClick={() => open()}>
+              <Button
+                style={{ borderColor: "#006af5ƒ" }}
+                className="w-full border border-solid"
+                variant="secondary"
+                onClick={() => open()}
+              >
                 Thêm vào giỏ hàng
               </Button>
             </>
           )}
         </ProductPicker>
+
+        <Button className="w-full !border" onClick={() => open()}>
+          Mua ngay
+        </Button>
       </Box>
     </Page>
   );

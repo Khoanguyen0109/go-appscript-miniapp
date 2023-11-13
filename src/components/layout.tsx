@@ -19,6 +19,7 @@ import ProductDetail from "pages/product/product-detail";
 import NotFound from "pages/error/not-found";
 import UserAddress from "pages/user/user-address";
 import AddUserAddress from "pages/user/add-user-address";
+import OpenChat from "pages/chat";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -43,6 +44,8 @@ export const Layout: FC = () => {
           <Route path="/notification" element={<NotificationPage />}></Route>
           <Route path="/cart" element={<CartPage />}></Route>
           <Route path="/profile" element={<ProfilePage />}></Route>
+          <Route path="/openChat" element={<OpenChat />}></Route>
+
           <Route
             path={ROUTES.PRODUCT_DETAIL(":id")}
             element={<ProductDetail />}

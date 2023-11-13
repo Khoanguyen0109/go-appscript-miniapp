@@ -4,16 +4,23 @@ import { Box, Button, Icon, Text } from "zmp-ui";
 export const QuantityPicker: FC<{
   value: number;
   onChange: (quantity: number) => void;
-}> = ({ value, onChange }) => {
+  noTitle?: boolean;
+}> = ({ value, onChange, noTitle }) => {
   return (
     <Box flex className=" rounded-full items-center justify-between p-[6px]">
-      <Text.Title size="small" className="font-bold mr-3">
-        Số lượng: {value}
-      </Text.Title>
-      <Box flex className="w-1/3 justify-around">
+      {!noTitle && (
+        <Text.Title size="small" className="font-bold mr-3">
+          Số lượng
+        </Text.Title>
+      )}
+      <Box flex className="w-2/3 justify-around">
         <Button
           disabled={value < 1}
-          onClick={() => onChange(value - 1)}
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log('first')
+            onChange(value - 1);
+          }}
           variant="secondary"
           type="neutral"
           size="small"
@@ -36,7 +43,10 @@ export const QuantityPicker: FC<{
         </Box>
         <Button
           size="small"
-          onClick={() => onChange(value + 1)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(value + 1);
+          }}
           variant="secondary"
           type="neutral"
           icon={<Icon icon="zi-plus" />}

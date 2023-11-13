@@ -76,7 +76,12 @@ export const totalQuantityState = selector({
   key: "totalQuantity",
   get: ({ get }) => {
     const cart = get(cartState);
-    return cart.reduce((total, item) => total + item.quantity, 0);
+    return cart.reduce((total, item) => {
+      if (!item.selected) {
+        return total;
+      }
+      return total + item.quantity;
+    }, 0);
   },
 });
 
@@ -84,11 +89,12 @@ export const totalPriceState = selector({
   key: "totalPrice",
   get: ({ get }) => {
     const cart = get(cartState);
-    return cart.reduce(
-      (total, item) =>
-        total + item.quantity * calcFinalPrice(item.product, item.options),
-      0
-    );
+    return cart.reduce((total, item) => {
+      if (!item.selected) {
+        return total;
+      }
+      return total + item.quantity * calcFinalPrice(item.product, item.options);
+    }, 0);
   },
 });
 

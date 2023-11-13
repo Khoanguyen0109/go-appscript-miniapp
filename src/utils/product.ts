@@ -85,7 +85,7 @@ const pay = async (amount: number, callback?: any, description?: string) =>
 export default pay;
 
 export const getOptionString = (options) => {
-  if (options) {
+  if (!options) {
     return "";
   }
   let variants: string[] = [];

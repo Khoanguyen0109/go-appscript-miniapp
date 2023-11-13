@@ -4,30 +4,47 @@ import { useLocation, useNavigate } from "react-router";
 import { MenuItem } from "types/menu";
 import { BottomNavigation, Icon } from "zmp-ui";
 import { CartIcon } from "./cart-icon";
-
+import { AiFillHome, AiOutlineHome } from "react-icons/ai";
+import {
+  BsFillCartFill,
+  BsCart,
+  BsFillChatFill,
+  BsChatDots,
+} from "react-icons/bs";
+import { BiUser, BiSolidUser } from "react-icons/bi";
+import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 const tabs: Record<string, MenuItem> = {
-  "/": {
-    label: "Trang chủ",
-    icon: <Icon icon="zi-home" />,
-  },
-  "/notification": {
-    label: "Thông báo",
-    icon: <Icon icon="zi-notif" />,
-  },
   "/cart": {
     label: "Giỏ hàng",
     icon: <CartIcon />,
-    activeIcon: <CartIcon active />,
+    activeIcon: <BsFillCartFill />,
+  },
+  "/notification": {
+    label: "Thông báo",
+    icon: <IoMdNotificationsOutline />,
+    activeIcon: <IoMdNotifications />,
+  },
+
+  "/": {
+    label: "Trang chủ",
+    icon: <AiOutlineHome />,
+    activeIcon: <AiFillHome />,
+  },
+  "/openChat": {
+    label: "Chat OA",
+    icon: <BsChatDots />,
+    activeIcon: <BsFillChatFill />,
   },
   "/profile": {
     label: "Cá nhân",
-    icon: <Icon icon="zi-user" />,
+    icon: <BiUser />,
+    activeIcon: <BiSolidUser />,
   },
 };
 
 export type TabKeys = keyof typeof tabs;
 
-export const NO_BOTTOM_NAVIGATION_PAGES = ["/search", "/category"];
+export const NO_BOTTOM_NAVIGATION_PAGES = ["/search", "/category", "/products"];
 
 export const Navigation: FC = () => {
   const [activeTab, setActiveTab] = useState<TabKeys>("/");
@@ -36,7 +53,10 @@ export const Navigation: FC = () => {
   const location = useLocation();
 
   const noBottomNav = useMemo(() => {
-    return NO_BOTTOM_NAVIGATION_PAGES.includes(location.pathname);
+    return NO_BOTTOM_NAVIGATION_PAGES.some((substring) =>
+      location.pathname.includes(substring)
+    );
+    // return NO_BOTTOM_NAVIGATION_PAGES.includes(location.pathname);
   }, [location]);
 
   if (noBottomNav || keyboardVisible) {

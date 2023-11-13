@@ -28,7 +28,7 @@ export const Delivery: FC = () => {
   };
   return (
     <Box className="space-y-3 px-4">
-      <Text.Header>Hình thức nhận hàng</Text.Header>
+      <Text className="text-md font-bold">Hình thức nhận hàng</Text>
 
       <ListRenderer
         items={[

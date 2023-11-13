@@ -53,10 +53,10 @@ function OrderDetail({}: Props) {
           <Icon icon="zi-location" className="my-auto mr-3" />
           <Box>
             <Text>Địa chỉ nhận hàng</Text>
-            <Text>{getAddress(detail?.address)}</Text>
-            {detail?.username && (
+            <Text className="font-semibold">{getAddress(detail?.address)}</Text>
+            {detail?.address && (
               <Text>
-                {detail?.username}, {detail?.user_phone}
+                {detail?.address.name} * {detail?.address.phone}
               </Text>
             )}
           </Box>
@@ -68,9 +68,9 @@ function OrderDetail({}: Props) {
       <CartItems cart={detail?.detail || []} />
       <Box className="px-4 pt-4">
         <Text.Title className="mb-4">Thông tin thanh toán</Text.Title>
-        <Box className="flex bg-background p-4 rounded-lg mb-3">
+        <Box className=" bg-background p-4 rounded-lg mb-3">
           <Text>Phương thức thanh toán</Text>
-          <Text>{detail?.payment_method}</Text>
+          <Text className="font-bold">{detail?.payment_method}</Text>
         </Box>
 
         {/* <Box className="flex bg-background mt-3 p-4 rounded-lg "> */}

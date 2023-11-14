@@ -6,12 +6,14 @@ import { useSetRecoilState } from "recoil";
 import { cartState } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
-import { isIdentical } from "utils/product";
+import { findVariant, isIdentical } from "utils/product";
 import { Box, Button, Icon, Text } from "zmp-ui";
 import { MultipleOptionPicker } from "./multiple-option-picker";
 import { QuantityPicker } from "./quantity-picker";
 import { SingleOptionPicker } from "./single-option-picker";
 import ProductVariant from "./component/product-variant";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "pages/route";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -19,7 +21,11 @@ export interface ProductPickerProps {
     options: SelectedOptions;
     quantity: number;
   };
-  children: (methods: { open: () => void; close: () => void }) => ReactNode;
+  children: (methods: {
+    open: () => void;
+    close: () => void;
+    openRedirect: () => void;
+  }) => ReactNode;
 }
 
 function getDefaultOptions(product?: Product) {
@@ -40,11 +46,12 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   product,
   selected,
 }) => {
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
   const setCart = useSetRecoilState(cartState);
-
+  const [isRedirect, setIsRedirect] = useState(false);
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -72,9 +79,11 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 item.product.id === product.id &&
                 isIdentical(item.options, options)
             )!;
+            const exitedInventories = findVariant(editing.product, options);
             res.splice(cart.indexOf(editing), 1, {
               ...editing,
               options,
+              inventory_id: exitedInventories?.id,
               quantity: existed ? existed.quantity + quantity : quantity,
             });
             if (existed) {
@@ -88,9 +97,11 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               item.product.id === product.id &&
               isIdentical(item.options, options)
           );
+          const exitedInventories = findVariant(product, options);
           if (existed) {
             res.splice(cart.indexOf(existed), 1, {
               ...existed,
+              inventory_id: exitedInventories?.id,
               quantity: existed.quantity + quantity,
             });
           } else {
@@ -98,6 +109,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               selected: true,
               product,
               options,
+              inventory_id: exitedInventories?.id,
               quantity,
             });
           }
@@ -106,12 +118,24 @@ export const ProductPicker: FC<ProductPickerProps> = ({
       });
     }
     setVisible(false);
+    setQuantity(1);
+    setOptions({});
+    if (isRedirect) {
+      navigate(ROUTES.CART);
+    }
   };
   return (
     <>
       {children({
+        openRedirect: () => {
+          setVisible(true);
+          setIsRedirect(true);
+        },
         open: () => setVisible(true),
-        close: () => setVisible(false),
+        close: () => {
+          setVisible(false);
+          setIsRedirect(false);
+        },
       })}
       {createPortal(
         <Sheet visible={visible} onClose={() => setVisible(false)} autoHeight>
@@ -209,7 +233,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                     fullWidth
                     onClick={addToCart}
                   >
-                    Thêm vào giỏ hàng
+                    {isRedirect ? "Mua ngay" : "Thêm vào giỏ hàng"}
                   </Button>
                 )}
               </Box>

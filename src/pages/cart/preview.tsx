@@ -1,7 +1,7 @@
 import { axiosInstance } from "api/instance";
 import { DisplayPrice } from "components/display/price";
 import { ROUTES } from "pages/route";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
@@ -26,6 +26,7 @@ export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const cart = useRecoilValue(cartState);
   const resetCart = useResetRecoilState(cartState);
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
@@ -36,11 +37,19 @@ export const CartPreview: FC = () => {
   const [paymentMethod, setPaymentMethod] = useRecoilState(
     selectedPaymentMethod
   );
-
+  console.log("cart", cart);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
 
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
+  const timmerId = useRef();
 
+  useEffect(
+    () => () => {
+      closeSnackbar();
+      clearInterval(timmerId.current);
+    },
+    []
+  );
   const callBackPayment = async (data) => {
     try {
       if (!address?.id) {
@@ -48,7 +57,7 @@ export const CartPreview: FC = () => {
           text: "Vui lòng chọn địa chỉ giao hàng",
           type: "error",
           icon: true,
-          duration: 3000,
+          duration: 1000,
         });
       }
       if (!paymentMethod) {
@@ -56,7 +65,7 @@ export const CartPreview: FC = () => {
           text: "Vui lòng chọn  phương thức thanh toán",
           type: "error",
           icon: true,
-          duration: 3000,
+          duration: 1000,
         });
       }
       const res = await axiosInstance.post("/orders", {
@@ -64,6 +73,7 @@ export const CartPreview: FC = () => {
         user: { ...user, phone },
         items: cart.reduce((acc, value) => {
           acc.push({
+            inventory_id: value.inventory_id,
             product_id: value.product.id,
             name: value.product.name,
             thumbnail: value.product.thumbnail,
@@ -79,6 +89,9 @@ export const CartPreview: FC = () => {
         orderId: data?.orderId || "",
         total: totalPrice,
       });
+      setAddressSelected(null)
+      setPaymentMethod(null)
+      setNote('')
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
     } catch (error) {

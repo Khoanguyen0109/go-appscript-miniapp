@@ -4,9 +4,10 @@ import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
 
-export function calcFinalPrice(product: Product, options?: SelectedOptions) {
-  let finalPrice = product.price;
-  const findVariant = product?.inventories?.find((item) => {
+export const findVariant = (product, options) => {
+  console.log('product', product)
+  console.log('options', options)
+  return product?.inventories?.find((item) => {
     const object = chain(item)
       .omit([
         "id",
@@ -22,11 +23,15 @@ export function calcFinalPrice(product: Product, options?: SelectedOptions) {
       ])
       .omitBy((value) => value === "")
       .value();
-    console.log("object", object);
     return isEqual(object, options);
   });
-  if (findVariant) {
-    return findVariant.price;
+};
+
+export function calcFinalPrice(product: Product, options?: SelectedOptions) {
+  let finalPrice = product.price;
+  const variant = findVariant(product, options);
+  if (variant) {
+    return variant.price;
   }
 
   return finalPrice;

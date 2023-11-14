@@ -40,9 +40,12 @@ function OrderItem({ item }: Props) {
           <Text className="font-bold text-md mb-1">
             {item?.thumbnail_name || "Áo thun đặc biệt"}
           </Text>
-          <Text className=" text-md">
-            <DisplayPrice>{item?.thumbnail_price || "4000000"}</DisplayPrice>
-          </Text>
+          <Box className="flex justify-between">
+            <Text className=" text-md">
+              <DisplayPrice>{item?.thumbnail_price || "4000000"}</DisplayPrice>
+            </Text>
+            <Text className="text-gray">{item.item_quantity} sản phẩm</Text>
+          </Box>
         </Box>
       </Box>
     </Box>

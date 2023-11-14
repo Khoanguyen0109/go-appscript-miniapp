@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { useRecoilValue } from "recoil";
-import { cartState } from "state";
+import { cartState, totalQuantityState } from "state";
 import { Box, Text } from "zmp-ui";
 
 export const CartIcon: FC<{ active?: boolean }> = ({ active }) => {
-  const cart = useRecoilValue(cartState);
+  const quantity = useRecoilValue(totalQuantityState);
 
   return (
     <Box className="relative">
@@ -20,13 +20,13 @@ export const CartIcon: FC<{ active?: boolean }> = ({ active }) => {
           fill={active ? "var(--zmp-primary-color)" : "#767a7f"}
         />
       </svg>
-      {cart.length > 0 && (
+      {quantity > 0 && (
         <Box className="absolute -right-2 -top-[2px] p-[2px] bg-background rounded-full">
           <Text
             className="w-4 h-4 bg-red-500 rounded-full text-white"
             size="xxxxSmall"
           >
-            {cart.length > 9 ? "9+" : cart.length}
+            {quantity> 9 ? "9+" : quantity}
           </Text>
         </Box>
       )}

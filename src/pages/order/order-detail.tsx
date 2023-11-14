@@ -116,6 +116,7 @@ function OrderDetail({}: Props) {
           renderRight={(item) => item.right}
         />
       </Box>
+      <Box className="mb-4"/>
       {/* </Box> */}
       {/* <Divider size={32} className="flex-1" />
 

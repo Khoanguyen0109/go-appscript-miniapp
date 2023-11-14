@@ -84,6 +84,7 @@ export const CartItems: FC<TCartItemProps> = ({
       return res;
     });
   };
+  const imgSize = disableClick ? "w-12 h-12" : "w-24 h-24";
   return (
     <Box className="pb-3 px-4 mt-3">
       {cart.length > 0 ? (
@@ -92,41 +93,40 @@ export const CartItems: FC<TCartItemProps> = ({
             <ListRenderer
               items={cart}
               limit={3}
-              // onClick={(item) => {
-              //   if (disableClick) {
-              //     return;
-              //   }
-              //   setEditingItem(item);
-              //   open();
-              // }}
               renderKey={({ product, options, quantity }) =>
                 JSON.stringify({ product: product.id, options, quantity })
               }
-              renderLeft={(item) => (
-                <Checkbox
-                  size="small"
-                  value=""
-                  checked={item.selected}
-                  onChange={() => onCheckProduct(item)}
-                />
-              )}
+              onClick={(item) => {
+                if (disableClick) {
+                  return;
+                }
+                setEditingItem(item);
+                open();
+              }}
+              renderLeft={(item) =>
+                !disableClick ? (
+                  <Box onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      size="small"
+                      value=""
+                      checked={item.selected}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        onCheckProduct(item);
+                      }}
+                    />
+                  </Box>
+                ) : (
+                  <></>
+                )
+              }
               renderRight={(item) => (
-                <Box
-                  flex
-                  className=""
-                  onClick={(item) => {
-                    if (disableClick) {
-                      return;
-                    }
-                    setEditingItem(item);
-                    open();
-                  }}
-                >
+                <Box flex className="">
                   <img
-                    className="w-24 h-24 max-w-none max-h-none rounded-lg"
+                    className={`${imgSize} max-w-none max-h-none rounded-lg`}
                     src={item.product.thumbnail}
                   />
-                  <Box className="space-y-1 ml-2 flex-1">
+                  <Box className="space-y-1 ml-4 flex-1">
                     <Box>
                       <Box className="mb-1">
                         <Text size="small">{item.product.name}</Text>
@@ -149,19 +149,32 @@ export const CartItems: FC<TCartItemProps> = ({
                           )}
                         </Text>
                       </Box>
-                      <QuantityPicker
-                        value={item.quantity}
-                        onChange={(value) => onChangeQuantity(item, value)}
-                        noTitle={true}
-                      />
+                      {!disableClick && (
+                        <QuantityPicker
+                          value={item.quantity}
+                          onChange={(value) => onChangeQuantity(item, value)}
+                          noTitle={true}
+                        />
+                      )}
                     </Box>
                   </Box>
-                  {/* <Text className="text-primary font-medium" size="small">
-                    x{item.quantity}
-                  </Text> */}
-                  <Box className="cursor-pointer" onClick={() => {onRemoveProduct(item)}}>
-                    <Icon icon="zi-close-circle" />
-                  </Box>
+                  {disableClick && (
+                    <Text className="text-black font-medium" size="small">
+                      x{item.quantity}
+                    </Text>
+                  )}
+
+                  {!disableClick && (
+                    <Box
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onRemoveProduct(item);
+                      }}
+                    >
+                      <Icon icon="zi-close-circle" />
+                    </Box>
+                  )}
                 </Box>
               )}
             />

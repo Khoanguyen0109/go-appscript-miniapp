@@ -5,8 +5,9 @@ export type SelectedOptions = Record<string, string | string[]>;
 export interface CartItem {
   product: Product;
   options: SelectedOptions;
+  inventory_id?: string;
   quantity: number;
-  selected: boolean
+  selected: boolean;
 }
 
 export type Cart = CartItem[];

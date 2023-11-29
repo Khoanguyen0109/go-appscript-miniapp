@@ -16,7 +16,7 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({
 }) => {
   return (
     <Box
-      className={`bg-background ${padding === "all" ? "p-4 space-y-4" : ""} ${
+      className={`bg-background ${padding === "all" ? " py-2 px-4 space-y-4" : ""} ${
         padding === "title-only" ? "py-4 space-y-4" : ""
       }`}
       {...props}

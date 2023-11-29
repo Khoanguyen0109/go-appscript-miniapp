@@ -7,7 +7,7 @@ import milkteaIcon from "static/category-milktea.svg";
 import drinksIcon from "static/category-drinks.svg";
 import breadIcon from "static/category-bread.svg";
 import juiceIcon from "static/category-juice.svg";
-import logo from "static/logo.png";
+import logo from "static/logo.jpg";
 import { Category, CategoryId } from "types/category";
 import { Product, Variant } from "types/product";
 import { Cart } from "types/cart";
@@ -111,7 +111,6 @@ export const orderState = selector({
     const res = await axiosInstance.get(`/orders/${user.id}`, {
       params: { limit: 50 },
     });
-    console.log("res.data.data", res.data.data);
     return res.data?.data || [];
   },
 });
@@ -326,5 +325,14 @@ export const phoneState = selector<string | boolean>({
       return "0337076898";
     }
     return false;
+  },
+});
+
+export const bankState = selector({
+  key: "bank",
+  get: async ({ get }) => {
+    const res = await axiosInstance.get("/bank-info");
+
+    return res.data.data;
   },
 });

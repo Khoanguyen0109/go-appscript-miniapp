@@ -37,7 +37,6 @@ export const CartPreview: FC = () => {
   const [paymentMethod, setPaymentMethod] = useRecoilState(
     selectedPaymentMethod
   );
-  console.log("cart", cart);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
 
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
@@ -89,10 +88,10 @@ export const CartPreview: FC = () => {
         orderId: data?.orderId || "",
         total: totalPrice,
       });
-      setAddressSelected(null)
-      setPaymentMethod(null)
-      setNote('')
-      resetCart();
+      // setAddressSelected(null)
+      // setPaymentMethod(null)
+      // setNote('')
+      // resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
     } catch (error) {
     } finally {

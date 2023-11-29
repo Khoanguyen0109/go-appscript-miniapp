@@ -24,7 +24,7 @@ function OrderStatus({ status }: Props) {
         };
       case EOrderStatus.DELIVERED:
         return {
-          title: "Đã vận chuyển",
+          title: "Đã giao hàng",
           backgroundColor: "#D7FAE0",
           color: "#007D3A",
           icon: "zi-check-circle",

@@ -1,13 +1,14 @@
-import React from 'react'
+import React from "react";
 import ReactLoading from "react-loading";
 
-type Props = {}
+type Props = {};
 
 function Loading({}: Props) {
   return (
-    <div className='absolute left-24 top-0'>
+    <div className="absolute left-24 top-0">
       <ReactLoading type="bubbles" color={"fff"} />
-    </div>  )
+    </div>
+  );
 }
 
-export default Loading
+export default Loading;

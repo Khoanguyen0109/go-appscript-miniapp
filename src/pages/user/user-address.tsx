@@ -13,7 +13,6 @@ type Props = {};
 function UserAddress({}: Props) {
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
-  console.log("searchParams", searchParams.get("routeFrom"));
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const addresses = useRecoilValue(addressesState);
   const [addressCart, setAddressSelectedCart] =

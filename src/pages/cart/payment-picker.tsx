@@ -23,7 +23,6 @@ function PaymentPicker({}: Props) {
   const [paymentMethod, setPaymentMethod] = useRecoilState(
     selectedPaymentMethod
   );
-  console.log("visible", visible);
   if (!paymentMethod && !visible) {
     return <RequestPayment onClick={() => setVisible(true)} />;
   }

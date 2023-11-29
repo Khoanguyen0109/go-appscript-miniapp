@@ -19,7 +19,6 @@ const CartPage: FC = () => {
       <Text className="px-4 text-md font-bold">Chi tiết đơn hàng</Text>
       <CartItems cart={cart} disableClick={false} />
       {cart.length > 0 && <Delivery />}
-      {/* <Delivery /> */}
       <Divider size={12} />
       <TermsAndPolicies />
       <Divider size={32} className="flex-1" />

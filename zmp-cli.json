@@ -1,6 +1,6 @@
 {
   "cwd": "/Users/lap15182-local/Desktop/zalo/zaui-coffee",
-  "name": "Go Appscript ECommerce",
+  "name": "AnTam Shop",
   "framework": "react-typescript",
   "cssPreProcessor": "scss",
   "includeTailwind": true,

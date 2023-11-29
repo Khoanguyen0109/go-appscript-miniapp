@@ -18,7 +18,6 @@ export const QuantityPicker: FC<{
           disabled={value < 1}
           onClick={(e) => {
             e.stopPropagation();
-            console.log('first')
             onChange(value - 1);
           }}
           variant="secondary"

@@ -1,5 +1,6 @@
 import { ProductItem } from "components/product/item";
-import React, { FC, Suspense } from "react";
+import React, { FC, Suspense, useEffect, useRef, useState } from "react";
+import ReactPaginate from "react-paginate";
 import { useRecoilValue } from "recoil";
 import {
   categoriesState,
@@ -29,6 +30,9 @@ const CategoryPicker: FC = () => {
 };
 
 const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
+  const itemsPerPage = 10;
+  const errorRef = useRef(null);
+
   const productsByCategory = useRecoilValue(
     productsByCategoryState(categoryId)
   );
@@ -42,11 +46,49 @@ const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
       </Box>
     );
   }
+
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = productsByCategory.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(productsByCategory.length / itemsPerPage);
+
+  const handlePageClick = (event) => {
+    const newOffset =
+      (event.selected * itemsPerPage) % productsByCategory.length;
+
+    setItemOffset(newOffset);
+    errorRef.current.scrollIntoView();
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentItems]);
   return (
-    <Box className="bg-background grid grid-cols-2 gap-4 p-4">
-      {productsByCategory.map((product) => (
+    <Box ref={errorRef} className="bg-background grid grid-cols-2 gap-4 p-4">
+      {currentItems.map((product) => (
         <ProductItem key={product.id} product={product} />
       ))}
+      <Box>
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel=">"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={2}
+          pageCount={pageCount}
+          previousLabel="<"
+          renderOnZeroPageCount={null}
+          pageClassName="page-item"
+          pageLinkClassName="page-link"
+          previousClassName="page-item"
+          previousLinkClassName="page-link"
+          nextClassName="page-item"
+          nextLinkClassName="page-link"
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          containerClassName="pagination"
+          activeClassName="active"
+        />
+      </Box>
     </Box>
   );
 };

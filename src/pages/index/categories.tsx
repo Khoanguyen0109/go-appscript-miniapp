@@ -20,7 +20,6 @@ export const Categories: FC = () => {
   const fetchCategories = async () => {
     try {
       const res = await axiosInstance.get("/categories");
-      console.log("res", res);
       setCategories(res.data.data);
     } catch (error) {}
   };
@@ -30,7 +29,7 @@ export const Categories: FC = () => {
   }, []);
 
   return (
-    <Box className="p-4 max-w-full overflow-x-auto">
+    <Box className="py-2 px-4 max-w-full overflow-x-auto">
       <Text className="font-bold text-lg">Tất cả mặt hàng</Text>
       <Box className="bg-white  w-full mt-4 flex overflow-x-auto">
         {categories.map((category, i) => (

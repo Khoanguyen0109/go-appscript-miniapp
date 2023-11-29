@@ -49,7 +49,6 @@ function AddUserAddress({}: Props) {
     formState: { errors },
   } = useForm({ mode: "onChange", defaultValues: addressSelected || { type: 'home'} });
   const onSubmit = async (value) => {
-    console.log('value', value)
     try {
       setLoading(true);
       const res = await axiosInstance.post(`users/${user.id}/address`, {

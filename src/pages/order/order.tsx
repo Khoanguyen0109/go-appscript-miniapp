@@ -71,7 +71,7 @@ function Order({}: Props) {
         <Tabs.Tab key="delivering" label="Đang vận chuyển">
           <OrderList orders={orderDelivering} />
         </Tabs.Tab>
-        <Tabs.Tab key="delivered" label="Đã vận chuyển">
+        <Tabs.Tab key="delivered" label="Đã giao hàng">
           <OrderList orders={orderDelivered} />
         </Tabs.Tab>
         <Tabs.Tab key="cancel" label="Đã huỷ">

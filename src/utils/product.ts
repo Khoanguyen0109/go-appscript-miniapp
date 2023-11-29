@@ -5,8 +5,7 @@ import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
 
 export const findVariant = (product, options) => {
-  console.log('product', product)
-  console.log('options', options)
+
   return product?.inventories?.find((item) => {
     const object = chain(item)
       .omit([
@@ -78,7 +77,6 @@ const pay = async (amount: number, callback?: any, description?: string) =>
     item: [],
     amount: amount,
     success: (data) => {
-      console.log("Payment success: ", data);
       callback(data);
       return data;
     },

@@ -91,6 +91,7 @@ export const CartItems: FC<TCartItemProps> = ({
         <ProductPicker product={editingItem?.product} selected={editingItem}>
           {({ open }) => (
             <ListRenderer
+              padding={0}
               items={cart}
               limit={3}
               renderKey={({ product, options, quantity }) =>

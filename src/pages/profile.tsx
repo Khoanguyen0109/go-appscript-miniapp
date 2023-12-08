@@ -1,10 +1,25 @@
-import React, { FC } from "react";
-import { Box, Header, Icon, Page, Text } from "zmp-ui";
+import React, { FC, useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Header,
+  Icon,
+  Input,
+  Modal,
+  Page,
+  Select,
+  Text,
+  useSnackbar,
+} from "zmp-ui";
 import subscriptionDecor from "static/subscription-decor.svg";
 import { ListRenderer } from "components/list-renderer";
 import { useToBeImplemented } from "hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "./route";
+import { axiosInstance } from "api/instance";
+import { useRecoilValue } from "recoil";
+import { userState } from "state";
+
+const { OtpGroup, Option } = Select;
 
 const Subscription: FC = () => {
   const onClick = useToBeImplemented();
@@ -33,9 +48,9 @@ const Personal: FC = () => {
     navigate(ROUTES.ORDER);
   };
 
-  const navigateToUserAddress = () =>{
-    navigate(ROUTES.USER_ADDRESS)
-  }
+  const navigateToUserAddress = () => {
+    navigate(ROUTES.USER_ADDRESS);
+  };
   return (
     <Box className="m-4">
       <ListRenderer
@@ -70,7 +85,7 @@ const Personal: FC = () => {
             right: (
               <Box flex onClick={navigateToUserAddress}>
                 <Text.Header className="flex-1 items-center font-normal">
-                  Địa chỉ 
+                  Địa chỉ
                 </Text.Header>
                 <Icon icon="zi-chevron-right" />
               </Box>
@@ -86,28 +101,74 @@ const Personal: FC = () => {
 
 const Other: FC = () => {
   const onClick = useToBeImplemented();
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [issue, setIssue] = useState("Vấn đề về đơn hàng");
+  const [note, setNote] = useState("");
+  const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
+  const user = useRecoilValue(userState);
 
+  const onChange = (e) => {
+    setNote(e.target.value);
+  };
+
+  const timmerId = useRef();
+
+  useEffect(
+    () => () => {
+      closeSnackbar();
+      clearInterval(timmerId.current);
+    },
+    []
+  );
+
+  const submit = async () => {
+    try {
+      if (note === "") {
+        return openSnackbar({
+          text: "Vui lòng nhập ghi chú",
+          type: "error",
+          icon: true,
+          duration: 1000,
+        });
+      }
+      const res = await axiosInstance.post(`/users/${user.id}/feedback`, {
+        note,
+        issue,
+      });
+      // if (res) {
+      setNote("");
+      setDialogVisible(false);
+      return openSnackbar({
+        text: "Góp ý của bạn đã được gửi đi",
+        type: "success",
+        icon: true,
+        duration: 2000,
+      });
+      // }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return (
     <Box className="m-4">
       <ListRenderer
         title="Khác"
-        onClick={onClick}
         items={[
-          {
-            left: <Icon icon="zi-star" />,
-            right: (
-              <Box flex>
-                <Text.Header className="flex-1 items-center font-normal">
-                  Đánh giá đơn hàng
-                </Text.Header>
-                <Icon icon="zi-chevron-right" />
-              </Box>
-            ),
-          },
+          // {
+          //   left: <Icon icon="zi-star" />,
+          //   right: (
+          //     <Box flex onClick={onClick}>
+          //       <Text.Header className="flex-1 items-center font-normal">
+          //         Đánh giá đơn hàng
+          //       </Text.Header>
+          //       <Icon icon="zi-chevron-right" />
+          //     </Box>
+          //   ),
+          // },
           {
             left: <Icon icon="zi-call" />,
             right: (
-              <Box flex>
+              <Box flex onClick={() => setDialogVisible(true)}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Liên hệ và góp ý
                 </Text.Header>
@@ -119,6 +180,42 @@ const Other: FC = () => {
         renderLeft={(item) => item.left}
         renderRight={(item) => item.right}
       />
+      <Modal
+        visible={dialogVisible}
+        title="Liện hệ & góp ý"
+        actions={[
+          {
+            text: "Huỷ",
+            onClick: () => {
+              setNote("");
+              setDialogVisible(false);
+            },
+          },
+          {
+            text: "Gửi",
+            onClick: () => submit(),
+            highLight: true,
+          },
+        ]}
+      >
+        <Select
+          value={issue}
+          placeholder="Vấn đề cần góp ý"
+          onChange={(value) => setIssue(value)}
+          closeOnSelect
+        >
+          <Option value="Vấn đề về đơn hàng" title="Vấn đề về đơn hàng" />
+          <Option value="Vấn đề về sản phẩm" title="Vấn đề về sản phẩm" />
+          <Option value="Vấn đề về dịch vụ" title="Vấn đề về dịch vụ" />
+          <Option value="Khác" title="Khác" />
+        </Select>
+        <Box className="mb-3" />
+        <Input.TextArea
+          helperText="Nội dung góp ý"
+          value={note}
+          onChange={onChange}
+        />
+      </Modal>
     </Box>
   );
 };

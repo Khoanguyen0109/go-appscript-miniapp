@@ -145,6 +145,21 @@ export const notificationsState = atom<Notification[]>({
   ],
 });
 
+export const newNotificationState = selector({
+  key: "newNotifications",
+  get: async ({ get }) => {
+    const { id } = get(userState);
+    const res = await axiosInstance.get(`users/${id}/notifications`);
+    return res.data.data;
+  },
+});
+
+export const notificationSelectedState = atom({
+  key: "notificationSelectedState",
+  default: null,
+});
+
+
 export const keywordState = atom({
   key: "keyword",
   default: "",

@@ -1,16 +1,19 @@
 import React from "react";
 import { TOrder } from "types/order";
-import { Box, Text } from "zmp-ui";
+import { Box, Button, Text } from "zmp-ui";
 import OrderStatus from "./order-status";
 import { DisplayPrice } from "components/display/price";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
+import { EOrderStatus } from "constantsapp";
+import { Divider } from "components/divider";
 
 type Props = {
   item: TOrder;
+  onOpenRating: (id: string) => void;
 };
 
-function OrderItem({ item }: Props) {
+function OrderItem({ item, onOpenRating }: Props) {
   const navigate = useNavigate();
   const onClick = () => {
     navigate(ROUTES.ORDER_DETAIL(item.id));
@@ -42,10 +45,24 @@ function OrderItem({ item }: Props) {
           </Text>
           <Box className="flex justify-between">
             <Text className=" text-md">
-              <DisplayPrice>{item?.thumbnail_price || "4000000"}</DisplayPrice>
+              <DisplayPrice>{item?.thumbnail_price || "0"}</DisplayPrice>
             </Text>
             <Text className="text-gray">{item.item_quantity} sản phẩm</Text>
           </Box>
+          <Divider size={32} className="border-b"/>
+          {item.status === EOrderStatus.DELIVERED && (
+            <Button
+              className="float-right -m-2 mt-2"
+              size="small"
+              variant="secondary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenRating(item.id);
+              }}
+            >
+              Đánh giá sản phẩm
+            </Button>
+          )}
         </Box>
       </Box>
     </Box>

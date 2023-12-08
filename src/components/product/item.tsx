@@ -31,7 +31,7 @@ export const ProductItem: FC<{ product: Product }> = ({ product }) => {
             />
           </Box>
           <Box className="pt-2 pb-4 px-2">
-            <Text className="font-semibold">{product.name}</Text>
+            <Text className="font-semibold text-sm">{product.name}</Text>
             <Box className=" mt-2 flex items justify-between">
               <Text
                 size="xLarge"

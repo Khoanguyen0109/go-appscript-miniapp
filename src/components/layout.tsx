@@ -20,6 +20,7 @@ import NotFound from "pages/error/not-found";
 import UserAddress from "pages/user/user-address";
 import AddUserAddress from "pages/user/add-user-address";
 import OpenChat from "pages/chat";
+import NotificationDetail from "pages/notification-detail";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -65,6 +66,10 @@ export const Layout: FC = () => {
           <Route
             path={ROUTES.USER_ADDRESS_ADD}
             element={<UserAddress />}
+          ></Route>
+              <Route
+            path={ROUTES.NOTIFICATION(":id")}
+            element={<NotificationDetail />}
           ></Route>
           <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
         </Routes>

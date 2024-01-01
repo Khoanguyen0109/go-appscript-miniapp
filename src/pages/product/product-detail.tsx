@@ -1,8 +1,7 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { productDetailState } from "./state";
-import { Box, Button, Header, Page, Swiper, Text } from "zmp-ui";
+import { productDetailState, selectedProductIdState } from "./state";
+import { Box, Button, Header, Page, Swiper, Text, useNavigate } from "zmp-ui";
 import { truncate } from "lodash";
 import { Banner } from "components/banner/banner";
 import { DisplayPrice } from "components/display/price";
@@ -22,23 +21,36 @@ import { openChat, openShareSheet } from "zmp-sdk";
 import { FaShare } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { OA_ID } from "enviroment";
+import Loading from "components/loading";
+import LoadingScreenOverLay from "components/loading-screen";
+import { axiosInstance } from "api/instance";
+import { useLocation, useParams } from "react-router-dom";
 
 type Props = {};
 
 function ProductDetail({}: Props) {
   const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
+  console.log("params", params);
+  const paramsSearch = new URLSearchParams(location.search);
   const cart = useRecoilValue(cartState);
-  const productDetail = useRecoilValue(productDetailState);
+  const queryParams = new URLSearchParams(window.location.search);
+  const env = queryParams.get("env");
+  const version = queryParams.get("version");
   const setCart = useSetRecoilState(cartState);
+  const [productDetail, setProductDetail] = useState();
+  console.log("productDetail", productDetail);
 
   const shareCurrentPage = async () => {
     try {
       const data = await openShareSheet({
-        type: "zmp",
+        type: "zmp_deep_link",
         data: {
           title: productDetail.name,
           description: productDetail?.desc_thumbnail || "",
           thumbnail: productDetail.thumbnail,
+          path: `${ROUTES.PRODUCT_DETAIL(params.id)}`,
         },
       });
     } catch (err) {
@@ -57,6 +69,24 @@ function ProductDetail({}: Props) {
       },
     });
   };
+
+  const getProductDetail = async () => {
+    try {
+      const res = await axiosInstance(`/products/${params?.id || 2}`);
+      setProductDetail(res.data.data);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    getProductDetail();
+  }, [params]);
+
+  if (!productDetail) {
+    return <LoadingScreenOverLay />;
+  }
+
   return (
     <Page className="flex flex-col bg-background">
       <Header
@@ -141,7 +171,10 @@ function ProductDetail({}: Props) {
               >
                 Thêm vào giỏ hàng
               </Button>
-              <Button className="w-full !border text-xs" onClick={() => openRedirect()}>
+              <Button
+                className="w-full !border text-xs"
+                onClick={() => openRedirect()}
+              >
                 Mua ngay
               </Button>
             </>

@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { productDetailState, selectedProductIdState } from "./state";
-import { Box, Button, Header, Page, Swiper, Text, useNavigate } from "zmp-ui";
+import {
+  Box,
+  Button,
+  Header,
+  ImageViewer,
+  Page,
+  Swiper,
+  Text,
+  useNavigate,
+} from "zmp-ui";
 import { truncate } from "lodash";
 import { Banner } from "components/banner/banner";
 import { DisplayPrice } from "components/display/price";
 import { Divider } from "components/divider";
 import { ProductPicker } from "components/product/picker";
-import { FinalPrice } from "components/display/final-price";
-import { DisplaySelectedOptions } from "components/display/selected-options";
-import { ListRenderer } from "components/list-renderer";
-import { Pagination } from "swiper";
-import { SwiperSlide } from "swiper/react";
-import { IoCartSharp } from "react-icons/io5";
+
 import { ROUTES } from "pages/route";
 import { CartIcon } from "components/cart-icon";
-import { cartState } from "state";
-import { isIdentical } from "utils/product";
+import { cartState, userState } from "state";
 import { openChat, openShareSheet } from "zmp-sdk";
 import { FaShare } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
@@ -25,6 +27,7 @@ import Loading from "components/loading";
 import LoadingScreenOverLay from "components/loading-screen";
 import { axiosInstance } from "api/instance";
 import { useLocation, useParams } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
 
 type Props = {};
 
@@ -32,16 +35,14 @@ function ProductDetail({}: Props) {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
-  console.log("params", params);
-  const paramsSearch = new URLSearchParams(location.search);
-  const cart = useRecoilValue(cartState);
-  const queryParams = new URLSearchParams(window.location.search);
-  const env = queryParams.get("env");
-  const version = queryParams.get("version");
-  const setCart = useSetRecoilState(cartState);
-  const [productDetail, setProductDetail] = useState();
-  console.log("productDetail", productDetail);
+  const user = useRecoilValue(userState);
 
+  const paramsSearch = new URLSearchParams(location.search);
+  const ctvId = paramsSearch.get("id_ctv_shared");
+  const cart = useRecoilValue(cartState);
+  const [productDetail, setProductDetail] = useState();
+  const [visible, setVisible] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const shareCurrentPage = async () => {
     try {
       const data = await openShareSheet({
@@ -50,7 +51,9 @@ function ProductDetail({}: Props) {
           title: productDetail.name,
           description: productDetail?.desc_thumbnail || "",
           thumbnail: productDetail.thumbnail,
-          path: `${ROUTES.PRODUCT_DETAIL(params.id)}`,
+          path: user?.ctv
+            ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${user.id}`
+            : `${ROUTES.PRODUCT_DETAIL(params.id)}`,
         },
       });
     } catch (err) {
@@ -79,21 +82,56 @@ function ProductDetail({}: Props) {
     }
   };
 
+  const saveCTV = async (ctvId) => {
+    try {
+      const res = await axiosInstance.put(`/users/${user.id}/ctv_update`, {
+        ctvId,
+        user,
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     getProductDetail();
   }, [params]);
 
+  useEffect(() => {
+    if (ctvId) {
+      saveCTV(ctvId);
+    }
+  }, []);
+
   if (!productDetail) {
     return <LoadingScreenOverLay />;
   }
-
   return (
     <Page className="flex flex-col bg-background">
       <Header
         title={truncate(productDetail.name, { length: 24 })}
         showBackIcon={true}
+        onBackClick={() => navigate(ROUTES.HOME)}
       />
-      <Banner banners={productDetail.image} />
+      {/* {open && (
+        <Box className=" absolute z-30 top-0 h-screen w-screen  flex justify-center items-center ">
+          <Box
+            className="absolute top-20 right-5 z-50 "
+            onClick={() => setOpen(false)}
+          >
+            <IoMdClose size={30} color="#000000" />
+          </Box>
+          <Box className="absolute top-0 w-full h-full bg-slate-400 opacity-90 "></Box>
+          <Banner banners={productDetail.image} padding={0} />
+        </Box>
+      )} */}
+      <ImageViewer
+        onClose={() => setVisible(false)}
+        activeIndex={activeIndex}
+        images={productDetail?.image.map((item) => ({ src: item.image }))}
+        visible={visible}
+      />
+      <Banner banners={productDetail.image} onClick={() => setVisible(true)} />
       {productDetail?.image.length > 1 && (
         <Box className="flex gap-4 p-4 overflow-x-auto">
           {productDetail.image.map((item) => (

@@ -9,5 +9,5 @@ export const ROUTES = {
   USER_ADDRESS_ADD: "/addresses-add",
   NOT_FOUND: "*",
   NOTIFICATION: (id) => `/notification/${id}`,
-
+  COMMISSION: "/commission",
 };

@@ -10,23 +10,11 @@ export const Categories: FC = () => {
   const categories = useRecoilValue(categoriesState);
   const navigate = useNavigate();
   const setSelectedCategoryId = useSetRecoilState(selectedCategoryIdState);
-  const setCategories = useSetRecoilState(categoriesState);
 
   const gotoCategory = (categoryId: string) => {
     setSelectedCategoryId(categoryId);
     navigate("/category");
   };
-
-  const fetchCategories = async () => {
-    try {
-      const res = await axiosInstance.get("/categories");
-      setCategories(res.data.data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
 
   return (
     <Box className="py-2 px-4 max-w-full overflow-x-auto">

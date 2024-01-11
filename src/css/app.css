@@ -1,8 +1,8 @@
 body {
   background-color: var(--zmp-background-color);
   -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .zaui-routes {
@@ -25,6 +25,9 @@ body {
 
 .zaui-input-affix-wrapper {
   margin: 0;
+}
+#right-buttons {
+  background-color: "none";
 }
 
 .border-inset {
@@ -110,7 +113,8 @@ body {
   margin: 0;
   background: rgba(255, 255, 255, 0.6);
 }
-.swiper-pagination.swiper-pagination-horizontal > .swiper-pagination-bullet.swiper-pagination-bullet-active {
+.swiper-pagination.swiper-pagination-horizontal
+  > .swiper-pagination-bullet.swiper-pagination-bullet-active {
   background: #ffffff;
   transform: scale(1.5);
 }
@@ -118,4 +122,4 @@ body {
 .zaui-bottom-navigation,
 .zaui-bottom-navigation-content {
   height: 70px;
-}/*# sourceMappingURL=app.css.map */
+} /*# sourceMappingURL=app.css.map */

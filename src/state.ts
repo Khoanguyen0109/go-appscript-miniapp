@@ -1,5 +1,5 @@
 import { atom, selector, selectorFamily } from "recoil";
-import { getLocation, getPhoneNumber, getUserInfo } from "zmp-sdk";
+import { getAppInfo, getLocation, getPhoneNumber, getUserInfo } from "zmp-sdk";
 import coffeeIcon from "static/category-coffee.svg";
 import matchaIcon from "static/category-matcha.svg";
 import foodIcon from "static/category-food.svg";
@@ -20,7 +20,23 @@ import { axiosInstance } from "api/instance";
 
 export const userState = selector({
   key: "user",
-  get: () => getUserInfo({}).then((res) => res.userInfo),
+  get: async () => {
+    const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
+
+    try {
+      const res = await axiosInstance.get(`/users/${zaloUser.id}`);
+      return { ...res.data.data[0], ...zaloUser };
+    } catch (error) {
+      return zaloUser;
+    }
+  },
+});
+
+export const appInfoState = selector({
+  key: "appInfo",
+  get: async () => {
+    return await getAppInfo({});
+  },
 });
 
 export const categoriesState = selector<Category[]>({
@@ -34,6 +50,13 @@ export const categoriesState = selector<Category[]>({
 
 const description = `There is a set of mock banners available <u>here</u> in three colours and in a range of standard banner sizes`;
 
+export const hotProductsState = selector<Product[]>({
+  key: "hotProducts",
+  get: async ({}) => {
+    const res = await axiosInstance.get("/products");
+    return res.data.hotProducts;
+  },
+});
 export const productsState = selector<Product[]>({
   key: "products",
   get: async () => {
@@ -158,7 +181,6 @@ export const notificationSelectedState = atom({
   key: "notificationSelectedState",
   default: null,
 });
-
 
 export const keywordState = atom({
   key: "keyword",

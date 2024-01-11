@@ -1,7 +1,11 @@
 import { ListRenderer } from "components/list-renderer";
 import { ROUTES } from "pages/route";
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
 import { addressesState } from "./state";
@@ -13,6 +17,7 @@ type Props = {};
 function UserAddress({}: Props) {
   const navigate = useNavigate();
   let [searchParams, setSearchParams] = useSearchParams();
+  const routeFrom = searchParams.get("routeFrom");
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const addresses = useRecoilValue(addressesState);
   const [addressCart, setAddressSelectedCart] =
@@ -23,17 +28,39 @@ function UserAddress({}: Props) {
   const onclickAddress = (item) => {
     if (isRouteFromCart) {
       setAddressSelectedCart(item);
-      navigate(-1);
+      navigate(ROUTES.CART);
     } else {
       setAddressSelected(item);
       navigate(ROUTES.USER_ADDRESS_ADD);
     }
   };
+
+  const onBack = () => {
+    if (isRouteFromCart) {
+      navigate(ROUTES.CART);
+    } else {
+      navigate(ROUTES.USER_ADDRESS_ADD);
+    }
+  };
+  
+  const navigateToAdd = () => {
+    setAddressSelected(null)
+    navigate({
+      pathname: ROUTES.USER_ADDRESS_ADD,
+      search: createSearchParams({
+        routeFrom: routeFrom ?? "",
+      }).toString(),
+    });
+  };
   return (
     <Page>
-      <Header title="Danh sách địa chỉ" showBackIcon={true} />
+      <Header
+        title="Danh sách địa chỉ"
+        showBackIcon={true}
+        onBackClick={onBack}
+      />
       <Box className="flex justify-end m-4">
-        <Button size="medium" onClick={() => navigate(ROUTES.USER_ADDRESS_ADD)}>
+        <Button size="medium" onClick={() => navigateToAdd()}>
           Thêm địa chỉ
         </Button>
       </Box>

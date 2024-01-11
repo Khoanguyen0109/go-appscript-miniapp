@@ -33,7 +33,6 @@ function NotificationDetail({}: Props) {
               >
                 <button className="flex items-center justify-between border-blue-500 border-2 rounded-lg py-2 px-4">
                   <Text className="mr-2 text-blue-500 font-semibold">
-                    {" "}
                     {notificationSelected.code_voucher}
                   </Text>{" "}
                   <FaCopy className="text-blue-500" />

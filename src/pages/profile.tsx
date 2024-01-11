@@ -18,13 +18,26 @@ import { ROUTES } from "./route";
 import { axiosInstance } from "api/instance";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
+import { openChat } from "zmp-sdk";
+import { OA_ID } from "enviroment";
 
 const { OtpGroup, Option } = Select;
 
 const Subscription: FC = () => {
   const onClick = useToBeImplemented();
+  const openChatScreen = () => {
+    openChat({
+      type: "oa",
+      id: OA_ID,
+      message: "CTV",
+      success: () => {},
+      fail: (err) => {
+        console.log("err", err);
+      },
+    });
+  };
   return (
-    <Box className="m-4" onClick={onClick}>
+    <Box className="m-4" onClick={openChatScreen}>
       <Box
         className="bg-green text-white rounded-xl p-4 space-y-2"
         style={{
@@ -33,8 +46,8 @@ const Subscription: FC = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <Text.Title className="font-bold">Đăng ký thành viên</Text.Title>
-        <Text size="xxSmall">Tích điểm đổi thưởng, mở rộng tiện ích</Text>
+        <Text.Title className="font-bold">Đăng ký Cộng tác viên</Text.Title>
+        {/* <Text size="xxSmall">Tích điểm đổi thưởng, mở rộng tiện ích</Text> */}
       </Box>
     </Box>
   );
@@ -100,13 +113,14 @@ const Personal: FC = () => {
 };
 
 const Other: FC = () => {
+  const navigate = useNavigate();
   const onClick = useToBeImplemented();
   const [dialogVisible, setDialogVisible] = useState(false);
   const [issue, setIssue] = useState("Vấn đề về đơn hàng");
   const [note, setNote] = useState("");
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const user = useRecoilValue(userState);
-
+  console.log("user", user);
   const onChange = (e) => {
     setNote(e.target.value);
   };
@@ -154,17 +168,22 @@ const Other: FC = () => {
       <ListRenderer
         title="Khác"
         items={[
-          // {
-          //   left: <Icon icon="zi-star" />,
-          //   right: (
-          //     <Box flex onClick={onClick}>
-          //       <Text.Header className="flex-1 items-center font-normal">
-          //         Đánh giá đơn hàng
-          //       </Text.Header>
-          //       <Icon icon="zi-chevron-right" />
-          //     </Box>
-          //   ),
-          // },
+          ...(user?.ctv
+            ? [
+                {
+                  left: <Icon icon="zi-star" />,
+                  right: (
+                    <Box flex onClick={() => navigate(ROUTES.COMMISSION)}>
+                      <Text.Header className="flex-1 items-center font-normal">
+                        Thống kê hoa hồng
+                      </Text.Header>
+                      <Icon icon="zi-chevron-right" />
+                    </Box>
+                  ),
+                },
+              ]
+            : []),
+
           {
             left: <Icon icon="zi-call" />,
             right: (
@@ -221,12 +240,13 @@ const Other: FC = () => {
 };
 
 const ProfilePage: FC = () => {
+  const user = useRecoilValue(userState);
   return (
     <Page>
       <Header showBackIcon={false} title="&nbsp;" />
-      <Subscription />
       <Personal />
       <Other />
+      {!user?.ctv && <Subscription />}
     </Page>
   );
 };

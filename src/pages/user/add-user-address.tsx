@@ -19,7 +19,11 @@ import {
 } from "./state";
 import AppInput from "components/customize/Input";
 import ErrorText from "components/customize/ErrorText";
-import { useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { ROUTES } from "pages/route";
 import { axiosInstance } from "api/instance";
 import { userState } from "state";
@@ -31,6 +35,9 @@ type Props = {};
 function AddUserAddress({}: Props) {
   const navigate = useNavigate();
   const provinces = useRecoilValue(provinceState);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const routeFrom = searchParams.get("routeFrom");
+
   const setProvinceId = useSetRecoilState(selectedProvinceId);
   const districts = useRecoilValue(districtState);
   const setDistrictId = useSetRecoilState(selectedDistrictId);
@@ -47,7 +54,19 @@ function AddUserAddress({}: Props) {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm({ mode: "onChange", defaultValues: addressSelected || { type: 'home'} });
+  } = useForm({
+    mode: "onChange",
+    defaultValues: addressSelected || { type: "home" },
+  });
+
+  const navigateBack = () => {
+    navigate({
+      pathname: ROUTES.USER_ADDRESS,
+      search: createSearchParams({
+        routeFrom: routeFrom ?? "",
+      }).toString(),
+    });
+  };
   const onSubmit = async (value) => {
     try {
       setLoading(true);
@@ -55,9 +74,12 @@ function AddUserAddress({}: Props) {
         ...value,
       });
       refresh();
-      navigate(ROUTES.USER_ADDRESS);
+      setProvinceId(null);
+      setWardId(null);
+      setDistrictId(null);
+      navigateBack();
     } catch (error) {
-      console.log('error', error)
+      console.log("error", error);
     }
   };
 

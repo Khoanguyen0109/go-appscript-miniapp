@@ -26,6 +26,7 @@ import Commission from "pages/user/commission";
 import { axiosInstance } from "api/instance";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { userState } from "state";
+import MemberInfo from "pages/user/member-info";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -103,6 +104,7 @@ export const Layout: FC = () => {
               element={<NotificationDetail />}
             ></Route>
             <Route path={ROUTES.COMMISSION} element={<Commission />}></Route>
+            <Route path={ROUTES.MEMBER_CARD} element={<MemberInfo />}></Route>
 
             <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
           </Routes>

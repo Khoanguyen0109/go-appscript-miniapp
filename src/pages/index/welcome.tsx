@@ -8,31 +8,38 @@ import { getConfig } from "utils/config";
 
 export const Welcome: FC = () => {
   const user = useRecoilValueLoadable(userState);
-
+  console.log("user", user);
   return (
-    <Header
-      className="app-header no-border pl-4 flex-none pb-[6px]"
-      showBackIcon={false}
-      title={
-        (
-          <Box flex alignItems="center" className="space-x-2">
-            <img
-              className="w-8 h-8 rounded-full border-inset"
-              src={getConfig((c) => c.template.headerLogo) || logo}
-            />
-            <Box>
-              <Text.Title size="small">{appConfig.app.title}</Text.Title>
-              {user.state === "hasValue" ? (
-                <Text size="xxSmall" className="text-gray">
-                  Welcome, {user.contents.name}!
-                </Text>
-              ) : (
-                <Text>...</Text>
-              )}
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <Header
+        className="app-header no-border pl-4 flex-none pb-[6px]"
+        showBackIcon={false}
+        title={
+          (
+            <Box flex alignItems="center" className="space-x-3">
+              <img
+                className="w-8 h-8 rounded-full border-inset"
+                src={getConfig((c) => c.template.headerLogo) || logo}
+              />
+              <Box>
+                {/* <Text.Title size="small">{appConfig.app.title}</Text.Title> */}
+                {user.state === "hasValue" ? (
+                  <>
+                    <Text size="small" className="text-slate-700">
+                      {user.contents.name}
+                    </Text>
+                    <Text size="xxSmall" className="text-slate-400">
+                      Thành viên {user.contents?.memberClass || "Mới"}
+                    </Text>
+                  </>
+                ) : (
+                  <Text>...</Text>
+                )}
+              </Box>
             </Box>
-          </Box>
-        ) as unknown as string
-      }
-    />
+          ) as unknown as string
+        }
+      />
+    </React.Suspense>
   );
 };

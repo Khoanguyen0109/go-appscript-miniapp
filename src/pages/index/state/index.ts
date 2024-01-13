@@ -12,3 +12,15 @@ export const bannerState = selector({
     }
   },
 });
+
+export const scoreRankState = selector({
+  key: "scoreRank",
+  get: async () => {
+    try {
+      const res = await axiosInstance.get("/banners/score");
+      return res.data?.data || [];
+    } catch (error) {
+      console.log("error", error);
+    }
+  },
+});

@@ -20,6 +20,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import { openChat } from "zmp-sdk";
 import { OA_ID } from "enviroment";
+import MemberCard from "./user/components/member-card";
 
 const { OtpGroup, Option } = Select;
 
@@ -241,9 +242,15 @@ const Other: FC = () => {
 
 const ProfilePage: FC = () => {
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
+
   return (
     <Page>
       <Header showBackIcon={false} title="&nbsp;" />
+      <Box onClick={() => navigate(ROUTES.MEMBER_CARD)}>
+        <MemberCard />
+      </Box>
+
       <Personal />
       <Other />
       {!user?.ctv && <Subscription />}

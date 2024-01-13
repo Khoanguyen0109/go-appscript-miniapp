@@ -10,4 +10,5 @@ export const ROUTES = {
   NOT_FOUND: "*",
   NOTIFICATION: (id) => `/notification/${id}`,
   COMMISSION: "/commission",
+  MEMBER_CARD: "/member-card",
 };

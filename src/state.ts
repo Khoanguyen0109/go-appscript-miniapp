@@ -22,13 +22,8 @@ export const userState = selector({
   key: "user",
   get: async () => {
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
-
-    try {
-      const res = await axiosInstance.get(`/users/${zaloUser.id}`);
-      return { ...res.data.data[0], ...zaloUser };
-    } catch (error) {
-      return zaloUser;
-    }
+    const res = await axiosInstance.get(`/users/${zaloUser.id}`);
+    return { ...res.data.data, ...zaloUser };
   },
 });
 

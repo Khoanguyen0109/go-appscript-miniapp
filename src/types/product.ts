@@ -37,7 +37,7 @@ export interface MultipleOptionVariant extends BaseVariant {
 export type Variant = SingleOptionVariant | MultipleOptionVariant;
 
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   thumbnail: string;
   image: string;
@@ -47,9 +47,11 @@ export interface Product {
   active: string;
   inventory_quantity: number;
   created_at: string;
-  inventories: TProductInventory[]
+  inventories: TProductInventory[];
+  banner_image?: string;
+  costdown?: string;
+  discount?: string;
+  rating?: number;
 }
 
-export type TProductInventory = {
-
-}
+export type TProductInventory = {};

@@ -6,7 +6,10 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   cartState,
+  discountState,
   phoneState,
+  preTotalPriceState,
+  shippingFeeState,
   totalPriceState,
   totalQuantityState,
   userState,
@@ -26,12 +29,15 @@ export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const cart = useRecoilValue(cartState);
   const resetCart = useResetRecoilState(cartState);
+  const [discount, setDiscount] = useRecoilState(discountState);
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
   const totalPrice = useRecoilValue(totalPriceState);
+  const preTotal = useRecoilValue(preTotalPriceState);
   const user = useRecoilValue(userState);
+
   const phone = useRecoilValue(phoneState);
   const [note, setNote] = useRecoilState(noteState);
   const [paymentMethod, setPaymentMethod] = useRecoilState(
@@ -87,6 +93,9 @@ export const CartPreview: FC = () => {
         addressId: address?.id,
         orderId: data?.orderId || "",
         total: totalPrice,
+        discount: discount?.discount || "",
+        voucher: discount?.voucher || "",
+        preTotal,
       });
       // setAddressSelected(null)
       // setPaymentMethod(null)

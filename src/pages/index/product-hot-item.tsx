@@ -7,6 +7,8 @@ import { ROUTES } from "pages/route";
 import { BsCartPlus, BsFire } from "react-icons/bs";
 import { DisplayPrice } from "components/display/price";
 import { ProductPicker } from "components/product/picker";
+import { useSetRecoilState } from "recoil";
+import { selectedProductState } from "pages/product/state";
 
 const { Title } = Text;
 
@@ -24,7 +26,10 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
   onClick,
 }) => {
   const navigate = useNavigate();
+  const setSelectedProductId = useSetRecoilState(selectedProductState);
+
   const viewDetail = () => {
+    setSelectedProductId(product);
     navigate(ROUTES.PRODUCT_DETAIL(product.id));
   };
   console.log("product", product);
@@ -37,7 +42,7 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
         >
           <div className="aspect-cinema relative h-24 w-full">
             <img
-              src={product?.banner_image || product.image}
+              src={product?.banner_image || product?.image[0].image}
               className="absolute w-full h-full object-contain"
             />
           </div>

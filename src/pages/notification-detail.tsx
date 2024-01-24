@@ -16,9 +16,9 @@ function NotificationDetail({}: Props) {
     <Page>
       <Header title={notificationSelected.title} showBackIcon={true} />
 
-      <Box className="h-full bg-blue-200 p-3">
-        <Box className="bg-background p-3 rounded-xl">
-          <Box className="flex justify-center mb-5" >
+      <Box className="h-full p-3">
+        <Box className="p-3 rounded-xl">
+          <Box className="flex justify-center mb-5">
             <img
               className="w-10 h-10 rounded-full"
               src={notificationSelected?.image || logo}
@@ -31,7 +31,7 @@ function NotificationDetail({}: Props) {
                 text={notificationSelected.code_voucher}
                 onCopy={() => this.setState({ copied: true })}
               >
-                <button className="flex items-center justify-between border-blue-500 border-2 rounded-lg py-2 px-4">
+                <button className="flex items-center justify-between border-blue-500 border-2 rounded-lg py-2 px-2">
                   <Text className="mr-2 text-blue-500 font-semibold">
                     {notificationSelected.code_voucher}
                   </Text>{" "}

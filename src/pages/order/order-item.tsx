@@ -24,14 +24,14 @@ function OrderItem({ item, onOpenRating }: Props) {
       className="rounded-lg bg-background m-4 cursor-pointer"
       onClick={onClick}
     >
-      <Box className="flex justify-between py-3 px-4 items-center">
+      <Box className="flex justify-between py-3 px-2 items-center">
         <OrderStatus status={item.status} />
         <Text className="text-slate-600">
           Ngày đặt: {item.created_at?.split(",")[0] || "20/12/2023"}
         </Text>
       </Box>
 
-      <Box className="px-4 pb-4 mt-2 flex ">
+      <Box className="px-2 pb-4 mt-2 flex ">
         <img
           className="w-12 h-12 object-cover rounded-2xl mr-3"
           src={

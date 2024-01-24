@@ -10,6 +10,7 @@ import ProductHotItemList from "./product-hot-item-list";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import { axiosInstance } from "api/instance";
+import { Categories } from "./categories";
 
 const HomePage: React.FunctionComponent = () => {
   return (
@@ -17,8 +18,9 @@ const HomePage: React.FunctionComponent = () => {
       <Welcome />
       <Box className="flex-1 overflow-auto mt-4">
         <BannerHome />
-        <ProductHotItemList />
+        <Categories />
 
+        <ProductHotItemList />
         <ProductList />
         <Divider />
       </Box>

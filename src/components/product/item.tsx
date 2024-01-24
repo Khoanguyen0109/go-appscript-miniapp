@@ -5,23 +5,23 @@ import { Box, Text } from "zmp-ui";
 import { ProductPicker } from "./picker";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { selectedProductIdState } from "pages/product/state";
 import { ROUTES } from "pages/route";
 import { BsCartPlus } from "react-icons/bs";
+import { selectedProductState } from "pages/product/state";
 export const ProductItem: FC<{ product: Product }> = ({ product }) => {
-  const setSelectedProductId = useSetRecoilState(selectedProductIdState);
+  const setSelectedProductId = useSetRecoilState(selectedProductState);
 
   const navigate = useNavigate();
-  const navigateProductDetail = (productId) => {
-    setSelectedProductId(productId);
-    navigate(ROUTES.PRODUCT_DETAIL(productId));
+  const navigateProductDetail = (product: Product) => {
+    setSelectedProductId(product);
+    navigate(ROUTES.PRODUCT_DETAIL(product.id));
   };
   return (
     <ProductPicker product={product}>
       {({ open }) => (
         <div
           className="space-y-2 shadow-xl rounded-xl"
-          onClick={() => navigateProductDetail(product.id)}
+          onClick={() => navigateProductDetail(product)}
         >
           <Box className="w-full aspect-square relative">
             <img

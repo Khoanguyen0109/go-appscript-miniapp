@@ -46,7 +46,7 @@ function OrderDetail({}: Props) {
     <Page className="flex flex-col">
       <Header title="Chi tiết đơn hàng" showBackIcon={true} />
       <OrderInfo item={detail} />
-      <Box className="px-4">
+      <Box className="px-2">
         <Text.Title className="mb-4">Thông tin địa chỉ</Text.Title>
 
         <Box className="flex bg-background p-4 rounded-lg ">
@@ -62,11 +62,11 @@ function OrderDetail({}: Props) {
           </Box>
         </Box>
       </Box>
-      <Box className="px-4 pt-4">
+      <Box className="px-2 pt-4">
         <Text.Title className="mb-4">Thông tin sản phẩm</Text.Title>
       </Box>
       <CartItems cart={detail?.detail || []} />
-      <Box className="px-4 pt-4">
+      <Box className="px-2 pt-4">
         <Text.Title className="mb-4">Thông tin thanh toán</Text.Title>
         <Box className=" bg-background p-4 rounded-lg mb-3">
           <Text>Phương thức thanh toán</Text>

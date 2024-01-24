@@ -7,7 +7,12 @@ export const noteState = atom({
 
 export const selectedPaymentMethod = atom({
   key: "selectedPaymentMethod",
-  default: null,
+  default: {
+    id: 0,
+    label: "COD",
+    value: "cod",
+    subtitle: "Thanh toán khi nhận hàng",
+  },
 });
 
 export const addressSelectedState = atom({

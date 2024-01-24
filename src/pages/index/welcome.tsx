@@ -19,7 +19,11 @@ export const Welcome: FC = () => {
             <Box flex alignItems="center" className="space-x-3">
               <img
                 className="w-8 h-8 rounded-full border-inset"
-                src={getConfig((c) => c.template.headerLogo) || logo}
+                src={
+                  user.contents?.avatar ||
+                  getConfig((c) => c.template.headerLogo) ||
+                  logo
+                }
               />
               <Box>
                 {/* <Text.Title size="small">{appConfig.app.title}</Text.Title> */}

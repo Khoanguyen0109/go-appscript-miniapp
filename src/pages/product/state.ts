@@ -1,16 +1,8 @@
 import { axiosInstance } from "api/instance";
 import { atom, selector } from "recoil";
+import { Product } from "types/product";
 
-export const selectedProductIdState = atom({
-  key: "selectedProductId",
+export const selectedProductState = atom<Product | null>({
+  key: "selectedProduct",
   default: null,
-});
-
-export const productDetailState = selector({
-  key: "productDetail",
-  get: async ({ get }) => {
-    const productId = get(selectedProductIdState);
-    const res = await axiosInstance(`/products/${productId}`);
-    return res.data.data;
-  },
 });

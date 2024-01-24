@@ -22,11 +22,44 @@ export const userState = selector({
   key: "user",
   get: async () => {
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
-    const res = await axiosInstance.get(`/users/${zaloUser.id}`);
-    return { ...res.data.data, ...zaloUser };
+    try {
+      const res = await axiosInstance.get(`/users/${zaloUser.id}`);
+
+      return { ...res.data.data, ...zaloUser };
+    } catch (error) {
+      return zaloUser;
+    }
   },
 });
 
+export const settingState = selector({
+  key: "settings",
+  get: async () => {
+    const res = await axiosInstance.get(`/settings/`);
+    return res.data.data;
+  },
+});
+
+export const shippingFeeState = selector({
+  key: "shippingFee",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return setting.find((item) => item.name === "shippingFee").value || 0;
+  },
+});
+
+export const bankState = selector({
+  key: "bankState",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    const bankInfoArr = setting.filter((item) => item.type === "bank");
+    const bankInfo = {};
+    bankInfoArr.forEach((item) => {
+      bankInfo[item.name] = item.value;
+    });
+    return bankInfo;
+  },
+});
 export const appInfoState = selector({
   key: "appInfo",
   get: async () => {
@@ -36,10 +69,10 @@ export const appInfoState = selector({
 
 export const categoriesState = selector<Category[]>({
   key: "categories",
-  get: async ({ get }) => {
-    const res = await axiosInstance.get("/categories");
-
-    return res.data.data;
+  get: ({ get }) => {
+    const setting = get(settingState);
+    const categories = setting.filter((item) => item.type === "categories");
+    return categories;
   },
 });
 
@@ -90,6 +123,11 @@ export const cartState = atom<Cart>({
   default: [],
 });
 
+export const discountState = atom({
+  key: "voucher-discount",
+  default: null,
+});
+
 export const totalQuantityState = selector({
   key: "totalQuantity",
   get: ({ get }) => {
@@ -107,12 +145,47 @@ export const totalPriceState = selector({
   key: "totalPrice",
   get: ({ get }) => {
     const cart = get(cartState);
-    return cart.reduce((total, item) => {
+    const discount = get(discountState);
+    const shippingFee = parseInt(get(shippingFeeState));
+    if (cart.length === 0) {
+      return 0;
+    }
+    const total =
+      cart.reduce((total, item) => {
+        if (!item.selected) {
+          return total;
+        }
+        return (
+          total + item.quantity * calcFinalPrice(item.product, item.options)
+        );
+      }, 0) + shippingFee;
+    if (discount) {
+      switch (discount.discount_by) {
+        case "percent":
+          return total - total * (parseInt(discount.discount) / 100);
+        case "price":
+          return total - parseInt(discount.discount);
+
+        default:
+          break;
+      }
+    }
+    return total;
+  },
+});
+
+export const preTotalPriceState = selector({
+  key: "preTotalPriceState",
+  get: ({ get }) => {
+    const cart = get(cartState);
+    const total = cart.reduce((total, item) => {
       if (!item.selected) {
         return total;
       }
       return total + item.quantity * calcFinalPrice(item.product, item.options);
     }, 0);
+
+    return total;
   },
 });
 
@@ -357,14 +430,5 @@ export const phoneState = selector<string | boolean>({
       return "0337076898";
     }
     return false;
-  },
-});
-
-export const bankState = selector({
-  key: "bank",
-  get: async ({ get }) => {
-    const res = await axiosInstance.get("/bank-info");
-
-    return res.data.data;
   },
 });

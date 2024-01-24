@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   Box,
   Button,
@@ -28,36 +28,39 @@ import LoadingScreenOverLay from "components/loading-screen";
 import { axiosInstance } from "api/instance";
 import { useLocation, useParams } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
+import { selectedProductState } from "./state";
 
 type Props = {};
 
-function ProductDetail({}: Props) {
+function productSelected({}: Props) {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
   const user = useRecoilValue(userState);
-
+  const [productSelected, setProductSelected] =
+    useRecoilState(selectedProductState);
   const paramsSearch = new URLSearchParams(location.search);
   const ctvId = paramsSearch.get("id_ctv_shared");
   const cart = useRecoilValue(cartState);
-  const [productDetail, setProductDetail] = useState();
   const [visible, setVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const shareCurrentPage = async () => {
-    try {
-      const data = await openShareSheet({
-        type: "zmp_deep_link",
-        data: {
-          title: productDetail.name,
-          description: productDetail?.desc_thumbnail || "",
-          thumbnail: productDetail.thumbnail,
-          path: user?.ctv
-            ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${user.id}`
-            : `${ROUTES.PRODUCT_DETAIL(params.id)}`,
-        },
-      });
-    } catch (err) {
-      console.log("error", err);
+    if (productSelected) {
+      try {
+        const data = await openShareSheet({
+          type: "zmp_deep_link",
+          data: {
+            title: productSelected?.name,
+            description: productSelected?.desc_thumbnail || "",
+            thumbnail: productSelected?.thumbnail,
+            path: user?.ctv
+              ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${user.id}`
+              : `${ROUTES.PRODUCT_DETAIL(params.id)}`,
+          },
+        });
+      } catch (err) {
+        console.log("error", err);
+      }
     }
   };
 
@@ -73,10 +76,10 @@ function ProductDetail({}: Props) {
     });
   };
 
-  const getProductDetail = async () => {
+  const getproductSelected = async () => {
     try {
       const res = await axiosInstance(`/products/${params?.id || 2}`);
-      setProductDetail(res.data.data);
+      setProductSelected(res.data.data);
     } catch (error) {
       console.log("error", error);
     }
@@ -94,7 +97,9 @@ function ProductDetail({}: Props) {
   };
 
   useEffect(() => {
-    getProductDetail();
+    if (productSelected?.has_inventories || !productSelected) {
+      getproductSelected();
+    }
   }, [params]);
 
   useEffect(() => {
@@ -103,13 +108,14 @@ function ProductDetail({}: Props) {
     }
   }, []);
 
-  if (!productDetail) {
+  if (!productSelected) {
     return <LoadingScreenOverLay />;
   }
+  console.log('productSelected?.image', productSelected?.image)
   return (
     <Page className="flex flex-col bg-background">
       <Header
-        title={truncate(productDetail.name, { length: 24 })}
+        title={truncate(productSelected.name, { length: 24 })}
         showBackIcon={true}
         onBackClick={() => navigate(ROUTES.HOME)}
       />
@@ -122,19 +128,22 @@ function ProductDetail({}: Props) {
             <IoMdClose size={30} color="#000000" />
           </Box>
           <Box className="absolute top-0 w-full h-full bg-slate-400 opacity-90 "></Box>
-          <Banner banners={productDetail.image} padding={0} />
+          <Banner banners={productSelected.image} padding={0} />
         </Box>
       )} */}
       <ImageViewer
         onClose={() => setVisible(false)}
         activeIndex={activeIndex}
-        images={productDetail?.image.map((item) => ({ src: item.image }))}
+        images={productSelected?.image.map((item) => ({ src: item.image }))}
         visible={visible}
       />
-      <Banner banners={productDetail.image} onClick={() => setVisible(true)} />
-      {productDetail?.image.length > 1 && (
+      <Banner
+        banners={productSelected.image}
+        onClick={() => setVisible(true)}
+      />
+      {productSelected?.image.length > 1 && (
         <Box className="flex gap-4 p-4 overflow-x-auto">
-          {productDetail.image.map((item) => (
+          {productSelected.image.map((item) => (
             <Box
               className="w-1/4 rounded-xl aspect-[1/1] bg-cover bg-center bg-skeleton"
               style={{ backgroundImage: `url(${item.image})` }}
@@ -144,11 +153,11 @@ function ProductDetail({}: Props) {
       )}
       <Box className="p-4">
         <Text.Header className="text-lg font-bold">
-          {productDetail.name}
+          {productSelected.name}
         </Text.Header>
         <Box className="flex justify-between items-center">
           <Text size="xLarge" className=" mt-2 pb-2 text-blue-500 font-bold">
-            <DisplayPrice>{productDetail.price}</DisplayPrice>
+            <DisplayPrice>{productSelected.price}</DisplayPrice>
           </Text>
           <Box className="flex items-center">
             <Box
@@ -169,7 +178,7 @@ function ProductDetail({}: Props) {
           <div className="rated-stars">
             <div
               className="star-ratings-css"
-              data-rate={productDetail?.rating || 5}
+              data-rate={productSelected?.rating || 5}
             ></div>
           </div>
         </Box>
@@ -178,17 +187,17 @@ function ProductDetail({}: Props) {
           Mô tả sản phẩm
         </Text.Header> */}
         <Text className="mt-3 ">
-          {productDetail.desc.indexOf("</") !== -1 ? (
+          {productSelected.desc.indexOf("</") !== -1 ? (
             <div
               dangerouslySetInnerHTML={{
-                __html: productDetail.desc.replace(
+                __html: productSelected.desc.replace(
                   /(<? *script)/gi,
                   "illegalscript"
                 ),
               }}
             ></div>
           ) : (
-            productDetail.desc
+            productSelected.desc
           )}
         </Text>
       </Box>
@@ -198,7 +207,7 @@ function ProductDetail({}: Props) {
         flex
         className="sticky bottom-0 w-full bg-background  p-4 space-x-4 justify-end"
       >
-        <ProductPicker product={productDetail}>
+        <ProductPicker product={productSelected}>
           {({ open, openRedirect }) => (
             <>
               <Button
@@ -231,4 +240,4 @@ function ProductDetail({}: Props) {
   );
 }
 
-export default ProductDetail;
+export default productSelected;

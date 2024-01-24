@@ -17,7 +17,7 @@ export const Categories: FC = () => {
   };
 
   return (
-    <Box className="py-2 px-4 max-w-full overflow-x-auto">
+    <Box className="py-2 px-2 max-w-full overflow-x-auto">
       <Text className="font-bold text-lg">Tất cả mặt hàng</Text>
       <Box className="bg-white  w-full mt-4 flex overflow-x-auto">
         {categories.map((category, i) => (
@@ -29,13 +29,13 @@ export const Categories: FC = () => {
           >
             <img
               className="w-12 max-w-none h-12 rounded-full shadow-lg object-contain"
-              src={category.image}
+              src={category.sub_value}
             />
             <Text
               size="xxSmall"
               className=" text-center font-semibold text-slate-950"
             >
-              {category.name}
+              {category.value}
             </Text>
           </div>
         ))}

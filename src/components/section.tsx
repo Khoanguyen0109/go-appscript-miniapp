@@ -16,14 +16,14 @@ export const Section: FC<PropsWithChildren<SectionProps>> = ({
 }) => {
   return (
     <Box
-      className={`bg-background ${padding === "all" ? " py-2 px-4 space-y-4" : ""} ${
+      className={`bg-background ${padding === "all" ? " py-2 px-2 space-y-4" : ""} ${
         padding === "title-only" ? "py-4 space-y-4" : ""
       }`}
       {...props}
     >
       <Text.Title
         className={`${
-          padding === "title-only" ? "px-4" : ""
+          padding === "title-only" ? "px-2" : ""
         } font-bold text-lg`}
       >
         {title}

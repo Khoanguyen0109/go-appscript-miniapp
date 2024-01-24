@@ -48,6 +48,8 @@ export interface Product {
   inventory_quantity: number;
   created_at: string;
   inventories: TProductInventory[];
+  has_inventories: string;
+  desc_thumbnail: string;
   banner_image?: string;
   costdown?: string;
   discount?: string;

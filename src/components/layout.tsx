@@ -24,9 +24,10 @@ import OpenChat from "pages/chat";
 import NotificationDetail from "pages/notification-detail";
 import Commission from "pages/user/commission";
 import { axiosInstance } from "api/instance";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { userState } from "state";
+import { useRecoilValueLoadable } from "recoil";
+import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
+import { addressesState } from "pages/user/state";
 
 if (getSystemInfo().platform === "android") {
   const androidSafeTop = Math.round(
@@ -40,23 +41,28 @@ if (getSystemInfo().platform === "android") {
 }
 
 export const Layout: FC = () => {
+  const setting = useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
-  const user = useRecoilValueLoadable(userState);
+  const addresses = useRecoilValueLoadable(addressesState);
+
   const navigate = useNavigate();
   const paramsSearch = new URLSearchParams(location.search);
   const ctvId = paramsSearch.get("id_ctv_shared");
   const saveCTV = async (ctvId) => {
     try {
-      const res = await axiosInstance.put(`/users/${user.id}/ctv_update`, {
-        ctvId,
-        user,
-      });
+      const res = await axiosInstance.put(
+        `/users/${userStateLoadable.contents.id}/ctv_update`,
+        {
+          ctvId,
+          user: userStateLoadable.contents,
+        }
+      );
     } catch (error) {
       console.log("error", error);
     }
   };
   useEffect(() => {
-    if (ctvId) {
+    if (ctvId && userStateLoadable.state === "hasValue") {
       saveCTV(ctvId);
     }
   }, []);

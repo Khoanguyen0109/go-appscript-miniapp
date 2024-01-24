@@ -1,21 +1,24 @@
 import { ElasticTextarea } from "components/elastic-textarea";
 import { ListRenderer } from "components/list-renderer";
-import React, { FC, Suspense } from "react";
+import React, { FC, Suspense, useEffect } from "react";
 import { Box, Icon, Input, Text } from "zmp-ui";
 import { PersonPicker, RequestPersonPickerPhone } from "./person-picker";
 import { RequestStorePickerLocation, StorePicker } from "./store-picker";
 import { TimePicker } from "./time-picker";
 import { createSearchParams, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import { addressSelectedState, noteState } from "./state";
 import PaymentPicker, { RequestPayment } from "./payment-picker";
 import { ROUTES } from "pages/route";
 import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
+import { addressesState } from "pages/user/state";
+import { size } from "lodash";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();
   const [note, setNote] = useRecoilState(noteState);
+  const addresses = useRecoilValueLoadable(addressesState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
   const navigateToAddress = () => {
@@ -26,9 +29,15 @@ export const Delivery: FC = () => {
       }).toString(),
     });
   };
+
+  useEffect(() => {
+    if (size(addresses)) {
+      setAddressSelected(addresses.contents[0]);
+    }
+  }, []);
   return (
-    <Box className="space-y-3 ">
-      <Text className="text-md font-bold px-4">Hình thức nhận hàng</Text>
+    <Box className="space-y-1 ">
+      <Text className="text-md font-bold px-2">Hình thức nhận hàng</Text>
 
       <ListRenderer
         items={[

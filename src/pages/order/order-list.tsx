@@ -26,7 +26,6 @@ function OrderList({ orders }: Props) {
   const [orderSelected, setOrderSelected] = useState();
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const timmerId = useRef();
-  console.log("rating", rating);
   useEffect(
     () => () => {
       closeSnackbar();
@@ -63,7 +62,7 @@ function OrderList({ orders }: Props) {
     return (
       <Box className="text-center">
         <Text
-          className="bg-background rounded-xl py-8 px-4 text-center text-gray"
+          className="bg-background rounded-xl py-8 px-2 text-center text-gray"
           size="xxSmall"
         >
           Không có đơn hàng

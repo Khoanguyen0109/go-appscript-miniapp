@@ -15,10 +15,8 @@ function MemberInfo({}: Props) {
   const user = useRecoilValue(userState);
   const scoreRank = useRecoilValue(scoreRankState);
   const [activeTab, setActiveTab] = useState(
-    scoreRank.findIndex((item) => item.class === user.memberClass) !== -1
-      ? scoreRank
-          .findIndex((item) => item.class === user.memberClass)
-          .toString()
+    scoreRank.findIndex((item) => item.name === user.memberClass) !== -1
+      ? scoreRank.findIndex((item) => item.name === user.memberClass).toString()
       : "1"
   );
   const openUrlInWebview = async () => {
@@ -33,7 +31,7 @@ function MemberInfo({}: Props) {
   };
   console.log(
     "first",
-    scoreRank.findIndex((item) => item.class === user.memberClass)
+    scoreRank.findIndex((item) => item.name === user.memberClass)
   );
   const onChange = (val) => {
     setActiveTab(val);
@@ -54,19 +52,19 @@ function MemberInfo({}: Props) {
         <Box className="mt-4">
           <Tabs id="contact-list" activeKey={activeTab} onChange={onChange}>
             {scoreRank.map((item, index) => (
-              <Tabs.Tab key={index} label={item.class}>
+              <Tabs.Tab key={index} label={item.name}>
                 <Text className="mt-3 ">
-                  {item.desc.indexOf("</") !== -1 ? (
+                  {item.sub_value.indexOf("</") !== -1 ? (
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: item.desc.replace(
+                        __html: item.sub_value.replace(
                           /(<? *script)/gi,
                           "illegalscript"
                         ),
                       }}
                     ></div>
                   ) : (
-                    item.desc
+                    item.sub_value
                   )}
                 </Text>
               </Tabs.Tab>

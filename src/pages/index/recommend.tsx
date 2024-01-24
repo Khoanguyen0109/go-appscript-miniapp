@@ -15,7 +15,7 @@ export const RecommendContent: FC = () => {
 
   return (
     <Section title="Gợi ý cho bạn" padding="title-only">
-      <Swiper slidesPerView={1.25} spaceBetween={16} className="px-4">
+      <Swiper slidesPerView={1.25} spaceBetween={16} className="px-2">
         {recommendProducts.map((product) => (
           <SwiperSlide key={product.id}>
             <ProductPicker product={product}>
@@ -63,7 +63,7 @@ export const RecommendFallback: FC = () => {
 
   return (
     <Section title="Gợi ý cho bạn" padding="title-only">
-      <Swiper slidesPerView={1.25} spaceBetween={16} className="px-4">
+      <Swiper slidesPerView={1.25} spaceBetween={16} className="px-2">
         {recommendProducts.map((_, i) => (
           <SwiperSlide key={i}>
             <ProductSlideSkeleton />

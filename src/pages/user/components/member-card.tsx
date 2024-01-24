@@ -17,7 +17,6 @@ function MemberCard({}: Props) {
   const navigate = useNavigate();
   const scoreRank = useRecoilValue(scoreRankState);
   const user = useRecoilValue(userState);
-  console.log('user', user.memberClass)
   const backgroundCard = useMemo(() => {
     switch (user.memberClass) {
       case EScoreRank.NEW:
@@ -32,21 +31,21 @@ function MemberCard({}: Props) {
         return newMember;
     }
   }, []);
-  console.log("scoreRank", scoreRank);
 
   const maxScore = useMemo(() => {
     switch (user.memberClass) {
       case EScoreRank.NEW:
-        return scoreRank.find((item) => item.class === EScoreRank.SILVER).score;
+        return scoreRank.find((item) => item.name === EScoreRank.SILVER).value;
       case EScoreRank.SILVER:
-        return scoreRank.find((item) => item.class === EScoreRank.GOLD).score;
+        return scoreRank.find((item) => item.name === EScoreRank.GOLD).value;
       case EScoreRank.GOLD:
-        return scoreRank.find((item) => item.class === EScoreRank.DIAMOND)
-          .score;
+        return scoreRank.find((item) => item.name === EScoreRank.DIAMOND).value;
       default:
         return null;
     }
-  }, []);
+  }, [user]);
+
+  console.log("maxScore", maxScore);
   return (
     <Box className="m-4" onClick={() => navigate(ROUTES.MEMBER_CARD)}>
       <Box
@@ -66,9 +65,15 @@ function MemberCard({}: Props) {
         {maxScore && (
           <>
             <Box mb={4}>
-              <Progress completed={user.score} maxCompleted={maxScore} />
+              <Progress
+                strokeColor="black"
+                completed={parseInt(user.score)}
+                maxCompleted={parseInt(maxScore)}
+              />
             </Box>
-            <Text size="small">Cần hoàn thành {maxScore} điểm để tăng hạng thành viên</Text>
+            <Text size="small">
+              Cần hoàn thành {maxScore} điểm để tăng hạng thành viên
+            </Text>
           </>
         )}
       </Box>

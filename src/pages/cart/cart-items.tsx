@@ -86,7 +86,7 @@ export const CartItems: FC<TCartItemProps> = ({
   };
   const imgSize = disableClick ? "w-12 h-12" : "w-24 h-24";
   return (
-    <Box className="pb-3 px-4 mt-3">
+    <Box className="pb-3 px-2 mt-3">
       {cart.length > 0 ? (
         <ProductPicker product={editingItem?.product} selected={editingItem}>
           {({ open }) => (
@@ -183,7 +183,7 @@ export const CartItems: FC<TCartItemProps> = ({
         </ProductPicker>
       ) : (
         <Text
-          className="bg-background rounded-xl py-8 px-4 text-center text-gray"
+          className="bg-background rounded-xl py-8 px-2 text-center text-gray"
           size="xxSmall"
         >
           Không có sản phẩm trong giỏ hàng

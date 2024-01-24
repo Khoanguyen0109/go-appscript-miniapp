@@ -25,7 +25,7 @@ export const ProductListContent: FC = () => {
   };
   return (
     <Section title="Danh sách sản phẩm">
-      <Box ref={errorRef} className="grid grid-cols-2 gap-4">
+      <Box ref={errorRef} className="grid grid-cols-2 gap-2">
         {currentItems.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}

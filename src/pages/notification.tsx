@@ -33,9 +33,8 @@ const NotificationList: FC = () => {
     navigate(ROUTES.NOTIFICATION(item.id));
   };
   return (
-    <Box className="bg-background">
-      <ListRenderer
-        noDivider
+    <Box className=" p-2">
+      {/* <ListRenderer
         items={newNotification}
         renderLeft={(item) => (
           <img className="w-10 h-10 rounded-full" src={item?.image || logo} />
@@ -51,7 +50,35 @@ const NotificationList: FC = () => {
             </Text>
           </Box>
         )}
-      />
+      /> */}
+      {newNotification.map((item) => {
+        return (
+          <Box
+            onClick={() => onClick(item)}
+            className="flex bg-background mb-2 px-2 py-4"
+          >
+            <img
+              className="w-12 h-12 rounded-full mr-3"
+              src={item?.thumbnail || logo}
+            />
+            <Box>
+              <Text.Header className="font-bold">{item.title}</Text.Header>
+              <Text
+                size="small"
+                className=" overflow-hidden whitespace-nowrap text-ellipsis mb-2"
+              >
+                {item.short_desc}
+              </Text>
+              <Text
+                size="xSmall"
+                className="text-gray overflow-hidden whitespace-nowrap text-ellipsis"
+              >
+                {item.time}
+              </Text>
+            </Box>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

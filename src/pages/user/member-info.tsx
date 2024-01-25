@@ -29,10 +29,7 @@ function MemberInfo({}: Props) {
       console.log(error);
     }
   };
-  console.log(
-    "first",
-    scoreRank.findIndex((item) => item.name === user.memberClass)
-  );
+
   const onChange = (val) => {
     setActiveTab(val);
   };

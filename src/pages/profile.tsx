@@ -71,17 +71,17 @@ const Personal: FC = () => {
         title="Cá nhân"
         // onClick={onClick}
         items={[
-          {
-            left: <Icon icon="zi-user" />,
-            right: (
-              <Box flex onClick={onClick}>
-                <Text.Header className="flex-1 items-center font-normal">
-                  Thông tin tài khoản
-                </Text.Header>
-                <Icon icon="zi-chevron-right" />
-              </Box>
-            ),
-          },
+          // {
+          //   left: <Icon icon="zi-user" />,
+          //   right: (
+          //     <Box flex onClick={onClick}>
+          //       <Text.Header className="flex-1 items-center font-normal">
+          //         Thông tin tài khoản
+          //       </Text.Header>
+          //       <Icon icon="zi-chevron-right" />
+          //     </Box>
+          //   ),
+          // },
           {
             left: <Icon icon="zi-clock-2" />,
             right: (

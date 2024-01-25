@@ -97,7 +97,7 @@ function productSelected({}: Props) {
   };
 
   useEffect(() => {
-    if (productSelected?.has_inventories || !productSelected) {
+    if (productSelected?.has_inventories || !productSelected || params?.id) {
       getproductSelected();
     }
   }, [params]);
@@ -111,7 +111,7 @@ function productSelected({}: Props) {
   if (!productSelected) {
     return <LoadingScreenOverLay />;
   }
-  console.log('productSelected?.image', productSelected?.image)
+  console.log("productSelected?.image", productSelected?.image);
   return (
     <Page className="flex flex-col bg-background">
       <Header

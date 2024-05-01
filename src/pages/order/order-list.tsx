@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, Icon, Input, List, Modal, Text, useSnackbar } from "zmp-ui";
 import OrderItem from "./order-item";
 import { TOrder } from "types/order";
-import { axiosInstance } from "api/instance";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import ReactStars from "react-rating-stars-component";
+import supabase from "../../client/client";
 const { Item } = List;
 
 type Props = {
@@ -38,12 +38,11 @@ function OrderList({ orders }: Props) {
     setOrderSelected(id);
   };
   const submitRating = async () => {
-    const res = await axiosInstance.put(
-      `orders/${user.id}/rating/${orderSelected}`,
-      {
-        rating,
-      }
-    );
+    const { error } = await supabase
+      .from("orders")
+      .update({ rating, feedback: note })
+      .eq("userId", user.id)
+      .eq("id", orderSelected);
     setNote("");
     setOrderSelected(undefined);
     setOpenModal(false);

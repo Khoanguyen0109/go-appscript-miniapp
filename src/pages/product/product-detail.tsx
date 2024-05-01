@@ -6,7 +6,6 @@ import {
   Header,
   ImageViewer,
   Page,
-  Swiper,
   Text,
   useNavigate,
 } from "zmp-ui";
@@ -23,12 +22,10 @@ import { openChat, openShareSheet } from "zmp-sdk";
 import { FaShare } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { OA_ID } from "enviroment";
-import Loading from "components/loading";
 import LoadingScreenOverLay from "components/loading-screen";
-import { axiosInstance } from "api/instance";
 import { useLocation, useParams } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
-import { selectedProductState } from "./state";
+import supabase from "../../client/client";
 
 type Props = {};
 
@@ -81,10 +78,10 @@ function productSelected({}: Props) {
 
   const saveCTV = async (ctvId) => {
     try {
-      const res = await axiosInstance.put(`/users/${user.id}/ctv_update`, {
-        ctvId,
-        user,
-      });
+      const { error } = await supabase
+        .from("users")
+        .update({ idCTVShared: ctvId })
+        .eq("id", user.id);
     } catch (error) {
       console.log("error", error);
     }

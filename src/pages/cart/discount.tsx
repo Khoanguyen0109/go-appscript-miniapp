@@ -1,4 +1,3 @@
-import { axiosInstance } from "api/instance";
 import useCustomSnackbar from "hooks/useCustomSnackbar";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";

@@ -1,5 +1,4 @@
-import { axiosInstance } from "api/instance";
-import { Divider } from "components/divider";
+
 import LoadingScreenOverLay from "components/loading-screen";
 import { CartItems } from "pages/cart/cart-items";
 import React, { useEffect, useState } from "react";
@@ -7,10 +6,8 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import { Box, Header, Icon, Page, Text } from "zmp-ui";
-import OrderStatus from "./order-status";
 import OrderInfo from "./order-info";
 import { ListRenderer } from "components/list-renderer";
-import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
 import { TOrder } from "types/order";
 import { DisplayPrice } from "components/display/price";
@@ -28,7 +25,6 @@ function OrderDetail({}: Props) {
   const fetchDetail = async () => {
     try {
       setLoading(true);
-      // const res = await axiosInstance.get(`/orders/${user.id}/details/${id}`);
       const { data, error } = await supabase
         .from("orders")
         .select(

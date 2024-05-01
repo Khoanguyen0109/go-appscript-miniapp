@@ -1,4 +1,3 @@
-import { axiosInstance } from "api/instance";
 import { selector } from "recoil";
 import { settingState } from "state";
 

@@ -1,4 +1,3 @@
-import { axiosInstance } from "api/instance";
 import { atom, selector } from "recoil";
 import { Product } from "types/product";
 

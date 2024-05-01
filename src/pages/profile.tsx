@@ -15,12 +15,12 @@ import { ListRenderer } from "components/list-renderer";
 import { useToBeImplemented } from "hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "./route";
-import { axiosInstance } from "api/instance";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import { openChat } from "zmp-sdk";
 import { OA_ID } from "enviroment";
 import MemberCard from "./user/components/member-card";
+import supabase from "../client/client";
 
 const { OtpGroup, Option } = Select;
 
@@ -146,11 +146,12 @@ const Other: FC = () => {
           duration: 1000,
         });
       }
-      const res = await axiosInstance.post(`/users/${user.id}/feedback`, {
+
+      await supabase.from("feedbacks").insert({
+        feedback: issue,
         note,
-        issue,
+        userId: user.id,
       });
-      // if (res) {
       setNote("");
       setDialogVisible(false);
       return openSnackbar({

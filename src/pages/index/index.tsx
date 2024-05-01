@@ -7,9 +7,6 @@ import { Divider } from "components/divider";
 
 import BannerHome from "./banner";
 import ProductHotItemList from "./product-hot-item-list";
-import { useRecoilValue } from "recoil";
-import { userState } from "state";
-import { axiosInstance } from "api/instance";
 import { Categories } from "./categories";
 
 const HomePage: React.FunctionComponent = () => {

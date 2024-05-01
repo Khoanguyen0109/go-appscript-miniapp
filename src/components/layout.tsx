@@ -23,11 +23,11 @@ import AddUserAddress from "pages/user/add-user-address";
 import OpenChat from "pages/chat";
 import NotificationDetail from "pages/notification-detail";
 import Commission from "pages/user/commission";
-import { axiosInstance } from "api/instance";
 import { useRecoilValueLoadable } from "recoil";
 import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
+import supabase from "../client/client";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -47,13 +47,10 @@ export const Layout: FC = () => {
   const ctvId = paramsSearch.get("id_ctv_shared");
   const saveCTV = async (ctvId) => {
     try {
-      const res = await axiosInstance.put(
-        `/users/${userStateLoadable.contents.id}/ctv_update`,
-        {
-          ctvId,
-          user: userStateLoadable.contents,
-        }
-      );
+      const { error } = await supabase
+        .from("users")
+        .update({ idCTVShared: ctvId })
+        .eq("id", userStateLoadable.contents.id);
     } catch (error) {
       console.log("error", error);
     }

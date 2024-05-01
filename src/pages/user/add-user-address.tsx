@@ -25,7 +25,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { ROUTES } from "pages/route";
-import { axiosInstance } from "api/instance";
 import { userState } from "state";
 import { addressSelectedState } from "pages/cart/state";
 import supabase from "../../client/client";
@@ -72,9 +71,6 @@ function AddUserAddress({}: Props) {
   const onSubmit = async (value) => {
     try {
       setLoading(true);
-      // const res = await axiosInstance.post(`users/${user.id}/address`, {
-      //   ...value,
-      // });
       await upsertUser(user)
       const { error } = await supabase
         .from("user_addresses")

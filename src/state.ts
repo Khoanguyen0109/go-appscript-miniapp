@@ -16,7 +16,6 @@ import { calculateDistance } from "utils/location";
 import { Store } from "types/delivery";
 import { calcFinalPrice, getDummyImage } from "utils/product";
 import { wait } from "utils/async";
-import { axiosInstance } from "api/instance";
 import supabase from "./client/client";
 import { groupBy } from "lodash";
 
@@ -249,9 +248,8 @@ export const notificationsState = atom<Notification[]>({
 export const newNotificationState = selector({
   key: "newNotifications",
   get: async ({ get }) => {
-    const { id } = get(userState);
-    const res = await axiosInstance.get(`users/${id}/notifications`);
-    return res.data.data;
+    const { data } = await supabase.from("notifications").select();
+    return data;
   },
 });
 

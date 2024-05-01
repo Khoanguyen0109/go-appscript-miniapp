@@ -13,7 +13,7 @@ import {
   noteState,
   selectedPaymentMethod,
 } from "pages/cart/state";
-import { axiosInstance } from "api/instance";
+import supabase from "../../client/client";
 const PaymentSuccess: FC = () => {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
@@ -33,10 +33,10 @@ const PaymentSuccess: FC = () => {
     navigate(ROUTES.HOME);
   };
   const updateFollowed = async () => {
-    const rest = await axiosInstance.put(
-      `/users/${user.id}/update_followed`,
-      {}
-    );
+    const { error } = await supabase
+      .from("users")
+      .update({ followed: true })
+      .eq("id", user.id);
   };
   const bankInfo = useRecoilValue(bankState);
   const onClick = async () => {

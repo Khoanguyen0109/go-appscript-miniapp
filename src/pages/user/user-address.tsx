@@ -39,7 +39,8 @@ function UserAddress({}: Props) {
     if (isRouteFromCart) {
       navigate(ROUTES.CART);
     } else {
-      navigate(ROUTES.USER_ADDRESS_ADD);
+      navigate(-1)
+      // navigate(ROUTES.USER_ADDRESS_ADD);
     }
   };
   

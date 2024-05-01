@@ -4,7 +4,6 @@ import { Box, Text } from "zmp-ui";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { categoriesState, selectedCategoryIdState } from "state";
 import { useNavigate } from "react-router";
-import { axiosInstance } from "api/instance";
 
 export const Categories: FC = () => {
   const categories = useRecoilValue(categoriesState);
@@ -12,6 +11,7 @@ export const Categories: FC = () => {
   const setSelectedCategoryId = useSetRecoilState(selectedCategoryIdState);
 
   const gotoCategory = (categoryId: string) => {
+    console.log('categoryId', categoryId)
     setSelectedCategoryId(categoryId);
     navigate("/category");
   };
@@ -29,13 +29,13 @@ export const Categories: FC = () => {
           >
             <img
               className="w-12 max-w-none h-12 rounded-full shadow-lg object-contain"
-              src={category.subValue}
+              src={category.image}
             />
             <Text
               size="xxSmall"
               className=" text-center font-semibold text-slate-950"
             >
-              {category.value}
+              {category.name}
             </Text>
           </div>
         ))}

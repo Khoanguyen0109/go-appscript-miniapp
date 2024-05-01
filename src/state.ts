@@ -85,10 +85,9 @@ export const appInfoState = selector({
 
 export const categoriesState = selector<Category[]>({
   key: "categories",
-  get: ({ get }) => {
-    const setting = get(settingState);
-    const categories = setting.filter((item) => item.type === "categories");
-    return categories;
+  get: async () => {
+    const { data } = await supabase.from("categories").select();
+    return data;
   },
 });
 
@@ -133,9 +132,7 @@ export const productsByCategoryState = selectorFamily<Product[], string>({
     (categoryId) =>
     ({ get }) => {
       const allProducts = get(productsState);
-      return allProducts.filter((product) =>
-        product.categoryId.includes(categoryId)
-      );
+      return allProducts.filter((product) => product.categoryId === categoryId);
     },
 });
 
@@ -220,21 +217,13 @@ export const orderState = selector({
   get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
-    const res = await axiosInstance.get(`/orders/${user.id}`, {
-      params: { limit: 50 },
-    });
-    return res.data?.data || [];
-  },
-});
-
-export const orderDetailState = selector({
-  key: "orderDetail",
-  get: async ({ get }) => {
-    const user = get(userState);
-    const res = await axiosInstance.get(`/orders/${user.id}`, {
-      params: { limit: 50 },
-    });
-    return res.data?.data || [];
+    const { data, error } = await supabase
+      .from("orders")
+      .select(
+        `* , orderDetails: order_details(* , inventory:product_inventories(*, products(*)))`
+      )
+      .eq("userId", user.id);
+    return data;
   },
 });
 

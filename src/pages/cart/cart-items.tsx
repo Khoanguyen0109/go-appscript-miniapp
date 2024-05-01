@@ -22,7 +22,6 @@ export const CartItems: FC<TCartItemProps> = ({
 }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
   const setCart = useSetRecoilState(cartState);
-
   const onChangeQuantity = (productItem, quantity) => {
     const product = productItem.product;
     const options = productItem.options;

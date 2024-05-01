@@ -1,4 +1,3 @@
-import { axiosInstance } from "api/instance";
 import { DisplayPrice } from "components/display/price";
 import { ROUTES } from "pages/route";
 import React, { FC, useEffect, useRef, useState } from "react";
@@ -24,10 +23,13 @@ import {
   selectedPaymentMethod,
 } from "./state";
 import { Product } from "types/product";
+import supabase from "../../client/client";
+import { EOrderStatus } from "../../constantsapp";
 
 export const CartPreview: FC = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const cart = useRecoilValue(cartState);
+  console.log("cart", cart);
   const resetCart = useResetRecoilState(cartState);
   const [discount, setDiscount] = useRecoilState(discountState);
 
@@ -73,34 +75,37 @@ export const CartPreview: FC = () => {
           duration: 1000,
         });
       }
-      const res = await axiosInstance.post("/orders", {
-        userId: user.id,
-        user: { ...user, phone },
-        items: cart.reduce((acc, value) => {
-          acc.push({
-            inventory_id: value.inventory_id,
-            product_id: value.product.id,
-            name: value.product.name,
-            thumbnail: value.product.thumbnail,
-            total: parseFloat(value.product.price) * parseInt(value.quantity),
-            quantity: value.quantity,
-            options: getOptionString(value.options),
-          });
-          return acc;
-        }, []),
-        note,
-        paymentMethod: paymentMethod.label,
-        addressId: address?.id,
-        orderId: data?.orderId || "",
-        total: totalPrice,
-        discount: discount?.discount || "",
-        voucher: discount?.voucher || "",
-        preTotal,
-      });
-      // setAddressSelected(null)
-      // setPaymentMethod(null)
-      // setNote('')
-      // resetCart();
+      const orderCreated = await supabase
+        .from("orders")
+        .insert({
+          userId: user.id,
+          paymentMethod: paymentMethod.label,
+          addressId: address?.id,
+          total: totalPrice,
+          discount: discount?.discount || 0,
+          voucher: discount?.voucher || "",
+          preTotal,
+          quantity,
+          note,
+          status: EOrderStatus.WAITING,
+        })
+        .select();
+      console.log("orderCreated", orderCreated);
+      const details = cart.reduce((acc, value) => {
+        acc.push({
+          orderId: orderCreated.data[0].id,
+          inventoryId: value.inventory_id,
+          total: parseFloat(value.price) * parseInt(value.quantity),
+          quantity: value.quantity,
+        });
+        return acc;
+      }, []);
+      console.log("details", details);
+      await supabase.from("order_details").insert(details);
+      setAddressSelected(null);
+      setPaymentMethod(null);
+      setNote("");
+      resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
     } catch (error) {
     } finally {

@@ -3,6 +3,7 @@ import React from "react";
 import { TOrder } from "types/order";
 import { Box, Text } from "zmp-ui";
 import OrderStatus from "./order-status";
+import { formatDate } from "../../utils/date";
 
 type Props = {
   item: TOrder;
@@ -33,7 +34,7 @@ function OrderInfo({ item }: Props) {
                 <Text.Header className="flex-1 items-center font-normal">
                   Ngày đặt hàng
                 </Text.Header>
-                <Text>{item.created_at}</Text>
+                <Text>{formatDate(item.createdAt)}</Text>
               </Box>
             ),
           },

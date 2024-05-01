@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export function isToday(date: Date) {
   const today = new Date();
   return (
@@ -27,4 +29,9 @@ export function displayDate(date: Date, hint?: boolean) {
     return `Hôm nay - ${day}/${month}/${year}`;
   }
   return `${day}/${month}/${year}`;
+}
+
+
+export function formatDate (date) {
+  return DateTime.fromISO(date).toFormat("dd/MM/yyyy")
 }

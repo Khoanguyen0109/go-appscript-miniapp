@@ -14,6 +14,8 @@ import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
 import { TOrder } from "types/order";
 import { DisplayPrice } from "components/display/price";
+import supabase from "../../client/client";
+import OrderDetailList from "./order-detail-list";
 
 type Props = {};
 
@@ -26,8 +28,15 @@ function OrderDetail({}: Props) {
   const fetchDetail = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.get(`/orders/${user.id}/details/${id}`);
-      setDetail(res.data.data);
+      // const res = await axiosInstance.get(`/orders/${user.id}/details/${id}`);
+      const { data, error } = await supabase
+        .from("orders")
+        .select(
+          `* , address: user_addresses(*), orderDetails: order_details(* , inventory:product_inventories(*,product: products(*)))`
+        )
+        .eq("userId", user.id)
+        .eq("id", id);
+      setDetail(data[0]);
     } catch (error) {
     } finally {
       setLoading(false);
@@ -65,7 +74,7 @@ function OrderDetail({}: Props) {
       <Box className="px-2 pt-4">
         <Text.Title className="mb-4">Thông tin sản phẩm</Text.Title>
       </Box>
-      <CartItems cart={detail?.detail || []} />
+      <OrderDetailList detail={detail?.orderDetails || []} />
       <Box className="px-2 pt-4">
         <Text.Title className="mb-4">Thông tin thanh toán</Text.Title>
         <Box className=" bg-background p-4 rounded-lg mb-3">
@@ -116,7 +125,7 @@ function OrderDetail({}: Props) {
           renderRight={(item) => item.right}
         />
       </Box>
-      <Box className="mb-4"/>
+      <Box className="mb-4" />
       {/* </Box> */}
       {/* <Divider size={32} className="flex-1" />
 

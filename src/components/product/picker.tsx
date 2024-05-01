@@ -28,27 +28,13 @@ export interface ProductPickerProps {
   }) => ReactNode;
 }
 
-function getDefaultOptions(product?: Product) {
-  if (product && product.variants) {
-    return product.variants.reduce(
-      (options, variant) =>
-        Object.assign(options, {
-          [variant.key]: variant.default,
-        }),
-      {}
-    );
-  }
-  return {};
-}
-
 export const ProductPicker: FC<ProductPickerProps> = ({
   children,
   product,
   selected,
 }) => {
-  console.log("product.variants", product.variants);
   const navigate = useNavigate();
-  console.log('selected', selected)
+  console.log("selected", selected);
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
@@ -62,6 +48,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   }, [selected]);
 
   const addToCart = () => {
+    console.log("options", options);
     if (product) {
       setCart((cart) => {
         let res = [...cart];
@@ -112,6 +99,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               product,
               options,
               inventory_id: exitedInventories?.id,
+              price: exitedInventories.price,
               quantity,
             });
           }
@@ -171,8 +159,6 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               <Box className="space-y-5">
                 {product.variants &&
                   Object.keys(product.variants).map((key) => {
-                    console.log("key", key);
-                    console.log("product.variants[key]", product.variants[key]);
                     return (
                       <ProductVariant
                         variant={key}

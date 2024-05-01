@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { discountState } from "state";
 import { Box, Button, Input, Text, useSnackbar } from "zmp-ui";
+import supabase from "../../client/client";
 
 type Props = {};
 
@@ -24,17 +25,20 @@ function Discount({}: Props) {
   const onSubmitVoucher = async () => {
     try {
       setLoading(true);
-      const res = await axiosInstance.post("/discount/validate", {
-        voucher,
-      });
-      setDiscount(res.data.data);
-      openSnackbar({
-        text: "Mã giảm giá đã áp dụng",
-        type: "success",
-        icon: true,
-        duration: 2000,
-      });
-      return res.data.data;
+      const { data } = await supabase
+        .from("discounts")
+        .select()
+        .eq("name", voucher);
+      if (data?.length > 0) {
+        setDiscount(data[0]);
+        openSnackbar({
+          text: "Mã giảm giá đã áp dụng",
+          type: "success",
+          icon: true,
+          duration: 2000,
+        });
+        return data[0];
+      }
     } catch (error) {
       setDiscount(null);
 

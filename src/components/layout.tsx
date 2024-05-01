@@ -34,16 +34,13 @@ if (getSystemInfo().platform === "android") {
   //   (window as any).ZaloJavaScriptInterface.getStatusBarHeight() /
   //     window.devicePixelRatio
   // );
-  document.body.style.setProperty(
-    "--zaui-safe-area-inset-top",
-    `${20}px`
-  );
+  document.body.style.setProperty("--zaui-safe-area-inset-top", `${20}px`);
 }
 
 export const Layout: FC = () => {
-  const setting = useRecoilValueLoadable(settingState);
+  useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
-  const addresses = useRecoilValueLoadable(addressesState);
+  useRecoilValueLoadable(addressesState);
 
   const navigate = useNavigate();
   const paramsSearch = new URLSearchParams(location.search);

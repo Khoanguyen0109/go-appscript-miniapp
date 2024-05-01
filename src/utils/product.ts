@@ -5,22 +5,26 @@ import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
 
 export const findVariant = (product, options) => {
+  console.log("product", product);
+  console.log("options", options);
   return product?.inventories?.find((item) => {
-    const object = chain(item)
-      .omit([
-        "id",
-        "product_id",
-        "discount",
-        "price",
-        "image",
-        "active",
-        "created_at",
-        "updated_at",
-        "deleted_at",
-      ])
-      .omitBy((value) => value === "")
-      .value();
-    return isEqual(object, options);
+    // const object = chain(item)
+    //   .omit([
+    //     "id",
+    //     "product_id",
+    //     "discount",
+    //     "price",
+    //     "image",
+    //     "active",
+    //     "created_at",
+    //     "updated_at",
+    //     "deleted_at",
+    //   ])
+    //   .omitBy((value) => value === "")
+    //   .value();
+    // console.log('object', object)
+    const option = Object.values(options || {})?.[0];
+    return isEqual(item.id, option?.id);
   });
 };
 
@@ -91,7 +95,8 @@ export const getOptionString = (options) => {
   }
   let variants: string[] = [];
   for (const [key, value] of Object.entries(options)) {
-    variants.push(`${capitalize(key.replace("_", ""))}: ${value}`);
+    variants.push(`${capitalize(key.replace("_", ""))}: ${value.name}`);
   }
+  console.log("first", variants);
   return variants.join(". ");
 };

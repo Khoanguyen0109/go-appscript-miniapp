@@ -28,6 +28,8 @@ import { ROUTES } from "pages/route";
 import { axiosInstance } from "api/instance";
 import { userState } from "state";
 import { addressSelectedState } from "pages/cart/state";
+import supabase from "../../client/client";
+import { upsertUser } from "../../api/addUser";
 const { OtpGroup, Option } = Select;
 
 type Props = {};
@@ -70,9 +72,13 @@ function AddUserAddress({}: Props) {
   const onSubmit = async (value) => {
     try {
       setLoading(true);
-      const res = await axiosInstance.post(`users/${user.id}/address`, {
-        ...value,
-      });
+      // const res = await axiosInstance.post(`users/${user.id}/address`, {
+      //   ...value,
+      // });
+      await upsertUser(user)
+      const { error } = await supabase
+        .from("user_addresses")
+        .insert({ userId: user.id, ...value });
       refresh();
       setProvinceId(null);
       setWardId(null);

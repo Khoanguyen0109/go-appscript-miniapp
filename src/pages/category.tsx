@@ -19,7 +19,7 @@ const CategoryPicker: FC = () => {
       className="category-tabs"
     >
       {categories.map((category) => (
-        <Tabs.Tab key={category.id} label={category.name}>
+        <Tabs.Tab tabKey={category.id} label={category.name}>
           <Suspense>
             <CategoryProducts categoryId={category.id} />
           </Suspense>
@@ -64,11 +64,13 @@ const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
     window.scrollTo(0, 0);
   }, [currentItems]);
   return (
-    <Box ref={errorRef} className="bg-background grid grid-cols-2 gap-4 p-4">
-      {currentItems.map((product) => (
-        <ProductItem key={product.id} product={product} />
-      ))}
-      <Box>
+    <>
+      <Box ref={errorRef} className="bg-background grid grid-cols-2 gap-4 p-4">
+        {currentItems.map((product) => (
+          <ProductItem key={product.id} product={product} />
+        ))}
+      </Box>
+      <Box className="flex justify-center bg-background">
         <ReactPaginate
           breakLabel="..."
           nextLabel=">"
@@ -89,7 +91,7 @@ const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
           activeClassName="active"
         />
       </Box>
-    </Box>
+    </>
   );
 };
 

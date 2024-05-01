@@ -29,7 +29,7 @@ export const Categories: FC = () => {
           >
             <img
               className="w-12 max-w-none h-12 rounded-full shadow-lg object-contain"
-              src={category.sub_value}
+              src={category.subValue}
             />
             <Text
               size="xxSmall"

@@ -42,14 +42,13 @@ export interface Product {
   thumbnail: string;
   image: string;
   price: number;
-  category_id: string;
+  categoryId: string;
   desc: string;
   active: string;
-  inventory_quantity: number;
   created_at: string;
   inventories: TProductInventory[];
   has_inventories: string;
-  desc_thumbnail: string;
+  descThumbnail: string;
   banner_image?: string;
   costdown?: string;
   discount?: string;

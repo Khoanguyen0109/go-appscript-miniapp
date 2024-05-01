@@ -3,10 +3,11 @@ import axios from "axios";
 import { atom, selector } from "recoil";
 import { userState } from "state";
 
+const PROVINCE_API = 'https://province-blue.vercel.app/api'
 export const provinceState = selector({
   key: "provinces",
   get: async () => {
-    const res = await axios(`https://provinces.open-api.vn/api/p/`);
+    const res = await axios(`${PROVINCE_API}/p`);
     return res.data || [];
   },
 });
@@ -23,7 +24,7 @@ export const districtState = selector({
     const code = provinces.find((item) => item.name === provinceId)?.code;
     if (provinceId) {
       const res = await axios(
-        `https://provinces.open-api.vn/api/p/${code}?depth=2`
+        `${PROVINCE_API}/p/${code}?depth=2`
       );
       return res.data.districts;
     }
@@ -46,7 +47,7 @@ export const wardState = selector({
       return [];
     }
     const res = await axios(
-      `https://provinces.open-api.vn/api/d/${code}?depth=2`
+      `${PROVINCE_API}/d/${code}?depth=2`
     );
     return res.data.wards;
   },

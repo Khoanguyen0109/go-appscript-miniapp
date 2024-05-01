@@ -5,13 +5,11 @@ import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
 
 export const findVariant = (product, options) => {
-
   return product?.inventories?.find((item) => {
     const object = chain(item)
       .omit([
         "id",
         "product_id",
-        "inventory_quantity",
         "discount",
         "price",
         "image",
@@ -27,7 +25,7 @@ export const findVariant = (product, options) => {
 };
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
-  let finalPrice = product.price;
+  let finalPrice = product.costdown || product.price;
   const variant = findVariant(product, options);
   if (variant) {
     return variant.price;

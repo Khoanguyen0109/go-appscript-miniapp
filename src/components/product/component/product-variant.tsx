@@ -10,15 +10,15 @@ type Props = {
 };
 
 function ProductVariant({ variant, value, values, onChange }: Props) {
-  const variantLabel = capitalize(variant).replace("_", "");
-
+  const variantLabel = capitalize(variant);
+  console.log("value", value);
   return (
     <Box my={8} className="space-y-2">
       <Text.Title size="small" className="font-bold mb-1">
         {variantLabel}
       </Text.Title>
       {values.map((option) => {
-        const isActive = option === value;
+        const isActive = option?.name === value?.name;
         return (
           <Button
             onClick={() => {
@@ -31,7 +31,7 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
             }`}
             variant={"tertiary"}
           >
-            {option}
+            {option.name}
           </Button>
         );
       })}

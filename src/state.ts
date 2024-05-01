@@ -17,15 +17,31 @@ import { Store } from "types/delivery";
 import { calcFinalPrice, getDummyImage } from "utils/product";
 import { wait } from "utils/async";
 import { axiosInstance } from "api/instance";
+import supabase from "./client/client";
+import { groupBy } from "lodash";
+
+export const mapProduct = (item) => {
+  return {
+    ...item,
+    costdown: item.discount
+      ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
+      : Number(item.price),
+    variants: groupBy(item.inventories, "group"),
+    image: item.image.split(",").map((item) => ({ image: item })),
+  };
+};
 
 export const userState = selector({
   key: "user",
   get: async () => {
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
     try {
-      const res = await axiosInstance.get(`/users/${zaloUser.id}`);
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", zaloUser.id);
 
-      return { ...res.data.data, ...zaloUser };
+      return { ...data?.[0], ...zaloUser };
     } catch (error) {
       return zaloUser;
     }
@@ -35,8 +51,8 @@ export const userState = selector({
 export const settingState = selector({
   key: "settings",
   get: async () => {
-    const res = await axiosInstance.get(`/settings/`);
-    return res.data.data;
+    const { data, error } = await supabase.from("settings").select();
+    return data;
   },
 });
 
@@ -81,15 +97,20 @@ const description = `There is a set of mock banners available <u>here</u> in thr
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
   get: async ({}) => {
-    const res = await axiosInstance.get("/products");
-    return res.data.hotProducts;
+    const { data, error } = await supabase
+      .from("products")
+      .select(`*, inventories: product_inventories(*)`)
+      .eq("level", "Hot");
+    return data?.map((item) => mapProduct(item));
   },
 });
 export const productsState = selector<Product[]>({
   key: "products",
   get: async () => {
-    const res = await axiosInstance.get("/products");
-    return res.data.data;
+    const { data, error } = await supabase
+      .from("products")
+      .select(`*, inventories: product_inventories(*)`);
+    return data?.map((item) => mapProduct(item));
   },
 });
 
@@ -113,7 +134,7 @@ export const productsByCategoryState = selectorFamily<Product[], string>({
     ({ get }) => {
       const allProducts = get(productsState);
       return allProducts.filter((product) =>
-        product.category_id.includes(categoryId)
+        product.categoryId.includes(categoryId)
       );
     },
 });

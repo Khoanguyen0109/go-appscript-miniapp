@@ -50,8 +50,11 @@ function productSelected({}: Props) {
         const data = await openShareSheet({
           type: "zmp_deep_link",
           data: {
-            title: productSelected?.name,
-            description: productSelected?.desc_thumbnail || "",
+            title:
+              productSelected?.name +
+              " " +
+              (productSelected?.costdown || productSelected?.price),
+            description: productSelected?.descThumbnail || "",
             thumbnail: productSelected?.thumbnail,
             path: user?.ctv
               ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${user.id}`
@@ -68,21 +71,12 @@ function productSelected({}: Props) {
     openChat({
       type: "oa",
       id: OA_ID,
-      message: "Xin Chào",
+      message: `Tư vấn mua: ${productSelected?.name}`,
       success: () => {},
       fail: (err) => {
         console.log("err", err);
       },
     });
-  };
-
-  const getproductSelected = async () => {
-    try {
-      const res = await axiosInstance(`/products/${params?.id || 2}`);
-      setProductSelected(res.data.data);
-    } catch (error) {
-      console.log("error", error);
-    }
   };
 
   const saveCTV = async (ctvId) => {
@@ -95,12 +89,6 @@ function productSelected({}: Props) {
       console.log("error", error);
     }
   };
-
-  useEffect(() => {
-    if (productSelected?.has_inventories || !productSelected || params?.id) {
-      getproductSelected();
-    }
-  }, [params]);
 
   useEffect(() => {
     if (ctvId) {

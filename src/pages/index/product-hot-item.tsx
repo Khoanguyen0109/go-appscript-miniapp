@@ -54,7 +54,7 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
             <Box className="flex items-center mr-4">
               <BsFire color="red" />
               <Text size="xLarge" className="mt-2 mb-2  text-red-500 font-bold">
-                {product?.discount}
+                {product?.discount}%
               </Text>
             </Box>
           </div>

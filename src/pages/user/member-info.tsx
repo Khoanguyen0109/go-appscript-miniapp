@@ -51,17 +51,17 @@ function MemberInfo({}: Props) {
             {scoreRank.map((item, index) => (
               <Tabs.Tab key={index} label={item.name}>
                 <Text className="mt-3 ">
-                  {item.sub_value.indexOf("</") !== -1 ? (
+                  {item.subValue.indexOf("</") !== -1 ? (
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: item.sub_value.replace(
+                        __html: item.subValue.replace(
                           /(<? *script)/gi,
                           "illegalscript"
                         ),
                       }}
                     ></div>
                   ) : (
-                    item.sub_value
+                    item.subValue
                   )}
                 </Text>
               </Tabs.Tab>

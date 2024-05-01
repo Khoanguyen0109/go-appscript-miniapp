@@ -30,13 +30,13 @@ import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
 
 if (getSystemInfo().platform === "android") {
-  const androidSafeTop = Math.round(
-    (window as any).ZaloJavaScriptInterface.getStatusBarHeight() /
-      window.devicePixelRatio
-  );
+  // const androidSafeTop = Math.round(
+  //   (window as any).ZaloJavaScriptInterface.getStatusBarHeight() /
+  //     window.devicePixelRatio
+  // );
   document.body.style.setProperty(
     "--zaui-safe-area-inset-top",
-    `${androidSafeTop}px`
+    `${20}px`
   );
 }
 

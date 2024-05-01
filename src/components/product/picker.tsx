@@ -46,7 +46,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   product,
   selected,
 }) => {
+  console.log("product.variants", product.variants);
   const navigate = useNavigate();
+  console.log('selected', selected)
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
@@ -168,19 +170,23 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               </Box>
               <Box className="space-y-5">
                 {product.variants &&
-                  Object.keys(product.variants).map((key) => (
-                    <ProductVariant
-                      variant={key}
-                      value={options[key] as string}
-                      values={product.variants[key]}
-                      onChange={(selectedOption) => {
-                        setOptions((prevOptions) => ({
-                          ...prevOptions,
-                          [key]: selectedOption,
-                        }));
-                      }}
-                    />
-                  ))}
+                  Object.keys(product.variants).map((key) => {
+                    console.log("key", key);
+                    console.log("product.variants[key]", product.variants[key]);
+                    return (
+                      <ProductVariant
+                        variant={key}
+                        value={options[key] as string}
+                        values={product.variants[key]}
+                        onChange={(selectedOption) => {
+                          setOptions((prevOptions) => ({
+                            ...prevOptions,
+                            [key]: selectedOption,
+                          }));
+                        }}
+                      />
+                    );
+                  })}
                 {/* {product.variants &&
                   product.variants.map((variant) =>
                   <ProductVariant variant={variant}/>

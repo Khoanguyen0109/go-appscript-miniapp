@@ -1,0 +1,190 @@
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { Box, Header, Page, Text } from "zmp-ui";
+import subscriptionDecor from "static/subscription-decor.svg";
+import {
+  AsyncCallbackFailObject,
+  CheckTransactionReturns,
+  Payment,
+} from "zmp-sdk";
+import { useLocation } from "react-router";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import {
+  cartState,
+  discountState,
+  phoneState,
+  preTotalPriceState,
+  totalPriceState,
+  totalQuantityState,
+  userState,
+} from "state";
+import supabase from "../../client/client";
+import { addressSelectedState, noteState } from "./state";
+import { EOrderStatus } from "../../constantsapp";
+
+interface RenderResultProps {
+  title: string;
+  message: string;
+  color: string;
+}
+
+const CheckoutResultPage: FC = () => {
+  const { state } = useLocation();
+  const [paymentResult, setPaymentResult] = useState<
+    CheckTransactionReturns | AsyncCallbackFailObject
+  >();
+  const user = useRecoilValue(userState);
+  const preTotal = useRecoilValue(preTotalPriceState);
+  const [note, setNote] = useRecoilState(noteState);
+  const resetCart = useResetRecoilState(cartState);
+  const [discount, setDiscount] = useRecoilState(discountState);
+  const quantity = useRecoilValue(totalQuantityState);
+  const phone = useRecoilValue(phoneState);
+  const cart = useRecoilValue(cartState);
+  const totalPrice = useRecoilValue(totalPriceState);
+  const [address, setAddressSelected] = useRecoilState(addressSelectedState);
+
+  const callBackPayment = async (data) => {
+    try {
+      const orderCreated = await supabase
+        .from("orders")
+        .insert({
+          userId: user.id,
+          // paymentMethod: paymentMethod.label,
+          addressId: address?.id,
+          total: totalPrice,
+          discount: discount?.discount || 0,
+          voucher: discount?.voucher || "",
+          preTotal,
+          quantity,
+          note,
+          status: EOrderStatus.WAITING,
+          resultCode: data.resultCode,
+          zaloOrderId: data.orderId,
+        })
+        .select();
+      const details = cart.reduce((acc, value) => {
+        acc.push({
+          orderId: orderCreated.data[0].id,
+          inventoryId: value.inventory_id,
+          total: parseFloat(value.price) * parseInt(value.quantity),
+          quantity: value.quantity,
+        });
+        return acc;
+      }, []);
+      console.log("details", details);
+      await supabase.from("order_details").insert(details);
+      setAddressSelected(null);
+      // setPaymentMethod(null);
+      setNote("");
+      resetCart();
+      // navigate(ROUTES.PAYMENT_SUCCESS);
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    let timeout;
+
+    const check = () => {
+      let data = state;
+      if (data) {
+        if ("path" in data) {
+          data = data.path;
+        } else if ("data" in data) {
+          data = data.data;
+        }
+      } else {
+        data = new URL(window.location.href).searchParams.toString();
+      }
+      Payment.checkTransaction({
+        data,
+        success: (rs) => {
+          // Kết quả giao dịch khi gọi api thành công
+          setPaymentResult(rs);
+          if (rs.resultCode === 0) {
+            // Thanh toán đang được xử lý
+            timeout = setTimeout(check, 3000);
+          }
+          if (rs.resultCode === 1) {
+            callBackPayment(rs);
+          }
+        },
+        fail: (err) => {
+          // Kết quả giao dịch khi gọi api thất bại
+          setPaymentResult(err);
+        },
+      });
+    };
+
+    check();
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const clearCart = useResetRecoilState(cartState);
+  useEffect(() => {
+    if (paymentResult?.resultCode >= 0) {
+      clearCart();
+    }
+  }, [paymentResult]);
+
+  if (paymentResult) {
+    return (
+      <Page className="flex flex-col">
+        <Header title="Kết quả thanh toán" />
+        {(function (render: (result: RenderResultProps) => ReactNode) {
+          if ("resultCode" in paymentResult) {
+            if (paymentResult.resultCode === 1) {
+              return render({
+                title: "Thanh toán thành công",
+                message: `Cảm ơn bạn đã mua hàng!`,
+                color: "#288F4E",
+              });
+            }
+            if (paymentResult.resultCode === 0) {
+              return render({
+                title: "Thanh toán đang được xử lý",
+                message: `Nhà bán hàng đã nhận được yêu cầu thanh toán của bạn và đang xử lý. Mã giao dịch: ${
+                  (paymentResult as CheckTransactionReturns).orderId
+                }-${(paymentResult as CheckTransactionReturns).transId}`,
+                color: "#F4AA39",
+              });
+            }
+          }
+          return render({
+            title: "Thanh toán thất bại",
+            message: `Đã có lỗi xảy ra trong quá trình thanh toán, vui lòng thử lại sau! Mã lỗi: ${JSON.stringify(
+              (paymentResult as AsyncCallbackFailObject).code
+            )}`,
+            color: "#DC1F18",
+          });
+        })(({ title, message, color }: RenderResultProps) => (
+          <Box className="p-4 space-y-4 flex-1 flex flex-col justify-center items-center text-center">
+            <div
+              key={+new Date()}
+              className="w-28 h-28 flex items-center justify-center rounded-full animate-spin"
+              style={{
+                backgroundColor: color,
+                animationIterationCount: 1,
+              }}
+            >
+              <img src={subscriptionDecor} />
+            </div>
+            <Text.Title className="font-bold" style={{ color }}>
+              {title}
+            </Text.Title>
+            <Text>{message}</Text>
+          </Box>
+        ))}
+      </Page>
+    );
+  }
+
+  return <></>;
+};
+
+export default CheckoutResultPage;

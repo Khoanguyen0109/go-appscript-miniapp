@@ -5,9 +5,10 @@ import { Box, Input, useNavigate } from "zmp-ui";
 export const Inquiry: FC = () => {
   const navigate = useNavigate();
   return (
-    <Box p={4} className="bg-white">
+    <Box className="bg-white px-2 mt-2">
       <Input.Search
-      className="rounded-2xl"
+        size="small"
+        className=""
         onFocus={() => navigate("/search")}
         placeholder="Tìm nhanh đồ uống, món mới ..."
       />

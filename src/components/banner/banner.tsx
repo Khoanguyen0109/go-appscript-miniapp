@@ -13,9 +13,8 @@ type TBannerProps = {
   padding?: number;
 };
 export const Banner: FC<TBannerProps> = ({ banners, onClick, padding }) => {
-  console.log("banners", banners);
   return (
-    <Box className="bg-white w-full" pb={padding ?? 2} onClick={onClick}>
+    <Box className="bg-white w-full" pb={padding ?? 0} onClick={onClick}>
       <Swiper
         modules={[Pagination]}
         pagination={{
@@ -26,12 +25,12 @@ export const Banner: FC<TBannerProps> = ({ banners, onClick, padding }) => {
         cssMode
       >
         {banners.map((banner, i) => (
-          <SwiperSlide key={i} className="px-2">
+          <SwiperSlide key={i}>
             <Box
-              className="w-full rounded-xl aspect-[2/1] bg-no-repeat bg-center bg-skeleton"
+              className="w-full aspect-[2/1] bg-no-repeat bg-center bg-skeleton"
               style={{
                 backgroundImage: `url(${banner?.value || banner?.image})`,
-                backgroundSize: "contain",
+                backgroundSize: "cover",
               }}
             />
           </SwiperSlide>

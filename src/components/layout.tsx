@@ -28,6 +28,10 @@ import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
 import supabase from "../client/client";
+import { useHandlePayment } from "../hooks/useHandlePayment";
+import CheckoutResultPage from "../pages/cart/result";
+import Search from "../pages/custom-search";
+import SearchResult from "../pages/search-result";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -38,6 +42,7 @@ if (getSystemInfo().platform === "android") {
 }
 
 export const Layout: FC = () => {
+  useHandlePayment();
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
   useRecoilValueLoadable(addressesState);
@@ -69,7 +74,12 @@ export const Layout: FC = () => {
         <Box className="flex-1 flex flex-col overflow-hidden">
           <Routes>
             <Route path={ROUTES.HOME} element={<HomePage />}></Route>
-            <Route path="/search" element={<SearchPage />}></Route>
+            <Route path={ROUTES.SEARCH} element={<Search />}></Route>
+            <Route
+              path={ROUTES.SEARCH_RESULT}
+              element={<SearchResult />}
+            ></Route>
+
             <Route path="/category" element={<CategoryPage />}></Route>
             <Route path="/notification" element={<NotificationPage />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
@@ -105,6 +115,10 @@ export const Layout: FC = () => {
             ></Route>
             <Route path={ROUTES.COMMISSION} element={<Commission />}></Route>
             <Route path={ROUTES.MEMBER_CARD} element={<MemberInfo />}></Route>
+            <Route
+              path={ROUTES.RESULT}
+              element={<CheckoutResultPage />}
+            ></Route>
 
             <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
           </Routes>

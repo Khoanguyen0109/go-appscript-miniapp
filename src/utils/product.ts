@@ -1,8 +1,10 @@
-import { createOrder } from "zmp-sdk";
+import { Payment, createOrder } from "zmp-sdk";
 import { Option, Product } from "types/product";
 import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
+import { sha256 } from "js-sha256";
+import { MAC_KEY } from "../enviroment";
 
 export const findVariant = (product, options) => {
   console.log("product", product);
@@ -71,21 +73,20 @@ export function isIdentical(
   return true;
 }
 
-const pay = async (amount: number, callback?: any, description?: string) =>
-  await createOrder({
-    desc:
-      description ??
-      `Thanh toán cho ${getConfig((config) => config.app.title)}`,
+const pay = (amount: number) => {
+  return createOrder({
+    desc: `Thanh toán cho ${getConfig((config) => config.app.title)}`,
     item: [],
     amount: amount,
-    success: (data) => {
-      callback(data);
-      return data;
-    },
-    fail: (err) => {
-      console.log("Payment error: ", err);
-    },
+    // success: (data) => {
+    //   callback(data);
+    //   console.log("Payment success: ", data);
+    // },
+    // fail: (err) => {
+    //   console.log("Payment error: ", err);
+    // },
   });
+};
 
 export default pay;
 

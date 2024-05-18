@@ -6,6 +6,9 @@ import { Box } from "zmp-ui";
 import { ProductItem } from "components/product/item";
 import { ProductItemSkeleton } from "components/skeletons";
 import ReactPaginate from "react-paginate";
+import { FixedSizeList as List } from "react-window";
+import { getWindowDimensions } from "../../utils/size";
+import NewProductItem from "./new-product-item";
 
 export const ProductListContent: FC = () => {
   const itemsPerPage = 30;
@@ -16,6 +19,7 @@ export const ProductListContent: FC = () => {
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = products.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(products.length / itemsPerPage);
+  const { width, height } = getWindowDimensions();
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % products.length;
@@ -24,13 +28,13 @@ export const ProductListContent: FC = () => {
     errorRef.current.scrollIntoView();
   };
   return (
-    <Section title="Danh sách sản phẩm">
-      <Box ref={errorRef} className="grid grid-cols-2 gap-2">
+    <Section title="Danh sách sản phẩm" mt={1}>
+      {/* <Box ref={errorRef} className="grid grid-cols-2 gap-2">
         {currentItems.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}
-      </Box>
-      <Box className="max-w-full mt-4 flex justify-center">
+      </Box> */}
+      {/* <Box className="max-w-full mt-4 flex justify-center">
         <ReactPaginate
           breakLabel="..."
           nextLabel=">"
@@ -46,10 +50,24 @@ export const ProductListContent: FC = () => {
           nextClassName="page-item"
           nextLinkClassName="page-link"
           breakClassName="page-item"
-          breakLinkClassName="page-link"
+        breakLinkClassName="page-link"
           containerClassName="pagination"
           activeClassName="active"
         />
+      </Box> */}
+      <Box className="m-2 mt-3">
+        <List
+          height={height - 200}
+          itemCount={products.length}
+          itemSize={350}
+          width={"100%"}
+        >
+          {({ index, style }) => (
+            <div style={style}>
+              <NewProductItem product={products[index]} />
+            </div>
+          )}
+        </List>
       </Box>
     </Section>
   );

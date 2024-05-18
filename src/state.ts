@@ -18,6 +18,7 @@ import { calcFinalPrice, getDummyImage } from "utils/product";
 import { wait } from "utils/async";
 import supabase from "./client/client";
 import { groupBy } from "lodash";
+import { upsertUser } from "./api/addUser";
 
 export const mapProduct = (item) => {
   return {
@@ -35,12 +36,8 @@ export const userState = selector({
   get: async () => {
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
     try {
-      const { data, error } = await supabase
-        .from("users")
-        .select()
-        .eq("id", zaloUser.id);
-
-      return { ...data?.[0], ...zaloUser };
+      const data = upsertUser(zaloUser);
+      return data;
     } catch (error) {
       return zaloUser;
     }
@@ -438,5 +435,33 @@ export const phoneState = selector<string | boolean>({
       return "0337076898";
     }
     return false;
+  },
+});
+
+export const searchState = atom<string | undefined>({
+  key: "searchBdsState",
+  default: undefined,
+});
+
+export const historySearchListState = atom<string[]>({
+  key: "historySearchListState",
+  default: [],
+});
+
+export const searchResultState = selector({
+  key: "searchResultState",
+  get: async ({ get }) => {
+    const search = get(searchState);
+    if (search) {
+      const { data, error } = await supabase
+        .from("products")
+        .select(`*, inventories: product_inventories(*)`)
+        .textSearch("name", search);
+      if (data) {
+        return data;
+      }
+      return [];
+    }
+    return [];
   },
 });

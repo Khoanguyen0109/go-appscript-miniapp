@@ -7,16 +7,16 @@ import ProductHotItem from "./product-hot-item";
 
 function ProductHotItemList() {
   const hotProducts = useRecoilValue(hotProductsState);
-  console.log('hotProducts', hotProducts)
+  console.log("hotProducts", hotProducts);
   return (
     <Suspense>
       <>
-        <Box mx={4} mt={6} className="flex">
+        <Box mt={2} mx={2} className="flex">
           <Text className="font-bold text-lg">Sản phẩm Hot</Text>
           <BsFire color="red" size={24} />
         </Box>
 
-        <div className="overflow-auto snap-x snap-mandatory scroll-p-4 no-scrollbar h-56">
+        <div className="overflow-auto snap-x snap-mandatory scroll-p-4 no-scrollbar">
           <Box m={0} pr={4} flex className="w-max">
             {hotProducts.map((product) => (
               <Box
@@ -24,7 +24,7 @@ function ProductHotItemList() {
                 ml={4}
                 mr={0}
                 className="snap-start"
-                style={{ width: "calc(100vw - 120px)" }}
+                // style={{ width: "calc(100vw - 120px)" }}
               >
                 <ProductHotItem product={product} />
               </Box>

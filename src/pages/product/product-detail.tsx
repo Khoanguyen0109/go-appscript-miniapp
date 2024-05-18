@@ -26,6 +26,7 @@ import LoadingScreenOverLay from "components/loading-screen";
 import { useLocation, useParams } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import supabase from "../../client/client";
+import { selectedProductState } from "./state";
 
 type Props = {};
 

@@ -11,4 +11,7 @@ export const ROUTES = {
   NOTIFICATION: (id) => `/notification/${id}`,
   COMMISSION: "/commission",
   MEMBER_CARD: "/member-card",
+  RESULT: "/result",
+  SEARCH: "/search",
+  SEARCH_RESULT: "/search-result",
 };

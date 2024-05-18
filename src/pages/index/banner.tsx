@@ -10,7 +10,7 @@ function BannerHome({}: Props) {
   const banners = useRecoilValue(bannerState);
 
   return (
-    <Suspense fallback={<ImageSkeleton className="w-full  rounded-lg" />}>
+    <Suspense fallback={<ImageSkeleton className="w-full" />}>
       <Banner banners={banners} />
     </Suspense>
   );

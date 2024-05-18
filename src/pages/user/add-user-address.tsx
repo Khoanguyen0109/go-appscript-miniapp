@@ -71,10 +71,11 @@ function AddUserAddress({}: Props) {
   const onSubmit = async (value) => {
     try {
       setLoading(true);
-      await upsertUser(user)
+      await upsertUser(user);
       const { error } = await supabase
         .from("user_addresses")
         .insert({ userId: user.id, ...value });
+      console.log("error", error);
       refresh();
       setProvinceId(null);
       setWardId(null);

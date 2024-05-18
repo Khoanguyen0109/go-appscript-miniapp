@@ -9,7 +9,6 @@ import { DisplayPrice } from "components/display/price";
 import { ProductPicker } from "components/product/picker";
 import { useSetRecoilState } from "recoil";
 import { selectedProductState } from "pages/product/state";
-import { BiPlus } from "react-icons/bi";
 
 const { Title } = Text;
 
@@ -20,7 +19,7 @@ interface RestaurantProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const ProductHotItem: FunctionComponent<RestaurantProps> = ({
+const NewProductHotItem: FunctionComponent<RestaurantProps> = ({
   product,
   before,
   after,
@@ -39,46 +38,45 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
       {({ open }) => (
         <div
           onClick={onClick ?? viewDetail}
-          className="relative bg-white mt-3 w-40 h-52 pb-3 overflow-hidden p-0 restaurant-with-cover shadow-md mb-3"
+          className="relative bg-white mt-3 rounded-xl overflow-hidden p-0 restaurant-with-cover shadow-md mb-3"
         >
           <div className="aspect-cinema relative h-24 w-full">
             <img
               src={product?.banner_image || product?.image[0].image}
-              className="absolute w-full h-full  object-cover"
+              className="absolute w-full h-full object-contain"
             />
           </div>
-          {/* <div className="absolute left-1 top-3 py-1 px-2 space-x-1 flex items-center font-semibold text-sm text-white bg-primary rounded-full">
+          <div className="absolute left-3 top-3 py-1 px-2 space-x-1 flex items-center font-semibold text-sm text-white bg-primary rounded-full">
             <Icon icon="zi-star-solid" className="text-yellow-400" size={14} />
             <span>{product.rating}</span>
-          </div> */}
-          {/* <div className="absolute right-1 top-1  space-x-1 flex items-center font-semibold text-sm text-white  ">
+          </div>
+          <div className="absolute right-1 top-1  space-x-1 flex items-center font-semibold text-sm text-white  ">
             <Box className="flex items-center mr-4">
               <BsFire color="red" />
               <Text size="xLarge" className="mt-2 mb-2  text-red-500 font-bold">
                 {product?.discount}%
               </Text>
             </Box>
-          </div> */}
+          </div>
 
-          <Title
-            size="small"
-            className="mt-4 mb-0 ml-1 truncate font-bold text-md"
-          >
+          <Title size="small" className="mt-2 mb-0 mx-4 truncate">
             {product.name}
           </Title>
 
-          <Box className=" ml-1 flex justify-between items-end">
-            <Box className="flex flex-col">
-              <Text size="normal" className=" mt-2   text-red-500 font-bold ">
+          <Box className=" flex justify-between items-center">
+            <Box className="flex justify-start">
+              <Text
+                size="normal"
+                className="mt-2 mb-2 ml-4 mr-2  text-center text-red-500 font-bold underline"
+              >
                 <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
               </Text>
-              <Text className="mt-2 mb-2   text-gray text-sm line-through">
+              <Text className="mt-2 mb-2  text-center text-gray text-sm line-through">
                 <DisplayPrice>{product.price.toString()}</DisplayPrice>
               </Text>
             </Box>
-            <Box className="flex items-center mr-4 mb-3 bg-red-500 rounded-xl">
-              <BiPlus
-                color="white"
+            <Box className="flex items-center mr-4">
+              <BsCartPlus
                 size={20}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -93,4 +91,4 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
   );
 };
 
-export default ProductHotItem;
+export default NewProductHotItem;

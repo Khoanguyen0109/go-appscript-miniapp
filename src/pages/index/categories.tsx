@@ -11,13 +11,13 @@ export const Categories: FC = () => {
   const setSelectedCategoryId = useSetRecoilState(selectedCategoryIdState);
 
   const gotoCategory = (categoryId: string) => {
-    console.log('categoryId', categoryId)
+    console.log("categoryId", categoryId);
     setSelectedCategoryId(categoryId);
     navigate("/category");
   };
 
   return (
-    <Box className="py-2 px-2 max-w-full overflow-x-auto">
+    <Box className="mt-2 px-2 max-w-full overflow-x-auto">
       <Text className="font-bold text-lg">Tất cả mặt hàng</Text>
       <Box className="bg-white  w-full mt-4 flex overflow-x-auto">
         {categories.map((category, i) => (

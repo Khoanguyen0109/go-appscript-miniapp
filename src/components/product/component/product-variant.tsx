@@ -11,7 +11,6 @@ type Props = {
 
 function ProductVariant({ variant, value, values, onChange }: Props) {
   const variantLabel = capitalize(variant);
-  console.log("value", value);
   return (
     <Box my={8} className="space-y-2">
       <Text.Title size="small" className="font-bold mb-1">

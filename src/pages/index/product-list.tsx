@@ -11,7 +11,7 @@ import { getWindowDimensions } from "../../utils/size";
 import NewProductItem from "./new-product-item";
 
 export const ProductListContent: FC = () => {
-  const itemsPerPage = 30;
+  const itemsPerPage = 20;
   const errorRef = useRef(null);
 
   const products = useRecoilValue(productsState);
@@ -29,11 +29,11 @@ export const ProductListContent: FC = () => {
   };
   return (
     <Section title="Danh sách sản phẩm" mt={1}>
-      {/* <Box ref={errorRef} className="grid grid-cols-2 gap-2">
+      <Box ref={errorRef} className="">
         {currentItems.map((product) => (
-          <ProductItem key={product.id} product={product} />
+          <NewProductItem key={product.id} product={product} />
         ))}
-      </Box> */}
+      </Box>
       {/* <Box className="max-w-full mt-4 flex justify-center">
         <ReactPaginate
           breakLabel="..."
@@ -55,7 +55,7 @@ export const ProductListContent: FC = () => {
           activeClassName="active"
         />
       </Box> */}
-      <Box className="m-2 mt-3">
+      {/* <Box className="m-2 mt-3">
         <List
           height={height - 200}
           itemCount={products.length}
@@ -68,7 +68,7 @@ export const ProductListContent: FC = () => {
             </div>
           )}
         </List>
-      </Box>
+      </Box> */}
     </Section>
   );
 };

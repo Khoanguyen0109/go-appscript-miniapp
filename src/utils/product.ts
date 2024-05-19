@@ -7,8 +7,6 @@ import { sha256 } from "js-sha256";
 import { MAC_KEY } from "../enviroment";
 
 export const findVariant = (product, options) => {
-  console.log("product", product);
-  console.log("options", options);
   return product?.inventories?.find((item) => {
     // const object = chain(item)
     //   .omit([

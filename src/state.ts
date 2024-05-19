@@ -119,7 +119,7 @@ export const recommendProductsState = selector<Product[]>({
 
 export const selectedCategoryIdState = atom({
   key: "selectedCategoryId",
-  default: "coffee",
+  default: `1`,
 });
 
 export const productsByCategoryState = selectorFamily<Product[], string>({
@@ -458,7 +458,7 @@ export const searchResultState = selector({
         .select(`*, inventories: product_inventories(*)`)
         .textSearch("name", search);
       if (data) {
-        return data;
+        return data.map((item) => mapProduct(item));
       }
       return [];
     }

@@ -1,25 +1,30 @@
 import { ProductItem } from "components/product/item";
 import React, { FC, Suspense, useEffect, useRef, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   categoriesState,
   productsByCategoryState,
   selectedCategoryIdState,
 } from "state";
 import { Box, Header, Page, Tabs, Text } from "zmp-ui";
+import NewProductItem from "./index/new-product-item";
 
 const CategoryPicker: FC = () => {
   const categories = useRecoilValue(categoriesState);
   const selectedCategory = useRecoilValue(selectedCategoryIdState);
+  const setSelectedCategoryId = useSetRecoilState(selectedCategoryIdState);
+
   return (
     <Tabs
       scrollable
-      defaultActiveKey={selectedCategory}
+      activeKey={selectedCategory.toString()}
+      defaultActiveKey={`${1}`}
       className="category-tabs"
+      onTabClick={(key) => setSelectedCategoryId(key)}
     >
       {categories.map((category) => (
-        <Tabs.Tab tabKey={category.id} label={category.name}>
+        <Tabs.Tab key={category.id.toString()} label={category.name}>
           <Suspense>
             <CategoryProducts categoryId={category.id} />
           </Suspense>
@@ -30,7 +35,6 @@ const CategoryPicker: FC = () => {
 };
 
 const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
-  const itemsPerPage = 10;
   const errorRef = useRef(null);
 
   const productsByCategory = useRecoilValue(
@@ -48,48 +52,16 @@ const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
   }
 
   const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = productsByCategory.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(productsByCategory.length / itemsPerPage);
-
-  const handlePageClick = (event) => {
-    const newOffset =
-      (event.selected * itemsPerPage) % productsByCategory.length;
-
-    setItemOffset(newOffset);
-    errorRef.current.scrollIntoView();
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentItems]);
+  }, [categoryId]);
   return (
     <>
-      <Box ref={errorRef} className="bg-background grid grid-cols-2 gap-4 p-4">
-        {currentItems.map((product) => (
-          <ProductItem key={product.id} product={product} />
+      <Box ref={errorRef} className="p-2">
+        {productsByCategory.map((product) => (
+          <NewProductItem key={product.id} product={product} />
         ))}
-      </Box>
-      <Box className="flex justify-center bg-background">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel=">"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={2}
-          pageCount={pageCount}
-          previousLabel="<"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-        />
       </Box>
     </>
   );

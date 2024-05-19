@@ -12,6 +12,7 @@ import {
 } from "zmp-ui";
 import { getStorage, setStorage } from "zmp-sdk";
 import { historySearchListState, searchState } from "../state";
+import { ROUTES } from "./route";
 
 type Props = {};
 
@@ -37,7 +38,7 @@ function Search({}: Props) {
           console.log(error);
         },
       });
-      navigate("/search-result");
+      navigate(ROUTES.SEARCH_RESULT);
     }
   };
   const getData = async () => {
@@ -61,7 +62,7 @@ function Search({}: Props) {
 
   const onItemClick = (value: string) => {
     setSearch(value);
-    navigate("/search-result");
+    navigate(ROUTES.SEARCH_RESULT);
   };
 
   return (

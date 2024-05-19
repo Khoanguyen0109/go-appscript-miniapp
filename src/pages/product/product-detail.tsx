@@ -103,7 +103,7 @@ function productSelected({}: Props) {
       <Header
         title={truncate(productSelected.name, { length: 24 })}
         showBackIcon={true}
-        onBackClick={() => navigate(ROUTES.HOME)}
+        onBackClick={() => navigate(-1)}
       />
       {/* {open && (
         <Box className=" absolute z-30 top-0 h-screen w-screen  flex justify-center items-center ">
@@ -214,14 +214,14 @@ function productSelected({}: Props) {
           )}
         </ProductPicker>
       </Box>
-      {cart.length > 0 && (
+      {/* {cart.length > 0 && (
         <Button
           onClick={() => navigate(ROUTES.CART)}
           className=" w-12 min-w-0 p-0 h-12 rounded-full fixed bottom-20 right-10 !bg-slate-100 text-white"
         >
           <CartIcon />
         </Button>
-      )}
+      )} */}
     </Page>
   );
 }

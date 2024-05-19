@@ -23,7 +23,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
     <ProductPicker product={product}>
       {({ open }) => (
         <div
-          className="flex shadow-md py-2"
+          className="flex shadow-md px-2 mb-3"
           onClick={() => navigateProductDetail(product)}
         >
           <Box className="w-24 h-24 mr-2 ">
@@ -45,7 +45,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
                 {product.descThumbnail}
               </Text>
             </Box>
-            <Box className="flex w-full justify-between">
+            <Box className="flex w-full mb-2 justify-between">
               <Text
                 size="xLarge"
                 color=""

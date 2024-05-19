@@ -43,15 +43,18 @@ function SearchResult() {
     return (
       <Page
         className={
-          "bg-white mx-auto p-3 flex flex-col items-center justify-centerr"
+          "bg-white mx-auto flex flex-col items-center justify-centerr"
         }
       >
         <Header title="Kết quả tìm kiếm" />
-        {searchResult.contents.length !== 0
-          ? searchResult.contents.map((item) => (
-              <NewProductItem product={item} />
-            ))
-          : renderBottom()}
+        <Box className="p-2 w-full">
+          {searchResult.contents.length !== 0
+            ? searchResult.contents.map((item) => (
+                <NewProductItem product={item} />
+              ))
+            : renderBottom()}
+        </Box>
+
         <Box className="mt-10">
           <Text className="text-xs mb-1">
             Bạn không tìm thấy sản phẩm phù hợp?

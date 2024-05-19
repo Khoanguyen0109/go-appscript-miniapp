@@ -99,7 +99,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               product,
               options,
               inventory_id: exitedInventories?.id,
-              price: exitedInventories.price,
+              price: exitedInventories?.price || product.price,
               quantity,
             });
           }

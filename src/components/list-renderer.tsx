@@ -39,15 +39,10 @@ export function ListRenderer<T>({
           <div
             key={renderKey ? renderKey(item) : i}
             onClick={() => onClick?.(item)}
-            className={`flex items-start space-x-1 p-${padding} last:pb-0`}
+            className={`flex items-start space-x-1 p-${padding} last:pb-0 mb-3`}
           >
             {renderLeft(item)}
-            <Box className="flex-1 min-w-0 relative">
-              {renderRight(item)}
-              {!noDivider && i < list.length - 1 && (
-                <hr className="absolute left-0 -right-4  border-divider border-t-[0.5px]"></hr>
-              )}
-            </Box>
+            <Box className="flex-1 min-w-0 relative">{renderRight(item)}</Box>
           </div>
         ))}
       </Box>

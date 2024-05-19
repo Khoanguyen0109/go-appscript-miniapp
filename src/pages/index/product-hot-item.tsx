@@ -33,7 +33,6 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
     setSelectedProductId(product);
     navigate(ROUTES.PRODUCT_DETAIL(product.id));
   };
-  console.log("product", product);
   return (
     <ProductPicker product={product}>
       {({ open }) => (

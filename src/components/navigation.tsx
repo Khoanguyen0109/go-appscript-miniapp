@@ -47,7 +47,6 @@ export type TabKeys = keyof typeof tabs;
 
 export const NO_BOTTOM_NAVIGATION_PAGES = [
   "/search",
-  "/category",
   "/products",
   ROUTES.PAYMENT_SUCCESS,
 ];
@@ -59,10 +58,10 @@ export const Navigation: FC = () => {
   const location = useLocation();
 
   const noBottomNav = useMemo(() => {
-    return NO_BOTTOM_NAVIGATION_PAGES.some((substring) =>
-      location.pathname.includes(substring)
-    );
-    // return NO_BOTTOM_NAVIGATION_PAGES.includes(location.pathname);
+    // return NO_BOTTOM_NAVIGATION_PAGES.some((substring) =>
+    //   location.pathname.includes(substring)
+    // );
+    return NO_BOTTOM_NAVIGATION_PAGES.includes(location.pathname);
   }, [location]);
   useEffect(() => {
     setActiveTab(location.pathname);

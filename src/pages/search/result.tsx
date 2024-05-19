@@ -14,7 +14,7 @@ const SearchResultContent: FC = () => {
         Kết quả ({result.length})
       </Text.Title>
       {result.length > 0 ? (
-        <Box className="p-4 pt-0 space-y-4 flex-1 overflow-y-auto">
+        <Box className="p-2 pt-0 space-y-4 flex-1 overflow-y-auto">
           {result.map((product) => (
             <ProductPicker key={product.id} product={product}>
               {({ open }) => (

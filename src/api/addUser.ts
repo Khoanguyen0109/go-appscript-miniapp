@@ -14,6 +14,6 @@ export const upsertUser = async (zaloUser) => {
       .from("users")
       .insert({ idByOA: zaloUser.id, name: zaloUser.name })
       .select();
-    return newUser;
+    return newUser[0];
   }
 };

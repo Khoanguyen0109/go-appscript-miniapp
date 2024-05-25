@@ -8,7 +8,7 @@ import CartPage from "pages/cart";
 import NotificationPage from "pages/notification";
 import ProfilePage from "pages/profile";
 import { useNavigate } from "react-router-dom";
-
+import size from "lodash/size";
 import SearchPage from "pages/search";
 import { getSystemInfo } from "zmp-sdk";
 import { ScrollRestoration } from "./scroll-restoration";
@@ -23,7 +23,7 @@ import AddUserAddress from "pages/user/add-user-address";
 import OpenChat from "pages/chat";
 import NotificationDetail from "pages/notification-detail";
 import Commission from "pages/user/commission";
-import { useRecoilValueLoadable } from "recoil";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
@@ -32,6 +32,7 @@ import { useHandlePayment } from "../hooks/useHandlePayment";
 import CheckoutResultPage from "../pages/cart/result";
 import Search from "../pages/custom-search";
 import SearchResult from "../pages/search-result";
+import { addressSelectedState } from "../pages/cart/state";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -45,7 +46,8 @@ export const Layout: FC = () => {
   useHandlePayment();
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
-  useRecoilValueLoadable(addressesState);
+  const addresses = useRecoilValueLoadable(addressesState);
+  const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
   const navigate = useNavigate();
   const paramsSearch = new URLSearchParams(location.search);
@@ -65,6 +67,12 @@ export const Layout: FC = () => {
       saveCTV(ctvId);
     }
   }, []);
+
+  useEffect(() => {
+    if (size(addresses) && addresses && addresses.state === "hasValue") {
+      setAddressSelected(addresses.contents[0]);
+    }
+  }, [addresses]);
   if (userStateLoadable.state === "hasError") {
     return navigate(ROUTES.NOT_FOUND);
   } else {

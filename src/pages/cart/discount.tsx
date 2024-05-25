@@ -10,6 +10,7 @@ type Props = {};
 function Discount({}: Props) {
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useRecoilState(discountState);
+  console.log(discount)
   const [loading, setLoading] = useState(false);
   const onChange = (e) => {
     const { value } = e.target;
@@ -27,7 +28,7 @@ function Discount({}: Props) {
       const { data } = await supabase
         .from("discounts")
         .select()
-        .eq("name", voucher);
+        .eq("voucher", voucher);
       if (data?.length > 0) {
         setDiscount(data[0]);
         openSnackbar({

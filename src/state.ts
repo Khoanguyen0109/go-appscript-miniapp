@@ -155,6 +155,18 @@ export const totalQuantityState = selector({
   },
 });
 
+export function calDiscount(discount, total) {
+  switch (discount.discountBy) {
+    case "percent":
+      return total - total * (parseInt(discount.discount) / 100);
+    case "price":
+      return total - parseInt(discount.discount);
+
+    default:
+      return 0;
+  }
+}
+
 export const totalPriceState = selector({
   key: "totalPrice",
   get: ({ get }) => {
@@ -174,15 +186,7 @@ export const totalPriceState = selector({
         );
       }, 0) + shippingFee;
     if (discount) {
-      switch (discount.discount_by) {
-        case "percent":
-          return total - total * (parseInt(discount.discount) / 100);
-        case "price":
-          return total - parseInt(discount.discount);
-
-        default:
-          break;
-      }
+      calDiscount(discount, total);
     }
     return total;
   },
@@ -452,11 +456,14 @@ export const searchResultState = selector({
   key: "searchResultState",
   get: async ({ get }) => {
     const search = get(searchState);
+    const formattedQuery = search.split(" ").join(" & ");
+
     if (search) {
       const { data, error } = await supabase
         .from("products")
         .select(`*, inventories: product_inventories(*)`)
-        .textSearch("name", search);
+        // .textSearch("name", search);
+        .filter("tsv_name", "fts(vietnamese)", formattedQuery);
       if (data) {
         return data.map((item) => mapProduct(item));
       }

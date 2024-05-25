@@ -18,7 +18,6 @@ import { size } from "lodash";
 export const Delivery: FC = () => {
   const navigate = useNavigate();
   const [note, setNote] = useRecoilState(noteState);
-  const addresses = useRecoilValueLoadable(addressesState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
   const navigateToAddress = () => {
@@ -30,11 +29,6 @@ export const Delivery: FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (size(addresses)) {
-      setAddressSelected(addresses.contents[0]);
-    }
-  }, []);
   return (
     <Box className="space-y-1 ">
       <Text className="text-md font-bold px-2">Hình thức nhận hàng</Text>

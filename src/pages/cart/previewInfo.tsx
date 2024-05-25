@@ -8,15 +8,13 @@ function PreviewInfo() {
   const preTotal = useRecoilValue(preTotalPriceState);
   const discount = useRecoilValue(discountState);
   const shippingFee = useRecoilValue(shippingFeeState);
-
   const discountPrice = useMemo(() => {
     if (discount) {
-      switch (discount.discount_by) {
+      switch (discount.discountBy) {
         case "percent":
           return preTotal * (parseInt(discount.discount) / 100);
         case "price":
           return parseInt(discount.discount);
-
         default:
           return 0;
       }

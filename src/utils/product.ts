@@ -71,18 +71,18 @@ export function isIdentical(
   return true;
 }
 
-const pay = (amount: number) => {
+const pay = (amount: number, callback: (data: any) => void) => {
   return createOrder({
     desc: `Thanh toán cho ${getConfig((config) => config.app.title)}`,
     item: [],
     amount: amount,
-    // success: (data) => {
-    //   callback(data);
-    //   console.log("Payment success: ", data);
-    // },
-    // fail: (err) => {
-    //   console.log("Payment error: ", err);
-    // },
+    success: (data) => {
+      console.log("data", data);
+      callback(data);
+    },
+    fail: (err) => {
+      console.log("Payment error: ", err);
+    },
   });
 };
 

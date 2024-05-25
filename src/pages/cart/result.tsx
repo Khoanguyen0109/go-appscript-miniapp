@@ -43,47 +43,6 @@ const CheckoutResultPage: FC = () => {
   const totalPrice = useRecoilValue(totalPriceState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
 
-  const callBackPayment = async (data) => {
-    try {
-      const orderCreated = await supabase
-        .from("orders")
-        .insert({
-          userId: user.id,
-          // paymentMethod: paymentMethod.label,
-          addressId: address?.id,
-          total: totalPrice,
-          discount: discount?.discount || 0,
-          voucher: discount?.voucher || "",
-          preTotal,
-          quantity,
-          note,
-          status: EOrderStatus.WAITING,
-          resultCode: data.resultCode,
-          zaloOrderId: data.orderId,
-        })
-        .select();
-      const details = cart.reduce((acc, value) => {
-        acc.push({
-          orderId: orderCreated.data[0].id,
-          inventoryId: value.inventory_id,
-          total: parseFloat(value.price) * parseInt(value.quantity),
-          quantity: value.quantity,
-        });
-        return acc;
-      }, []);
-      console.log("details", details);
-      await supabase.from("order_details").insert(details);
-      setAddressSelected(null);
-      // setPaymentMethod(null);
-      setNote("");
-      resetCart();
-      // navigate(ROUTES.PAYMENT_SUCCESS);
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-    }
-  };
-
   useEffect(() => {
     let timeout;
 
@@ -108,10 +67,11 @@ const CheckoutResultPage: FC = () => {
             timeout = setTimeout(check, 3000);
           }
           if (rs.resultCode === 1) {
-            callBackPayment(rs);
+            // callBackPayment(rs);
           }
         },
         fail: (err) => {
+          console.log("err", err);
           // Kết quả giao dịch khi gọi api thất bại
           setPaymentResult(err);
         },

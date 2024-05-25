@@ -27,14 +27,6 @@ function SearchResult() {
     });
   };
 
-  const renderBottom = () => {
-    return (
-      <Box>
-        <Box className="mt-20">Không tìm thấy sản phẩm</Box>
-      </Box>
-    );
-  };
-
   if (searchResult.state === "loading") {
     return <LoadingScreenOverLay />;
   }
@@ -48,25 +40,26 @@ function SearchResult() {
       >
         <Header title="Kết quả tìm kiếm" />
         <Box className="p-2 w-full">
-          {searchResult.contents.length !== 0
-            ? searchResult.contents.map((item) => (
-                <NewProductItem product={item} />
-              ))
-            : renderBottom()}
-        </Box>
+          {searchResult.contents.length !== 0 ? (
+            searchResult.contents.map((item) => (
+              <NewProductItem product={item} />
+            ))
+          ) : (
+            <>
+              <Box className="mt-10 text-center">
+                <Box className="mt-20 mb-7">Không tìm thấy sản phẩm</Box>
 
-        <Box className="mt-10">
-          <Text className="text-xs mb-1">
-            Bạn không tìm thấy sản phẩm phù hợp?
-          </Text>
-          <Box
-            onClick={() => navigate(-1)}
-            className={
-              " mt-2 border-solid border-1 w-full h-12 flex items-center justify-center rounded-sm text-gray-500 font-semibold"
-            }
-          >
-            <span>Trở về tìm kiếm</span>
-          </Box>
+                <Box
+                  onClick={() => navigate(-1)}
+                  className={
+                    " mt-2 border-solid border-1 w-full h-12 flex items-center justify-center rounded-sm text-gray-500 font-semibold"
+                  }
+                >
+                  <span>Trở về tìm kiếm</span>
+                </Box>
+              </Box>
+            </>
+          )}
         </Box>
       </Page>
     );

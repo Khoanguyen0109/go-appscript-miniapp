@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { addressesState } from "../user/state";
 
 export const noteState = atom({
   key: "note",
@@ -17,5 +18,5 @@ export const selectedPaymentMethod = atom({
 
 export const addressSelectedState = atom({
   key: "addressSelectedState",
-  default: null,
+  default: addressesState?.[0] || null,
 });

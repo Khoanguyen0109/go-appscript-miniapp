@@ -1,12 +1,5 @@
 import { atom, selector, selectorFamily } from "recoil";
 import { getAppInfo, getLocation, getPhoneNumber, getUserInfo } from "zmp-sdk";
-import coffeeIcon from "static/category-coffee.svg";
-import matchaIcon from "static/category-matcha.svg";
-import foodIcon from "static/category-food.svg";
-import milkteaIcon from "static/category-milktea.svg";
-import drinksIcon from "static/category-drinks.svg";
-import breadIcon from "static/category-bread.svg";
-import juiceIcon from "static/category-juice.svg";
 import logo from "static/logo.jpg";
 import { Category, CategoryId } from "types/category";
 import { Product, Variant } from "types/product";
@@ -87,15 +80,14 @@ export const categoriesState = selector<Category[]>({
   },
 });
 
-const description = `There is a set of mock banners available <u>here</u> in three colours and in a range of standard banner sizes`;
-
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
   get: async ({}) => {
     const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
-      .eq("level", "Hot");
+      .eq("level", "Hot")
+      .eq("active", true);
     return data?.map((item) => mapProduct(item));
   },
 });
@@ -104,7 +96,8 @@ export const productsState = selector<Product[]>({
   get: async () => {
     const { data, error } = await supabase
       .from("products")
-      .select(`*, inventories: product_inventories(*)`);
+      .select(`*, inventories: product_inventories(*)`)
+      .eq("active", true);
     return data?.map((item) => mapProduct(item));
   },
 });
@@ -217,10 +210,11 @@ export const orderState = selector({
   get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
+    console.log('user', user)
     const { data, error } = await supabase
       .from("orders")
       .select(
-        `* , orderDetails: order_details(* , inventory:product_inventories(*, products(*)))`
+        `* , orderDetails: order_details(* , product:products(*))`
       )
       .eq("userId", user.id);
     return data;
@@ -462,7 +456,7 @@ export const searchResultState = selector({
       const { data, error } = await supabase
         .from("products")
         .select(`*, inventories: product_inventories(*)`)
-        // .textSearch("name", search);
+        .eq("active", true)
         .filter("tsv_name", "fts(vietnamese)", formattedQuery);
       if (data) {
         return data.map((item) => mapProduct(item));

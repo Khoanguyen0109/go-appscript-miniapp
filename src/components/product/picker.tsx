@@ -68,11 +68,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 item.product.id === product.id &&
                 isIdentical(item.options, options)
             )!;
-            const exitedInventories = findVariant(editing.product, options);
             res.splice(cart.indexOf(editing), 1, {
               ...editing,
               options,
-              inventory_id: exitedInventories?.id,
               quantity: existed ? existed.quantity + quantity : quantity,
             });
             if (existed) {
@@ -86,11 +84,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               item.product.id === product.id &&
               isIdentical(item.options, options)
           );
-          const exitedInventories = findVariant(product, options);
           if (existed) {
             res.splice(cart.indexOf(existed), 1, {
               ...existed,
-              inventory_id: exitedInventories?.id,
               quantity: existed.quantity + quantity,
             });
           } else {
@@ -98,8 +94,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               selected: true,
               product,
               options,
-              inventory_id: exitedInventories?.id,
-              price: exitedInventories?.price || product.price,
+              price:  product.price,
               quantity,
             });
           }

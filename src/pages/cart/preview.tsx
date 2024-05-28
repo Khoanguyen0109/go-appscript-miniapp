@@ -24,7 +24,7 @@ import { EOrderStatus } from "../../constantsapp";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
-
+  console.log("cart", cart);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
@@ -63,15 +63,18 @@ export const CartPreview: FC = () => {
           quantity,
           note,
           status: EOrderStatus.WAITING,
-          zaloOrderId: data.orderId,
+          zaloOrderId: data?.orderId,
         })
         .select();
       const details = cart.reduce((acc, value) => {
         acc.push({
           orderId: orderCreated.data[0].id,
-          inventoryId: value.inventory_id,
+          productId: value.product.id,
           total: parseFloat(value.price) * parseInt(value.quantity),
           quantity: value.quantity,
+          inventoryIds: Object.keys(value.options)
+            .map((key) => value.options[key].id)
+            .join(","),
         });
         return acc;
       }, []);
@@ -81,7 +84,7 @@ export const CartPreview: FC = () => {
       // setPaymentMethod(null);
       setNote("");
       resetCart();
-      // navigate(ROUTES.PAYMENT_SUCCESS);
+      navigate(ROUTES.PAYMENT_SUCCESS);
     } catch (error) {
       console.log("error", error);
     } finally {
@@ -89,18 +92,24 @@ export const CartPreview: FC = () => {
   };
 
   const makePayment = async () => {
-    setLoading(true);
-    if (!address?.id) {
-      return openSnackbar({
-        text: "Vui lòng chọn địa chỉ giao hàng",
-        type: "error",
-        icon: true,
-        duration: 1000,
-      });
+    try {
+      if (!address?.id) {
+        return openSnackbar({
+          text: "Vui lòng chọn địa chỉ giao hàng",
+          type: "error",
+          icon: true,
+          duration: 1000,
+        });
+      }
+      setLoading(true);
+      const data = await pay(totalPrice, callBackPayment);
+      // callBackPayment(null);
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
-    const data = await pay(totalPrice, callBackPayment);
-    console.log("data", data);
-    setLoading(false);
+
+    // console.log("data", data);
   };
   return (
     <Box flex className="sticky bottom-0 bg-background p-4 space-x-4">
@@ -119,9 +128,8 @@ export const CartPreview: FC = () => {
       </Box>
       <Button
         type="highlight"
-        disabled={!quantity || loading}
+        disabled={!quantity || loading || !address}
         fullWidth
-        // onClick={() => callBackPayment({data: 1})}
         onClick={() => makePayment()}
       >
         {loading ? <Loading /> : "Đặt hàng"}

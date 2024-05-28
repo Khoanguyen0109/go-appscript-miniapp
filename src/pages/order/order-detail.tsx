@@ -1,4 +1,3 @@
-
 import LoadingScreenOverLay from "components/loading-screen";
 import { CartItems } from "pages/cart/cart-items";
 import React, { useEffect, useState } from "react";
@@ -28,7 +27,7 @@ function OrderDetail({}: Props) {
       const { data, error } = await supabase
         .from("orders")
         .select(
-          `* , address: user_addresses(*), orderDetails: order_details(* , inventory:product_inventories(*,product: products(*)))`
+          `* , address: user_addresses(*), orderDetails: order_details(* , product:products(* , inventories:product_inventories(*)))`
         )
         .eq("userId", user.id)
         .eq("id", id);
@@ -51,9 +50,7 @@ function OrderDetail({}: Props) {
     <Page className="flex flex-col">
       <Header title="Chi tiết đơn hàng" showBackIcon={true} />
       <OrderInfo item={detail} />
-      <Box className="px-2">
-        <Text.Title className="mb-4">Thông tin địa chỉ</Text.Title>
-
+      <Box className="px-2 mt-4">
         <Box className="flex bg-background p-4 rounded-lg ">
           <Icon icon="zi-location" className="my-auto mr-3" />
           <Box>
@@ -67,13 +64,10 @@ function OrderDetail({}: Props) {
           </Box>
         </Box>
       </Box>
-      <Box className="px-2 pt-4">
-        <Text.Title className="mb-4">Thông tin sản phẩm</Text.Title>
-      </Box>
+      <Box className="px-2 mt-4"></Box>
       <OrderDetailList detail={detail?.orderDetails || []} />
-      <Box className="px-2 pt-4">
-        <Text.Title className="mb-4">Thông tin thanh toán</Text.Title>
-        <Box className=" bg-background p-4 rounded-lg mb-3">
+      <Box className="px-2 mt-4">
+        <Box className=" bg-background p-4 rounded-lg mb-4">
           <Text>Phương thức thanh toán</Text>
           <Text className="font-bold">{detail?.payment_method}</Text>
         </Box>

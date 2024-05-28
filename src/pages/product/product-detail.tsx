@@ -27,6 +27,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import supabase from "../../client/client";
 import { selectedProductState } from "./state";
+import { formatPrice } from "../../utils/price";
 
 type Props = {};
 
@@ -49,9 +50,7 @@ function productSelected({}: Props) {
           type: "zmp_deep_link",
           data: {
             title:
-              productSelected?.name +
-              " " +
-              (productSelected?.costdown || productSelected?.price),
+              productSelected?.name + " " + formatPrice(productSelected?.price),
             description: productSelected?.descThumbnail || "",
             thumbnail: productSelected?.thumbnail,
             path: user?.ctv

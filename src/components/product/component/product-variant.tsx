@@ -20,6 +20,7 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
         const isActive = option?.name === value?.name;
         return (
           <Button
+            key={option.name}
             onClick={() => {
               onChange(option);
             }}

@@ -11,7 +11,7 @@ function OrderStatus({ status }: Props) {
         return {
           title: "Đang xác nhận",
           backgroundColor: "#FFE5D0",
-          color: "#FD7E14",
+          color: "#ff7300",
           icon: "zi-clock-1",
         };
 
@@ -50,10 +50,10 @@ function OrderStatus({ status }: Props) {
       <Box
         style={{
           color: statusItem.color,
-          backgroundColor: statusItem.backgroundColor,
+          backgroundColor: statusItem.backgroundColor + "!important",
           width: "fit-content",
         }}
-        className={`rounded-full px-3 py-2 items-center w-auto   text-white font-semibold flex`}
+        className={`rounded-full px-3 py-2 items-center w-auto   font-semibold flex`}
       >
         {/* <Icon icon={statusItem.icon} className="text-white mr-2" /> */}
         <Text className="font-semibold">{statusItem.title}</Text>

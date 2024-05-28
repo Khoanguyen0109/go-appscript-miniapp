@@ -30,12 +30,16 @@ export const findVariant = (product, options) => {
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   let finalPrice = product.costdown || product.price;
-  const variant = findVariant(product, options);
-  if (variant) {
-    return variant.price;
-  }
-
-  return finalPrice;
+  // const variant = findVariant(product, options);
+  // if (variant) {
+  //   return variant.price;
+  // }
+  console.log("options", options);
+  const totalOptionPrice = Object.keys(options).reduce(
+    (acc, key) => acc + options[key].price,
+    0
+  );
+  return finalPrice + totalOptionPrice;
 }
 
 export function getDummyImage(filename: string) {

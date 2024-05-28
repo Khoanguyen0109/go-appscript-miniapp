@@ -11,9 +11,7 @@ type Props = {
 
 function OrderInfo({ item }: Props) {
   return (
-    <Box className="p-4">
-      <Text.Title className="mb-4">Thông tin đơn hàng</Text.Title>
-
+    <Box className="p-2">
       <ListRenderer
         items={[
           {

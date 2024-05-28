@@ -18,7 +18,7 @@ function OrderItem({ item, onOpenRating }: Props) {
   const onClick = () => {
     navigate(ROUTES.ORDER_DETAIL(item.id));
   };
-
+  console.log("item", item);
   return (
     <Box
       className="rounded-lg bg-background m-4 cursor-pointer"
@@ -35,13 +35,13 @@ function OrderItem({ item, onOpenRating }: Props) {
         <img
           className="w-12 h-12 object-cover rounded-2xl mr-3"
           src={
-            item?.orderDetails[0].inventory.products.image ||
+            item?.orderDetails?.[0]?.product?.image ||
             "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8"
           }
         />
         <Box className="flex-1">
           <Text className="font-bold text-md mb-1">
-            {item?.orderDetails[0].inventory.products.name ||
+            {item?.orderDetails[0]?.product.name ||
               "Áo thun đặc biệt"}
           </Text>
           <Box className="flex justify-between">

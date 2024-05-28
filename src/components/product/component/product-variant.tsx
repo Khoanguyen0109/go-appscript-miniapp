@@ -1,6 +1,6 @@
 import { capitalize } from "lodash";
 import React from "react";
-import { Box, Button, Radio, Text } from "zmp-ui";
+import { Box, Button, Checkbox, Radio, Text } from "zmp-ui";
 
 type Props = {
   variant: string;
@@ -19,20 +19,34 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
       {values.map((option) => {
         const isActive = option?.name === value?.name;
         return (
-          <Button
-            key={option.name}
-            onClick={() => {
-              onChange(option);
-            }}
-            className={`rounded-xl h-12 px-3  border-2 min-w-min border-solid mr-2 ${
-              !isActive
-                ? "!text-black border-slate-400"
-                : "text-blue-500 border-blue-400"
-            }`}
-            variant={"tertiary"}
-          >
-            {option.name}
-          </Button>
+          // <Button
+          //   key={option.name}
+          //   onClick={() => {
+          //     onChange(option);
+          //   }}
+          //   className={`rounded-xl h-12 px-3  border-2 min-w-min border-solid mr-2 ${
+          //     !isActive
+          //       ? "!text-black border-slate-400"
+          //       : "text-blue-500 border-blue-400"
+          //   }`}
+          //   variant={"tertiary"}
+          // >
+          //   {option.name}
+          // </Button>
+          <Box className="flex ">
+            {option.image && <img className="w-12 h-12 mr-2" src={option.image} />}
+            <Box className="flex-1">
+              <Text>{option.name}</Text>
+              <Text>{option.price}</Text>
+            </Box>
+            <Checkbox
+              value=""
+              checked={isActive}
+              onChange={() => {
+                onChange(option);
+              }}
+            ></Checkbox>
+          </Box>
         );
       })}
     </Box>

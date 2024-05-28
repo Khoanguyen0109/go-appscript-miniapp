@@ -14,6 +14,7 @@ type Props = {
 };
 
 function OrderItem({ item, onOpenRating }: Props) {
+  console.log("item", item);
   const navigate = useNavigate();
   const onClick = () => {
     navigate(ROUTES.ORDER_DETAIL(item.id));
@@ -21,17 +22,17 @@ function OrderItem({ item, onOpenRating }: Props) {
   console.log("item", item);
   return (
     <Box
-      className="rounded-lg bg-background m-4 cursor-pointer"
+      className="rounded-lg bg-background m-3 cursor-pointer"
       onClick={onClick}
     >
-      <Box className="flex justify-between py-3 px-2 items-center">
+      <Box className="flex justify-between py-3 pr-3 items-center">
         <OrderStatus status={item.status} />
         <Text className="text-slate-600">
-          Ngày đặt: {formatDate(item.createdAt) || "20/12/2023"}
+          {formatDate(item.createdAt) || ""}
         </Text>
       </Box>
 
-      <Box className="px-2 pb-4 mt-2 flex ">
+      <Box className="px-3 pb-4 mt-2 flex ">
         <img
           className="w-12 h-12 object-cover rounded-2xl mr-3"
           src={
@@ -41,10 +42,9 @@ function OrderItem({ item, onOpenRating }: Props) {
         />
         <Box className="flex-1">
           <Text className="font-bold text-md mb-1">
-            {item?.orderDetails[0]?.product.name ||
-              "Áo thun đặc biệt"}
+            {item?.orderDetails[0]?.product.name || ""}
           </Text>
-          <Box className="flex justify-between">
+          <Box className="flex justify-between mt-2">
             <Text className=" text-md">
               <DisplayPrice>{item?.total || "0"}</DisplayPrice>
             </Text>
@@ -52,7 +52,8 @@ function OrderItem({ item, onOpenRating }: Props) {
               {item.orderDetails.length} sản phẩm
             </Text>
           </Box>
-          <Divider size={32} className="border-b" />
+
+          {/* <Divider size={32} className="border-b" /> */}
           {item.status === EOrderStatus.DELIVERED && (
             <Button
               className="float-right -m-2 mt-2"

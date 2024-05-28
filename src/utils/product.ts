@@ -35,10 +35,9 @@ export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   //   return variant.price;
   // }
   console.log("options", options);
-  const totalOptionPrice = Object.keys(options).reduce(
-    (acc, key) => acc + options[key].price,
-    0
-  );
+  const totalOptionPrice = options
+    ? Object.keys(options).reduce((acc, key) => acc + options[key].price, 0)
+    : 0;
   return finalPrice + totalOptionPrice;
 }
 

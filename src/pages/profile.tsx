@@ -21,6 +21,8 @@ import { openChat } from "zmp-sdk";
 import { OA_ID } from "enviroment";
 import MemberCard from "./user/components/member-card";
 import supabase from "../client/client";
+import { ERoles } from "../constants";
+import { CiWallet } from "react-icons/ci";
 
 const { OtpGroup, Option } = Select;
 
@@ -57,7 +59,7 @@ const Subscription: FC = () => {
 const Personal: FC = () => {
   const navigate = useNavigate();
   const onClick = useToBeImplemented();
-
+  const user = useRecoilValue(userState);
   const navigateToOrder = () => {
     navigate(ROUTES.ORDER);
   };
@@ -68,7 +70,7 @@ const Personal: FC = () => {
   return (
     <Box className="m-4">
       <ListRenderer
-        title="Cá nhân"
+        padding={3}
         // onClick={onClick}
         items={[
           // {
@@ -82,6 +84,32 @@ const Personal: FC = () => {
           //     </Box>
           //   ),
           // },
+          ...([ERoles.CTV, ERoles.SHIPPER].includes(user.role)
+            ? [
+                {
+                  left: <CiWallet />,
+                  right: (
+                    <Box flex onClick={() => navigate(ROUTES.INCOME)}>
+                      <Text.Header className="flex-1 items-center font-normal">
+                        Thu nhập
+                      </Text.Header>
+                      <Icon icon="zi-chevron-right" />
+                    </Box>
+                  ),
+                },
+                {
+                  left: <CiWallet />,
+                  right: (
+                    <Box flex onClick={() => navigate(ROUTES.BANK_ACCOUNT)}>
+                      <Text.Header className="flex-1 items-center font-normal">
+                        Tài khoản ngân hàng
+                      </Text.Header>
+                      <Icon icon="zi-chevron-right" />
+                    </Box>
+                  ),
+                },
+              ]
+            : []),
           {
             left: <Icon icon="zi-clock-2" />,
             right: (
@@ -168,7 +196,7 @@ const Other: FC = () => {
   return (
     <Box className="m-4">
       <ListRenderer
-        title="Khác"
+        padding={3}
         items={[
           ...(user?.ctv
             ? [

@@ -33,6 +33,11 @@ import CheckoutResultPage from "../pages/cart/result";
 import Search from "../pages/custom-search";
 import SearchResult from "../pages/search-result";
 import { addressSelectedState } from "../pages/cart/state";
+import Income from "../pages/income";
+import BankAccount from "../pages/user/bank-account";
+import Shipping from "../pages/shipping";
+import LoadingScreenOverLay from "./loading-screen";
+import { ERoles } from "../constants";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -43,7 +48,7 @@ if (getSystemInfo().platform === "android") {
 }
 
 export const Layout: FC = () => {
-  useHandlePayment();
+  // useHandlePayment();
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
   const addresses = useRecoilValueLoadable(addressesState);
@@ -62,6 +67,7 @@ export const Layout: FC = () => {
       console.log("error", error);
     }
   };
+
   useEffect(() => {
     if (ctvId && userStateLoadable.state === "hasValue") {
       saveCTV(ctvId);
@@ -73,6 +79,15 @@ export const Layout: FC = () => {
       setAddressSelected(addresses.contents[0]);
     }
   }, [addresses]);
+
+  useEffect(() => {
+    if (userStateLoadable.contents.role === ERoles.SHIPPER) {
+      navigate(ROUTES.SHIPPING);
+    }
+  }, [userStateLoadable.contents?.role]);
+  if (userStateLoadable.state === "loading") {
+    return <LoadingScreenOverLay />;
+  }
   if (userStateLoadable.state === "hasError") {
     return navigate(ROUTES.NOT_FOUND);
   } else {
@@ -98,7 +113,7 @@ export const Layout: FC = () => {
               path={ROUTES.PRODUCT_DETAIL(":id")}
               element={<ProductDetail />}
             ></Route>
-
+            <Route path={ROUTES.SHIPPING} element={<Shipping />}></Route>
             <Route
               path={ROUTES.PAYMENT_SUCCESS}
               element={<PaymentSuccess />}
@@ -127,6 +142,8 @@ export const Layout: FC = () => {
               path={ROUTES.RESULT}
               element={<CheckoutResultPage />}
             ></Route>
+            <Route path={ROUTES.INCOME} element={<Income />}></Route>
+            <Route path={ROUTES.BANK_ACCOUNT} element={<BankAccount />}></Route>
 
             <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
           </Routes>

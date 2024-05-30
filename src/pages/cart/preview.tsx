@@ -24,7 +24,6 @@ import { EOrderStatus } from "../../constantsapp";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
-  console.log("cart", cart);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
@@ -78,7 +77,7 @@ export const CartPreview: FC = () => {
         });
         return acc;
       }, []);
-      console.log("details", details);
+
       await supabase.from("order_details").insert(details);
       setAddressSelected(null);
       // setPaymentMethod(null);
@@ -108,8 +107,6 @@ export const CartPreview: FC = () => {
     } finally {
       setLoading(false);
     }
-
-    // console.log("data", data);
   };
   return (
     <Box flex className="sticky bottom-0 bg-background p-4 space-x-4">

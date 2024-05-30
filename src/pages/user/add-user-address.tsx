@@ -56,7 +56,7 @@ function AddUserAddress({}: Props) {
     getValues,
     formState: { errors },
   } = useForm({
-    mode: "onChange",
+    mode: "onSubmit",
     defaultValues: addressSelected || { type: "home" },
   });
 

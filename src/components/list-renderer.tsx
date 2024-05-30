@@ -39,10 +39,12 @@ export function ListRenderer<T>({
           <div
             key={renderKey ? renderKey(item) : i}
             onClick={() => onClick?.(item)}
-            className={`flex items-start space-x-1 p-${padding} last:pb-0 mb-3`}
+            className={`flex items-start space-x-1 p-${padding} items-center last:pb-0 mb-1`}
           >
             {renderLeft(item)}
-            <Box className="flex-1 min-w-0 relative">{renderRight(item)}</Box>
+            <Box className="flex-1 min-w-0 mt-1  relative">
+              {renderRight(item)}
+            </Box>
           </div>
         ))}
       </Box>
@@ -59,7 +61,7 @@ export function ListRenderer<T>({
           </Button>
         </Box>
       ) : (
-        <Box className="w-full h-4"></Box>
+        <Box className="w-full"></Box>
       )}
     </Box>
   );

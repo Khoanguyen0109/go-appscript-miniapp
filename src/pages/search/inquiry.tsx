@@ -36,6 +36,7 @@ export const Inquiry: FC = () => {
             el?.focus();
           }
         }}
+        autoFocus
         defaultValue={keyword}
         onChange={(e) => handleChange(e.target.value)}
         placeholder="Tìm nhanh đồ uống, món mới ..."

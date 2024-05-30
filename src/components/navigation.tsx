@@ -14,6 +14,9 @@ import {
 import { BiUser, BiSolidUser } from "react-icons/bi";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import { ROUTES } from "pages/route";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
+import { ERoles } from "../constants";
 const tabs: Record<string, MenuItem> = {
   "/cart": {
     label: "Giỏ hàng",
@@ -52,11 +55,13 @@ export const NO_BOTTOM_NAVIGATION_PAGES = [
 ];
 
 export const Navigation: FC = () => {
-  const [activeTab, setActiveTab] = useState<TabKeys>("/");
+  const user = useRecoilValue(userState);
+  const [activeTab, setActiveTab] = useState<TabKeys>(
+    user.role === ERoles.SHIPPER ? ROUTES.SHIPPING : "/"
+  );
   const keyboardVisible = useVirtualKeyboardVisible();
   const navigate = useNavigate();
   const location = useLocation();
-
   const noBottomNav = useMemo(() => {
     // return NO_BOTTOM_NAVIGATION_PAGES.some((substring) =>
     //   location.pathname.includes(substring)
@@ -69,6 +74,32 @@ export const Navigation: FC = () => {
 
   if (noBottomNav || keyboardVisible) {
     return <></>;
+  }
+  
+  if (user.role === ERoles.SHIPPER) {
+    return (
+      <BottomNavigation
+        id="footer"
+        activeKey={activeTab}
+        onChange={(key: TabKeys) => setActiveTab(key)}
+        className="z-50"
+      >
+        <BottomNavigation.Item
+          key={ROUTES.SHIPPING}
+          label={"Đơn hàng"}
+          icon={<CartIcon />}
+          activeIcon={<BsFillCartFill />}
+          onClick={() => navigate(ROUTES.SHIPPING)}
+        />
+        <BottomNavigation.Item
+          key={"/profile"}
+          label={"Đơn hàng"}
+          icon={<BiUser />}
+          activeIcon={<BiSolidUser />}
+          onClick={() => navigate("/profile")}
+        />
+      </BottomNavigation>
+    );
   }
 
   return (

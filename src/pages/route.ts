@@ -14,4 +14,8 @@ export const ROUTES = {
   RESULT: "/result",
   SEARCH: "/search",
   SEARCH_RESULT: "/search-result",
+  INCOME: "/income",
+  REQUEST_COMMISSION: "/request-commission",
+  BANK_ACCOUNT: "/bank-account",
+  SHIPPING: "/shipping",
 };

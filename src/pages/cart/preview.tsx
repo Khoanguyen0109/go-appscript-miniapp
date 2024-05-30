@@ -7,6 +7,7 @@ import {
   calDiscount,
   cartState,
   discountState,
+  minOrderItemSelector,
   phoneState,
   preTotalPriceState,
   shippingFeeState,
@@ -21,10 +22,12 @@ import { Payment } from "zmp-sdk";
 import { addressSelectedState, noteState } from "./state";
 import supabase from "../../client/client";
 import { EOrderStatus } from "../../constantsapp";
+import { ERoles } from "../../constants";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
   const navigate = useNavigate();
+  const minOrderItems = useRecoilValue(minOrderItemSelector);
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
   const totalPrice = useRecoilValue(totalPriceState);
@@ -52,8 +55,8 @@ export const CartPreview: FC = () => {
       const orderCreated = await supabase
         .from("orders")
         .insert({
-          userId: user.id,
-          // paymentMethod: paymentMethod.label,
+          userId: user.role == ERoles.CTV ? address.userId : user.id,
+          ctvId: user.role == ERoles.CTV ? user.id : null,
           addressId: address?.id,
           total: totalPrice,
           discount: discount ? calDiscount(discount, totalPrice) : 0,
@@ -92,6 +95,15 @@ export const CartPreview: FC = () => {
 
   const makePayment = async () => {
     try {
+      console.log("quantity", quantity);
+      if (quantity < minOrderItems) {
+        return openSnackbar({
+          text: `Vui lòng chọn tối thiểu ${minOrderItems} phần`,
+          type: "error",
+          icon: true,
+          duration: 1000,
+        });
+      }
       if (!address?.id) {
         return openSnackbar({
           text: "Vui lòng chọn địa chỉ giao hàng",
@@ -104,6 +116,7 @@ export const CartPreview: FC = () => {
       const data = await pay(totalPrice, callBackPayment);
       // callBackPayment(null);
     } catch (error) {
+      console.log("error", error);
     } finally {
       setLoading(false);
     }

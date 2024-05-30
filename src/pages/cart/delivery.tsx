@@ -49,15 +49,6 @@ export const Delivery: FC = () => {
       <ListRenderer
         padding={2}
         items={[
-          // {
-          //   left: <Icon icon="zi-check-circle" className="my-auto" />,
-          //   right: (
-          //     <Suspense fallback={<RequestPayment />}>
-          //       <PaymentPicker />
-          //     </Suspense>
-          //   ),
-          // },
-
           {
             left: <Icon icon="zi-location" className="my-auto" />,
             right: (

@@ -38,6 +38,7 @@ import BankAccount from "../pages/user/bank-account";
 import Shipping from "../pages/shipping";
 import LoadingScreenOverLay from "./loading-screen";
 import { ERoles } from "../constants";
+import ShippingDetail from "../pages/shipping/shipping-detail";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -114,6 +115,8 @@ export const Layout: FC = () => {
               element={<ProductDetail />}
             ></Route>
             <Route path={ROUTES.SHIPPING} element={<Shipping />}></Route>
+            <Route path={ROUTES.SHIPPING_DETAIL} element={<ShippingDetail />}></Route>
+
             <Route
               path={ROUTES.PAYMENT_SUCCESS}
               element={<PaymentSuccess />}

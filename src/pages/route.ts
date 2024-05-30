@@ -18,4 +18,6 @@ export const ROUTES = {
   REQUEST_COMMISSION: "/request-commission",
   BANK_ACCOUNT: "/bank-account",
   SHIPPING: "/shipping",
+  SHIPPING_DETAIL: "/shipping-detail",
+
 };

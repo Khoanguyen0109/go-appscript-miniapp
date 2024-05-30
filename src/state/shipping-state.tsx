@@ -12,29 +12,11 @@ export const shippingListSelector = selector({
   key: "shippingListSelector",
   get: async ({ get }) => {
     try {
-      // const user = get(userState);
-      // const { data, error } = await supabase.rpc("custom_query", {
-      //   query: `
-      //   SELECT
-      //       *
-      //       users.name,
-      //       user_addresses.address,
-      //       user_addresses.province,
-      //       user_addresses.district,
-      //       user_addresses.ward,
-      //       user_addresses.phone,
-
-      //   WHERE shipperId =${user.id}  
-      //   FROM
-      //       orders
-      //   JOIN
-      //       users ON orders.userId = users.id
-      //   JOIN
-      //       user_addresses ON user_addresses.id = orders.addressId
-      //   `,
-      // });
-      console.log("data", data);
-      return [];
+      const user = get(userState);
+      const { data } = await supabase.rpc("get_shipper_order", {
+        shipperIdParams: user.id,
+      });
+      return data;
     } catch (error) {
       console.log("error", error);
       return [];
@@ -58,4 +40,28 @@ export const shippingListSelectorByStatus = selector({
     );
     return orders;
   },
+});
+
+export const shippingDetailSelected = atom({
+  key: "shippingDetailSelected",
+  default: null,
+});
+
+export const shippingDetailSelector = selector({
+  key: "shippingDetailSelector",
+  get: async ({ get }) => {
+    const selected = get(shippingDetailSelected);
+    console.log("selected", selected);
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("id", selected.id);
+    console.log("error", error);
+    return data || {};
+  },
+});
+
+export const shippingDetailState = atom({
+  key: "shippingDetailSelector",
+  default: shippingDetailSelector,
 });

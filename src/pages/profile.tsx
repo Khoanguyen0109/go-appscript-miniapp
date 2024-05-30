@@ -282,7 +282,7 @@ const ProfilePage: FC = () => {
 
       <Personal />
       <Other />
-      {!user?.ctv && <Subscription />}
+      {!user?.role !== ERoles.CTV && <Subscription />}
     </Page>
   );
 };

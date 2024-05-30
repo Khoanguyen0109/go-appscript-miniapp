@@ -1,0 +1,165 @@
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
+import {
+  shippingDetailSelected,
+  shippingDetailState,
+  shippingListState,
+} from "../../state/shipping-state";
+import supabase from "../../client/client";
+import {
+  getOrderStatusLabel,
+  getStatusBGColor,
+  getStatusTextColor,
+} from "../../utils";
+import LoadingScreenOverLay from "../../components/loading-screen";
+import { DisplayPrice } from "../../components/display/price";
+import { openPhone } from "zmp-sdk";
+import { Divider } from "../../components/divider";
+import { EOrderStatus } from "../../constantsapp";
+import { clone, cloneDeep } from "lodash";
+
+type Props = {};
+
+function ShippingDetail({}: Props) {
+  const [loading, setLoading] = useState(true);
+  const [detail, setDetail] = useState({});
+  const selected = useRecoilValue(shippingDetailSelected);
+  const [shippingList, setShippingList] = useRecoilState(shippingListState);
+  async function getDetail() {
+    setLoading(true);
+    const { data } = await supabase
+      .from("orders")
+      .select(
+        `*, address: user_addresses(*), orderDetails: order_details(* , product:products(* , inventories:product_inventories(*)))`
+      )
+      .eq("id", selected.id);
+    if (data?.length) {
+      setDetail(data[0]);
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    getDetail();
+  }, [selected]);
+
+  const openCallScreen = async (phone) => {
+    try {
+      await openPhone({
+        phoneNumber: phone,
+      });
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }
+  };
+
+  if (loading) {
+    return <LoadingScreenOverLay />;
+  }
+
+  const updateStatusOrder = async (status) => {
+    setDetail((pre) => ({ ...pre, status }));
+    const index = shippingList.findIndex((item) => item.id === selected.id);
+    const cloneShipping = cloneDeep(shippingList);
+    cloneShipping[index].status = status;
+    setShippingList(cloneShipping);
+    await supabase.from("orders").update({ status }).eq("id", selected.id);
+  };
+
+  const statusColor = getStatusTextColor(detail.status);
+  const bgColor = getStatusBGColor(detail.status);
+
+  const renderButton = (status) => {
+    switch (status) {
+      case EOrderStatus.WAITING:
+        return (
+          <Button
+            className="w-full rounded-md "
+            onClick={() => updateStatusOrder(EOrderStatus.DELIVERING)}
+          >
+            Nhận đơn hàng
+          </Button>
+        );
+      case EOrderStatus.DELIVERING:
+        return (
+          <Button
+            className="w-full rounded-md"
+            onClick={() => updateStatusOrder(EOrderStatus.DELIVERED)}
+          >
+            Hoàn thành đơn hàng
+          </Button>
+        );
+      default:
+        return <></>;
+    }
+  };
+  return (
+    <Page className="bg-white">
+      <Header title={`Mã đơn ${detail.id}`} showBackIcon={true}></Header>
+      <Box className="p-3 m-2 rounded-lg border-[1px] border-solid border-neutral-300">
+        <Box className={`rounded-lg ${bgColor} w-fit p-2 mb-3`}>
+          <Text className={`${statusColor}`}>
+            {getOrderStatusLabel(detail.status)}
+          </Text>
+        </Box>
+        <Box className="bg-neutral-100 rounded-lg p-3">
+          <Text>{detail.user?.name}</Text>
+          <Text>{`${detail.address.address}, ${detail.address.ward} ${detail.address.district}, ${detail.address.province}`}</Text>
+          <Box className="flex items-center justify-between">
+            <Box className="flex items-center">
+              <Icon icon="zi-call-solid" size={18} />
+              <Text className="ml-2">{detail.address.phone}</Text>
+            </Box>
+            <Button
+              size="small"
+              className="rounded-md"
+              onClick={() => openCallScreen(detail.address.phone)}
+            >
+              Gọi khách
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box className="p-3 mt-4 m-2 rounded-lg border-[1px] border-solid border-neutral-300">
+        <Box>
+          <Box className="flex justify-between mb-3">
+            <Text className="font-bold">Chi tiết đơn hàng</Text>
+            <Text>{detail.orderDetails.length} món</Text>
+          </Box>
+
+          {detail.orderDetails.map((item) => {
+            console.log("item", item);
+            const selectedInventories = item.inventoryIds.split(",");
+
+            const options = item.product.inventories.reduce((acc, value) => {
+              if (selectedInventories.includes(value.id.toString())) {
+                acc.push(value);
+              }
+              return acc;
+            }, []);
+            return (
+              <Box className="flex items-center mb-2">
+                <Text>{item.quantity}x</Text>
+                <Text className=" ml-2">{item.product.name}</Text>
+                <Text>{options.map((item) => item.name).join(",")}</Text>
+              </Box>
+            );
+          })}
+        </Box>
+        <Box className="border-t-[1px] mt-3 pt-3 flex border-dashed border-neutral-300 justify-between items-center">
+          <Text>Tổng cộng</Text>
+          <Text className="text-lg font-bold text-blue-500">
+            <DisplayPrice>{detail.total}</DisplayPrice>{" "}
+          </Text>
+        </Box>
+      </Box>
+      <Divider size={32} className="flex-1" />
+      <Box className="m-2">{renderButton(detail.status)}</Box>
+    </Page>
+  );
+}
+
+export default ShippingDetail;

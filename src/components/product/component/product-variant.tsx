@@ -1,6 +1,7 @@
 import { capitalize } from "lodash";
 import React from "react";
 import { Box, Button, Checkbox, Radio, Text } from "zmp-ui";
+import { DisplayPrice } from "../../display/price";
 
 type Props = {
   variant: string;
@@ -34,10 +35,15 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
           //   {option.name}
           // </Button>
           <Box key={option.id} className="flex ">
-            {option.image && <img className="w-12 h-12 mr-2" src={option.image} />}
+            {option.image && (
+              <img className="w-12 h-12 mr-2" src={option.image} />
+            )}
             <Box className="flex-1">
               <Text>{option.name}</Text>
-              <Text>{option.price}</Text>
+              <Text>
+                {" "}
+                <DisplayPrice>{option.price}</DisplayPrice>{" "}
+              </Text>
             </Box>
             <Checkbox
               value=""

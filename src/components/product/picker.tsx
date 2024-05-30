@@ -151,7 +151,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                   </Box>
                 </Box>
               </Box>
-              <Box className="space-y-5">
+              <Box className="space-y-5 overflow-y-auto" >
                 {product.variants &&
                   Object.keys(product.variants).map((key) => {
                     return (

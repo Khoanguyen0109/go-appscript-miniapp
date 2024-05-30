@@ -93,7 +93,7 @@ export const Navigation: FC = () => {
         />
         <BottomNavigation.Item
           key={"/profile"}
-          label={"Đơn hàng"}
+          label={"Tài khoản"}
           icon={<BiUser />}
           activeIcon={<BiSolidUser />}
           onClick={() => navigate("/profile")}

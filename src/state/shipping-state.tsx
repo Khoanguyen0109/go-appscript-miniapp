@@ -62,6 +62,6 @@ export const shippingDetailSelector = selector({
 });
 
 export const shippingDetailState = atom({
-  key: "shippingDetailSelector",
+  key: "shippingDetailState",
   default: shippingDetailSelector,
 });

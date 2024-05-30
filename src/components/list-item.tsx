@@ -9,7 +9,7 @@ export interface ListItemProps {
 
 export const ListItem: FC<ListItemProps> = ({ title, subtitle, onClick }) => {
   return (
-    <Box flex className="space-x-2" onClick={onClick}>
+    <Box flex className="space-x-2 items-center" onClick={onClick}>
       <Box className="flex-1 space-y-[2px]">
         <Text size="small" className="font-medium text-sm text-primary">
           {title}

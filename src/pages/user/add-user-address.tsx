@@ -74,7 +74,7 @@ function AddUserAddress({}: Props) {
       await upsertUser(user);
       const { error } = await supabase
         .from("user_addresses")
-        .insert({ userId: user.id, ...value });
+        .insert({ userId: user.id, name: user.name, ...value });
       console.log("error", error);
       refresh();
       setProvinceId(null);
@@ -131,7 +131,7 @@ function AddUserAddress({}: Props) {
             status={errors?.phone ? "error" : "default"}
           />
         </Box>
-        <Box mt={4}>
+        {/* <Box mt={4}>
           <AppInput
             placeholder={`Nhập ${getFieldName("name")} `}
             label={getFieldName("name")}
@@ -139,7 +139,7 @@ function AddUserAddress({}: Props) {
             {...register("name", { required: true })}
             status={errors?.name ? "error" : "default"}
           />
-        </Box>
+        </Box> */}
         <Box mt={4}>
           <AppInput
             label={getFieldName("address")}

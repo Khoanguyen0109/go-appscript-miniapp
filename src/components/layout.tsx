@@ -39,6 +39,7 @@ import Shipping from "../pages/shipping";
 import LoadingScreenOverLay from "./loading-screen";
 import { ERoles } from "../constants";
 import ShippingDetail from "../pages/shipping/shipping-detail";
+import CTVUserList from "../pages/user/ctv-user-list";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -76,7 +77,12 @@ export const Layout: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (size(addresses) && addresses && addresses.state === "hasValue") {
+    if (
+      size(addresses) &&
+      addresses &&
+      addresses.state === "hasValue" &&
+      userStateLoadable?.contents.role !== ERoles.CTV
+    ) {
       setAddressSelected(addresses.contents[0]);
     }
   }, [addresses]);
@@ -115,7 +121,14 @@ export const Layout: FC = () => {
               element={<ProductDetail />}
             ></Route>
             <Route path={ROUTES.SHIPPING} element={<Shipping />}></Route>
-            <Route path={ROUTES.SHIPPING_DETAIL} element={<ShippingDetail />}></Route>
+            <Route
+              path={ROUTES.SHIPPING_DETAIL}
+              element={<ShippingDetail />}
+            ></Route>
+            <Route
+              path={ROUTES.CTV_USER_LIST}
+              element={<CTVUserList />}
+            ></Route>
 
             <Route
               path={ROUTES.PAYMENT_SUCCESS}

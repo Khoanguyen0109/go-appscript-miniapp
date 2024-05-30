@@ -19,5 +19,5 @@ export const ROUTES = {
   BANK_ACCOUNT: "/bank-account",
   SHIPPING: "/shipping",
   SHIPPING_DETAIL: "/shipping-detail",
-
+  CTV_USER_LIST: "/ctv-user-list",
 };

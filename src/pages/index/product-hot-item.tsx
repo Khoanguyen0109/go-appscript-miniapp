@@ -10,6 +10,7 @@ import { ProductPicker } from "components/product/picker";
 import { useSetRecoilState } from "recoil";
 import { selectedProductState } from "pages/product/state";
 import { BiPlus } from "react-icons/bi";
+import { isNull } from "lodash";
 
 const { Title } = Text;
 
@@ -68,9 +69,11 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
 
           <Box className=" ml-1 flex justify-between items-end">
             <Box className="flex flex-col">
-              <Text size="normal" className=" mt-2   text-red-500 font-bold ">
-                <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
-              </Text>
+              {!isNull(product?.costdown) && (
+                <Text size="normal" className=" mt-2   text-red-500 font-bold ">
+                  <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
+                </Text>
+              )}
               <Text className="mt-2 mb-2   text-gray text-sm line-through">
                 <DisplayPrice>{product.price.toString()}</DisplayPrice>
               </Text>

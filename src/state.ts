@@ -45,6 +45,14 @@ export const settingState = selector({
   },
 });
 
+export const minOrderItemSelector = selector({
+  key: "minOrderItemSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return setting.find((item) => item.name === "min").value || 5;
+  },
+});
+
 export const shippingFeeState = selector({
   key: "shippingFee",
   get: ({ get }) => {
@@ -210,12 +218,10 @@ export const orderState = selector({
   get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
-    console.log('user', user)
+    console.log("user", user);
     const { data, error } = await supabase
       .from("orders")
-      .select(
-        `* , orderDetails: order_details(* , product:products(*))`
-      )
+      .select(`* , orderDetails: order_details(* , product:products(*))`)
       .eq("userId", user.id);
     return data;
   },

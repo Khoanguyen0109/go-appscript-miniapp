@@ -55,8 +55,9 @@ export const CartPreview: FC = () => {
       const orderCreated = await supabase
         .from("orders")
         .insert({
-          userId: user.role == ERoles.CTV ? address.userId : user.id,
-          ctvId: user.role == ERoles.CTV ? user.id : null,
+          // userId: user.role == ERoles.CTV ? address.userId : user.id,
+          // ctvId: user.role == ERoles.CTV ? user.id : null,
+          userId: user.id,
           addressId: address?.id,
           total: totalPrice,
           discount: discount ? calDiscount(discount, totalPrice) : 0,

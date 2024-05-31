@@ -55,9 +55,10 @@ export const Delivery: FC = () => {
               <Suspense fallback={<RequestPayment />}>
                 <ListItem
                   onClick={() =>
-                    user.role === ERoles.CTV
-                      ? navigateCTVUserAddress()
-                      : navigateToAddress()
+                    // user.role === ERoles.CTV
+                    //   ? navigateCTVUserAddress()
+                    //   : navigateToAddress()
+                    navigateToAddress()
                   }
                   title={address?.name ?? "Địa chỉ giao hàng"}
                   subtitle={

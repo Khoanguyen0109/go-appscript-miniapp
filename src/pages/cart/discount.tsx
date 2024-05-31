@@ -55,7 +55,7 @@ function Discount({}: Props) {
   return (
     <Box className="px-2 ">
       <Text className="text-md font-bold mb-1">Mã khuyến mãi</Text>
-      <Box className="flex items-center justify-between">
+      <Box className="flex items-center justify-between mt-2">
         <Input
           size="small"
           placeholder="Nhập voucher giảm giá"

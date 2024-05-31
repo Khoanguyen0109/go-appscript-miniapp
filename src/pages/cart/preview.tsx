@@ -19,10 +19,16 @@ import pay, { getOptionString } from "utils/product";
 import { Box, Button, Text, useSnackbar } from "zmp-ui";
 import Loading from "components/loading";
 import { Payment } from "zmp-sdk";
-import { addressSelectedState, noteState } from "./state";
+import {
+  addressSelectedState,
+  dateSelectedState,
+  noteState,
+  timeSelectedState,
+} from "./state";
 import supabase from "../../client/client";
 import { EOrderStatus } from "../../constantsapp";
 import { ERoles } from "../../constants";
+import { formatDate } from "../../utils/date";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
@@ -35,6 +41,8 @@ export const CartPreview: FC = () => {
   const preTotal = useRecoilValue(preTotalPriceState);
   const [note, setNote] = useRecoilState(noteState);
   const resetCart = useResetRecoilState(cartState);
+  const date = useRecoilValue(dateSelectedState);
+  const time = useRecoilValue(timeSelectedState);
   const [discount, setDiscount] = useRecoilState(discountState);
   const phone = useRecoilValue(phoneState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
@@ -67,6 +75,8 @@ export const CartPreview: FC = () => {
           note,
           status: EOrderStatus.WAITING,
           zaloOrderId: data?.orderId,
+          receiveDate: formatDate(new Date(date).toISOString()),
+          receiveTime: time,
         })
         .select();
       const details = cart.reduce((acc, value) => {

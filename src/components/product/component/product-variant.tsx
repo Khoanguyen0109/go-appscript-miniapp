@@ -18,7 +18,6 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
         {variantLabel}
       </Text.Title>
       {values.map((option) => {
-        console.log('option', option)
         const isActive = option?.name === value?.name;
         if (!option.status) {
           return <></>;

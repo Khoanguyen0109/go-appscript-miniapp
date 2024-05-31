@@ -94,7 +94,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               selected: true,
               product,
               options,
-              price:  product.price,
+              price: product.price,
               quantity,
             });
           }
@@ -125,7 +125,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
       {createPortal(
         <Sheet visible={visible} onClose={() => setVisible(false)} autoHeight>
           {product && (
-            <Box className="space-y-6 mt-4 overflow-y-auto" p={4}>
+            <Box className="space-y-6 mt-4 " p={4}>
               <Box className="space-y-2">
                 <Box className="flex items-start">
                   <img
@@ -151,7 +151,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                   </Box>
                 </Box>
               </Box>
-              <Box className="space-y-5 overflow-y-auto" >
+              <Box className="space-y-5 overflow-y-auto h-[420px]">
                 {product.variants &&
                   Object.keys(product.variants).map((key) => {
                     return (
@@ -168,7 +168,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                       />
                     );
                   })}
-                {/* {product.variants &&
+              </Box>
+
+              {/* {product.variants &&
                   product.variants.map((variant) =>
                   <ProductVariant variant={variant}/>
                     // variant.type === "single" ? (
@@ -198,32 +200,31 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                     //   />
                     // )
                   )} */}
-                <QuantityPicker value={quantity} onChange={setQuantity} />
-                {selected ? (
-                  <Button
-                    variant={quantity > 0 ? "primary" : "secondary"}
-                    type={quantity > 0 ? "highlight" : "neutral"}
-                    fullWidth
-                    onClick={addToCart}
-                  >
-                    {quantity > 0
-                      ? selected
-                        ? "Cập nhật giỏ hàng"
-                        : "Thêm vào giỏ hàng"
-                      : "Xoá"}
-                  </Button>
-                ) : (
-                  <Button
-                    disabled={!quantity}
-                    variant="primary"
-                    type="highlight"
-                    fullWidth
-                    onClick={addToCart}
-                  >
-                    {isRedirect ? "Mua ngay" : "Thêm vào giỏ hàng"}
-                  </Button>
-                )}
-              </Box>
+              <QuantityPicker value={quantity} onChange={setQuantity} />
+              {selected ? (
+                <Button
+                  variant={quantity > 0 ? "primary" : "secondary"}
+                  type={quantity > 0 ? "highlight" : "neutral"}
+                  fullWidth
+                  onClick={addToCart}
+                >
+                  {quantity > 0
+                    ? selected
+                      ? "Cập nhật giỏ hàng"
+                      : "Thêm vào giỏ hàng"
+                    : "Xoá"}
+                </Button>
+              ) : (
+                <Button
+                  disabled={!quantity}
+                  variant="primary"
+                  type="highlight"
+                  fullWidth
+                  onClick={addToCart}
+                >
+                  {isRedirect ? "Mua ngay" : "Thêm vào giỏ hàng"}
+                </Button>
+              )}
             </Box>
           )}
         </Sheet>,

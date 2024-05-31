@@ -20,3 +20,13 @@ export const addressSelectedState = atom({
   key: "addressSelectedState",
   default: addressesState?.[0] || null,
 });
+
+export const dateSelectedState = atom({
+  key: "dateSelectedState",
+  default: new Date(),
+});
+
+export const timeSelectedState = atom({
+  key: "timeSelectedState",
+  default: null,
+});

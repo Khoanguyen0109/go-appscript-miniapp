@@ -43,7 +43,7 @@ export const Delivery: FC = () => {
   };
 
   return (
-    <Box className="space-y-1 mb-5 ">
+    <Box className="space-y-1 mb-3 ">
       <Text className="text-md font-bold px-2">Hình thức nhận hàng</Text>
 
       <ListRenderer

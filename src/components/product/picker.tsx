@@ -125,7 +125,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
       {createPortal(
         <Sheet visible={visible} onClose={() => setVisible(false)} autoHeight>
           {product && (
-            <Box className="space-y-6 mt-2" p={4}>
+            <Box className="space-y-6 mt-4 overflow-y-auto" p={4}>
               <Box className="space-y-2">
                 <Box className="flex items-start">
                   <img

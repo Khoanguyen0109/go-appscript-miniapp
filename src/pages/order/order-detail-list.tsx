@@ -5,22 +5,27 @@ import { DisplayPrice } from "../../components/display/price";
 import { FinalPrice } from "../../components/display/final-price";
 import { DisplaySelectedOptions } from "../../components/display/selected-options";
 import { isString } from "lodash";
+import { useRecoilValue } from "recoil";
+import { globalProductInventoriesSelector } from "../../state";
 
 function OrderDetailList({ detail }) {
   const imgSize = "w-24 h-24";
   console.log("detail", detail);
-
+  const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   return (
     <Box className="px-2">
       {detail.map((item) => {
         console.log("item", item);
         const selectedInventories = item.inventoryIds.split(",");
-        const options = item.product.inventories.reduce((acc, value) => {
-          if (selectedInventories.includes(value.id.toString())) {
-            acc.push(value);
-          }
-          return acc;
-        }, []);
+        const options = [...item.product.inventories, ...globalInventories].reduce(
+          (acc, value) => {
+            if (selectedInventories.includes(value.id.toString())) {
+              acc.push(value);
+            }
+            return acc;
+          },
+          []
+        );
         console.log("options", options);
 
         return (

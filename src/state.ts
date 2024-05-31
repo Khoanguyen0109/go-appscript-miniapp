@@ -13,13 +13,13 @@ import supabase from "./client/client";
 import { groupBy } from "lodash";
 import { upsertUser } from "./api/addUser";
 
-export const mapProduct = (item) => {
+export const mapProduct = (item, globalInventories) => {
   return {
     ...item,
     costdown: item.discount
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
-    variants: groupBy(item.inventories, "group"),
+    variants: groupBy([...item.inventories, ...globalInventories], "group"),
     image: item.image.split(",").map((item) => ({ image: item })),
   };
 };
@@ -90,23 +90,26 @@ export const categoriesState = selector<Category[]>({
 
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
-  get: async ({}) => {
+  get: async ({ get }) => {
+    const global = get(globalProductInventoriesSelector);
     const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
       .eq("level", "Hot")
       .eq("active", true);
-    return data?.map((item) => mapProduct(item));
+    return data?.map((item) => mapProduct(item, global));
   },
 });
 export const productsState = selector<Product[]>({
   key: "products",
-  get: async () => {
+  get: async ({ get }) => {
+    const global = get(globalProductInventoriesSelector);
+
     const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
       .eq("active", true);
-    return data?.map((item) => mapProduct(item));
+    return data?.map((item) => mapProduct(item, global));
   },
 });
 
@@ -457,6 +460,7 @@ export const searchResultState = selector({
   get: async ({ get }) => {
     const search = get(searchState);
     const formattedQuery = search.split(" ").join(" & ");
+    const global = get(globalProductInventoriesSelector);
 
     if (search) {
       const { data, error } = await supabase
@@ -465,10 +469,25 @@ export const searchResultState = selector({
         .eq("active", true)
         .filter("tsv_name", "fts(vietnamese)", formattedQuery);
       if (data) {
-        return data.map((item) => mapProduct(item));
+        return data.map((item) => mapProduct(item, global));
       }
       return [];
     }
     return [];
+  },
+});
+
+export const globalProductInventoriesSelector = selector({
+  key: "globalProductInventoriesSelector",
+  get: async ({ get }) => {
+    const { data } = await supabase
+      .from("product_inventories")
+      .select("*")
+      .is("productId", null);
+    if (data?.length) {
+      return data;
+    } else {
+      return [];
+    }
   },
 });

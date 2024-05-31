@@ -18,10 +18,12 @@ import { openPhone } from "zmp-sdk";
 import { Divider } from "../../components/divider";
 import { EOrderStatus } from "../../constantsapp";
 import { clone, cloneDeep } from "lodash";
+import { globalProductInventoriesSelector } from "../../state";
 
 type Props = {};
 
 function ShippingDetail({}: Props) {
+  const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState({});
   const selected = useRecoilValue(shippingDetailSelected);
@@ -134,12 +136,15 @@ function ShippingDetail({}: Props) {
             console.log("item", item);
             const selectedInventories = item.inventoryIds.split(",");
 
-            const options = item.product.inventories.reduce((acc, value) => {
-              if (selectedInventories.includes(value.id.toString())) {
-                acc.push(value);
-              }
-              return acc;
-            }, []);
+            const options = [...item.product.inventories, ...globalInventories].reduce(
+              (acc, value) => {
+                if (selectedInventories.includes(value.id.toString())) {
+                  acc.push(value);
+                }
+                return acc;
+              },
+              []
+            );
             return (
               <Box className="flex items-center mb-2">
                 <Text>{item.quantity}x</Text>

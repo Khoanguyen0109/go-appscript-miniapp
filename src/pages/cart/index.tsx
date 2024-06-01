@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { Divider } from "components/divider";
 import { Box, DatePicker, Header, Page, Text } from "zmp-ui";
 import { CartItems } from "./cart-items";
@@ -9,7 +9,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { cartState } from "state";
 import Discount from "./discount";
 import PreviewInfo from "./previewInfo";
-import TimePicker from "react-time-picker";
 import { dateSelectedState, timeSelectedState } from "./state";
 
 const CartPage: FC = () => {
@@ -27,14 +26,22 @@ const CartPage: FC = () => {
           <Delivery />
           <Box className="mb-3">
             <Text className="text-md font-bold px-2">Thời gian nhận hàng</Text>
-            <Box className="flex m-2 justify-between">
-              <DatePicker
-                onChange={(value) => {
-                  setDate(value);
-                }}
-                dateFormat="dd/mm/yyyy"
+            <Box className="flex p-2 justify-between w-screen">
+              <Box className="w-2/3">
+                <DatePicker
+                  value={date}
+                  onChange={(value) => {
+                    setDate(value);
+                  }}
+                  dateFormat="dd/mm/yyyy"
+                />
+              </Box>
+
+              <input
+                value={time}
+                type="time"
+                onChange={(e) => setTime(e.target.value)}
               />
-              <input type="time" onChange={(e) => setTime(e.target.value)} />
             </Box>
           </Box>
           <Discount />

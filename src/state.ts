@@ -13,13 +13,13 @@ import supabase from "./client/client";
 import { groupBy } from "lodash";
 import { upsertUser } from "./api/addUser";
 
-export const mapProduct = (item, globalInventories) => {
+export const mapProduct = (item) => {
   return {
     ...item,
     costdown: item.discount
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
-    variants: groupBy([...item.inventories, ...globalInventories], "group"),
+    variants: groupBy([...item.inventories], "group"),
     image: item.image.split(",").map((item) => ({ image: item })),
   };
 };
@@ -91,25 +91,22 @@ export const categoriesState = selector<Category[]>({
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
   get: async ({ get }) => {
-    const global = get(globalProductInventoriesSelector);
     const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
       .eq("level", "Hot")
       .eq("active", true);
-    return data?.map((item) => mapProduct(item, global));
+    return data?.map((item) => mapProduct(item));
   },
 });
 export const productsState = selector<Product[]>({
   key: "products",
   get: async ({ get }) => {
-    const global = get(globalProductInventoriesSelector);
-
     const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
       .eq("active", true);
-    return data?.map((item) => mapProduct(item, global));
+    return data?.map((item) => mapProduct(item));
   },
 });
 
@@ -221,11 +218,12 @@ export const orderState = selector({
   get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
-    console.log("user", user);
     const { data, error } = await supabase
       .from("orders")
       .select(`* , orderDetails: order_details(* , product:products(*))`)
-      .eq("userId", user.id);
+      .eq("userId", user.id)
+      .order("createdAt", { ascending: false });
+
     return data;
   },
 });
@@ -460,7 +458,6 @@ export const searchResultState = selector({
   get: async ({ get }) => {
     const search = get(searchState);
     const formattedQuery = search.split(" ").join(" & ");
-    const global = get(globalProductInventoriesSelector);
 
     if (search) {
       const { data, error } = await supabase
@@ -469,7 +466,7 @@ export const searchResultState = selector({
         .eq("active", true)
         .filter("tsv_name", "fts(vietnamese)", formattedQuery);
       if (data) {
-        return data.map((item) => mapProduct(item, global));
+        return data.map((item) => mapProduct(item));
       }
       return [];
     }

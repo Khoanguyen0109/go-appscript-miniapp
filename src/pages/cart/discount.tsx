@@ -2,7 +2,7 @@ import useCustomSnackbar from "hooks/useCustomSnackbar";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { discountState } from "state";
-import { Box, Button, Input, Text, useSnackbar } from "zmp-ui";
+import { Box, Button, Input, Text } from "zmp-ui";
 import supabase from "../../client/client";
 
 type Props = {};

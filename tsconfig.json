@@ -26,7 +26,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "strict": true,
     "strictFunctionTypes": false,
     "pretty": true,

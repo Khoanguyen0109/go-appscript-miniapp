@@ -52,7 +52,7 @@ function Shipping({}: Props) {
                     </Box>
                     <Box className="text-right">
                       <Text>
-                        <DisplayPrice>{order.shipperCommission}</DisplayPrice>
+                        <DisplayPrice>{order?.shipperPoint || 0}</DisplayPrice>
                       </Text>
                       <Text>Hoa Hồng</Text>
                     </Box>

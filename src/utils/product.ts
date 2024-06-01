@@ -1,10 +1,8 @@
-import { Payment, createOrder } from "zmp-sdk";
-import { Option, Product } from "types/product";
+import { createOrder } from "zmp-sdk";
+import { Product } from "types/product";
 import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
 import { capitalize, chain, isEqual, omit } from "lodash";
-import { sha256 } from "js-sha256";
-import { MAC_KEY } from "../enviroment";
 
 export const findVariant = (product, options) => {
   return product?.inventories?.find((item) => {

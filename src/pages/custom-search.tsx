@@ -70,7 +70,7 @@ function Search({}: Props) {
       <Header title="Tìm kiếm" />
 
       <Box className="p-2 flex items-center">
-        <Input.Search
+        <Input
           size="small"
           value={input}
           onChange={(e) => setInput(e.target.value)}

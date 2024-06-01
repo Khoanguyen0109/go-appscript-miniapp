@@ -7,6 +7,9 @@ import ProductHotItem from "./product-hot-item";
 
 function ProductHotItemList() {
   const hotProducts = useRecoilValue(hotProductsState);
+  if (hotProducts.length <= 0) {
+    return <></>;
+  }
   return (
     <Suspense>
       <>

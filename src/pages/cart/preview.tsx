@@ -1,7 +1,7 @@
 import { DisplayPrice } from "components/display/price";
 import { ROUTES } from "pages/route";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   calDiscount,
@@ -10,15 +10,13 @@ import {
   minOrderItemSelector,
   phoneState,
   preTotalPriceState,
-  shippingFeeState,
   totalPriceState,
   totalQuantityState,
   userState,
 } from "state";
-import pay, { getOptionString } from "utils/product";
+import pay from "utils/product";
 import { Box, Button, Text, useSnackbar } from "zmp-ui";
 import Loading from "components/loading";
-import { Payment } from "zmp-sdk";
 import {
   addressSelectedState,
   dateSelectedState,
@@ -27,7 +25,6 @@ import {
 } from "./state";
 import supabase from "../../client/client";
 import { EOrderStatus } from "../../constantsapp";
-import { ERoles } from "../../constants";
 import { formatDate } from "../../utils/date";
 
 export const CartPreview: FC = () => {
@@ -106,7 +103,6 @@ export const CartPreview: FC = () => {
 
   const makePayment = async () => {
     try {
-      console.log("quantity", quantity);
       if (quantity < minOrderItems) {
         return openSnackbar({
           text: `Vui lòng chọn tối thiểu ${minOrderItems} phần`,
@@ -133,7 +129,7 @@ export const CartPreview: FC = () => {
     }
   };
   return (
-    <Box flex className="sticky bottom-0 bg-background p-4 space-x-4">
+    <Box flex className="sticky bottom-0 bg-background p-2">
       <Box
         flex
         flexDirection="column"
@@ -149,7 +145,7 @@ export const CartPreview: FC = () => {
       </Box>
       <Button
         type="highlight"
-        disabled={!quantity || loading || !address}
+        disabled={!quantity || loading || !address || !date || !time}
         fullWidth
         onClick={() => makePayment()}
       >

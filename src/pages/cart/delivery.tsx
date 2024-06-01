@@ -1,21 +1,17 @@
 import { ElasticTextarea } from "components/elastic-textarea";
 import { ListRenderer } from "components/list-renderer";
-import React, { FC, Suspense, useEffect } from "react";
-import { Box, Icon, Input, Text } from "zmp-ui";
-import { PersonPicker, RequestPersonPickerPhone } from "./person-picker";
-import { RequestStorePickerLocation, StorePicker } from "./store-picker";
-import { TimePicker } from "./time-picker";
+import React, { FC, Suspense } from "react";
+import { Box, Icon, Text } from "zmp-ui";
+
 import { createSearchParams, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { addressSelectedState, noteState } from "./state";
-import PaymentPicker, { RequestPayment } from "./payment-picker";
+import { RequestPayment } from "./payment-picker";
 import { ROUTES } from "pages/route";
 import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
-import { addressesState } from "pages/user/state";
-import { size } from "lodash";
+
 import { userState } from "../../state";
-import { ERoles } from "../../constants";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();

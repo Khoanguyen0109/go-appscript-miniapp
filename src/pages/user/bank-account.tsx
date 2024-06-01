@@ -48,7 +48,7 @@ function BankAccount({}: Props) {
           <AppInput
             placeholder={`Nhập số tài khoản`}
             label="Số tài khoản"
-            {...register("bank", { required: true })}
+            {...register("bankAccount", { required: true })}
           />
         </Box>
         <Button

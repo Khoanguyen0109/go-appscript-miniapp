@@ -106,8 +106,16 @@ function ShippingDetail({}: Props) {
             {getOrderStatusLabel(detail.status)}
           </Text>
         </Box>
+
+        <Box>
+          <Text className="mb-1 font-bold">{`Ngày nhận hàng:${
+            detail?.receiveDate || ""
+          }, ${detail.receiveTime || ""}`}</Text>
+        </Box>
+
         <Box className="bg-neutral-100 rounded-lg p-3">
-          <Text>{detail.user?.name}</Text>
+          <Text className="mb-1">{detail.user?.name}</Text>
+
           <Text>{`${detail.address.address}, ${detail.address.ward} ${detail.address.district}, ${detail.address.province}`}</Text>
           <Box className="flex items-center justify-between">
             <Box className="flex items-center">
@@ -133,18 +141,17 @@ function ShippingDetail({}: Props) {
           </Box>
 
           {detail.orderDetails.map((item) => {
-            console.log("item", item);
             const selectedInventories = item.inventoryIds.split(",");
 
-            const options = [...item.product.inventories, ...globalInventories].reduce(
-              (acc, value) => {
-                if (selectedInventories.includes(value.id.toString())) {
-                  acc.push(value);
-                }
-                return acc;
-              },
-              []
-            );
+            const options = [
+              ...item.product.inventories,
+              ...globalInventories,
+            ].reduce((acc, value) => {
+              if (selectedInventories.includes(value.id.toString())) {
+                acc.push(value);
+              }
+              return acc;
+            }, []);
             return (
               <Box className="flex items-center mb-2">
                 <Text>{item.quantity}x</Text>

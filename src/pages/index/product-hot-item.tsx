@@ -67,18 +67,18 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
             {product.name}
           </Title>
 
-          <Box className=" ml-1 flex justify-between items-end">
+          <Box className="mt-2 ml-1 flex justify-between items-center">
             <Box className="flex flex-col">
-              {!isNull(product?.costdown) && (
-                <Text size="normal" className=" mt-2   text-red-500 font-bold ">
-                  <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
+              <Text size="normal" className=" mt-2   text-red-500 font-bold ">
+                <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
+              </Text>
+              {!isNull(product?.discount) && (
+                <Text className="mt-2 mb-2   text-gray text-sm line-through">
+                  <DisplayPrice>{product.price.toString()}</DisplayPrice>
                 </Text>
               )}
-              <Text className="mt-2 mb-2   text-gray text-sm line-through">
-                <DisplayPrice>{product.price.toString()}</DisplayPrice>
-              </Text>
             </Box>
-            <Box className="flex items-center mr-4 mb-3 bg-red-500 rounded-xl">
+            <Box className="flex items-center  mr-2 bg-red-500 rounded-xl">
               <BiPlus
                 color="white"
                 size={20}

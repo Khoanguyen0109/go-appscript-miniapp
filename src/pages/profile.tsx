@@ -175,11 +175,12 @@ const Other: FC = () => {
         });
       }
 
-      await supabase.from("feedbacks").insert({
+      const { data, error } = await supabase.from("feedbacks").insert({
         feedback: issue,
         note,
         userId: user.id,
       });
+      console.log("error", error);
       setNote("");
       setDialogVisible(false);
       return openSnackbar({
@@ -276,9 +277,11 @@ const ProfilePage: FC = () => {
   return (
     <Page>
       <Header showBackIcon={false} title="&nbsp;" />
-      <Box onClick={() => navigate(ROUTES.MEMBER_CARD)}>
-        <MemberCard />
-      </Box>
+      {user?.role !== ERoles.CTV && (
+        <Box onClick={() => navigate(ROUTES.MEMBER_CARD)}>
+          <MemberCard />
+        </Box>
+      )}
 
       <Personal />
       <Other />

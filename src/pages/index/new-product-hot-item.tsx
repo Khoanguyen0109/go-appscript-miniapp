@@ -9,6 +9,7 @@ import { DisplayPrice } from "components/display/price";
 import { ProductPicker } from "components/product/picker";
 import { useSetRecoilState } from "recoil";
 import { selectedProductState } from "pages/product/state";
+import { isNull } from "lodash";
 
 const { Title } = Text;
 
@@ -32,7 +33,6 @@ const NewProductHotItem: FunctionComponent<RestaurantProps> = ({
     setSelectedProductId(product);
     navigate(ROUTES.PRODUCT_DETAIL(product.id));
   };
-  console.log("product", product);
   return (
     <ProductPicker product={product}>
       {({ open }) => (
@@ -71,9 +71,11 @@ const NewProductHotItem: FunctionComponent<RestaurantProps> = ({
               >
                 <DisplayPrice>{product?.costdown || 0}</DisplayPrice>
               </Text>
-              <Text className="mt-2 mb-2  text-center text-gray text-sm line-through">
-                <DisplayPrice>{product.price.toString()}</DisplayPrice>
-              </Text>
+              {isNull(product.discount) && (
+                <Text className="mt-2 mb-2  text-center text-gray text-sm line-through">
+                  <DisplayPrice>{product.price.toString()}</DisplayPrice>
+                </Text>
+              )}
             </Box>
             <Box className="flex items-center mr-4">
               <BsCartPlus

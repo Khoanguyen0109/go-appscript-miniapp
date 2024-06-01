@@ -1,16 +1,14 @@
-import { Box, Button, Header, Page, Text, useNavigate } from "zmp-ui";
-import React, { useEffect } from "react";
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { searchResultState, searchState } from "../../state";
+import { Box, Header, Page, useNavigate } from "zmp-ui";
+import React from "react";
+import { useRecoilValueLoadable } from "recoil";
+import { searchResultState } from "../../state";
 import LoadingScreenOverLay from "../../components/loading-screen";
 import { openChat } from "zmp-sdk";
-import { FixedSizeList as List } from "react-window";
 import { getWindowDimensions } from "../../utils/size";
 import NewProductItem from "../index/new-product-item";
 import { OA_ID } from "../../enviroment";
 
 function SearchResult() {
-  const search = useRecoilValue(searchState);
   const searchResult = useRecoilValueLoadable(searchResultState);
   const { width, height } = getWindowDimensions();
   const navigate = useNavigate();

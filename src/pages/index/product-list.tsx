@@ -3,10 +3,8 @@ import { Section } from "components/section";
 import { useRecoilValue } from "recoil";
 import { productsState } from "state";
 import { Box } from "zmp-ui";
-import { ProductItem } from "components/product/item";
 import { ProductItemSkeleton } from "components/skeletons";
 import ReactPaginate from "react-paginate";
-import { FixedSizeList as List } from "react-window";
 import { getWindowDimensions } from "../../utils/size";
 import NewProductItem from "./new-product-item";
 
@@ -27,6 +25,10 @@ export const ProductListContent: FC = () => {
     setItemOffset(newOffset);
     errorRef.current.scrollIntoView();
   };
+
+  if (products.length <= 0) {
+    return <></>;
+  }
   return (
     <Section title="Danh sách sản phẩm" mt={1}>
       <Box ref={errorRef} className="">

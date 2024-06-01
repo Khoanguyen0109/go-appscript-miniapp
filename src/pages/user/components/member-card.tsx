@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
-import { Box, Progress, Slider, Text } from "zmp-ui";
+import { Box, Progress, Text } from "zmp-ui";
 import silver from "static/member-card/silver.jpg";
 import gold from "static/member-card/gold.png";
 import diamond from "static/member-card/diamond.jpg";
@@ -45,7 +45,6 @@ function MemberCard({}: Props) {
     }
   }, [user]);
 
-  console.log("maxScore", maxScore);
   return (
     <Box className="m-4" onClick={() => navigate(ROUTES.MEMBER_CARD)}>
       <Box

@@ -39,6 +39,19 @@ function OrderInfo({ item }: Props) {
           {
             left: <Box></Box>,
             right: (
+              <Box flex>
+                <Text.Header className="flex-1 items-center font-normal">
+                  Ngày nhận hàng
+                </Text.Header>
+                <Text>{`${item?.receiveDate || ""}, ${
+                  item.receiveTime || ""
+                }`}</Text>
+              </Box>
+            ),
+          },
+          {
+            left: <Box></Box>,
+            right: (
               <Box flex className="items-center">
                 <Text.Header className="flex-1 items-center font-normal">
                   Trạng thái

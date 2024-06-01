@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Page } from "zmp-ui";
 import { Welcome } from "./welcome";
 
@@ -9,12 +9,11 @@ import BannerHome from "./banner";
 import ProductHotItemList from "./product-hot-item-list";
 import { Categories } from "./categories";
 import { Inquiry } from "./inquiry";
-import { useRecoilValue } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
 
 const HomePage: React.FunctionComponent = () => {
-  const globalProductInventories = useRecoilValue(globalProductInventoriesSelector)
-  console.log('globalProductInventories', globalProductInventories)
+  useRecoilValueLoadable(globalProductInventoriesSelector);
   return (
     <Page className="relative flex-1 flex flex-col bg-white">
       <Welcome />

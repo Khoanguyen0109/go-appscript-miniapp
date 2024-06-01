@@ -2,8 +2,8 @@ import { FinalPrice } from "components/display/final-price";
 import { Sheet } from "components/fullscreen-sheet";
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useSetRecoilState } from "recoil";
-import { cartState } from "state";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { cartState, globalProductInventoriesSelector } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
 import { findVariant, isIdentical } from "utils/product";
@@ -14,6 +14,7 @@ import { SingleOptionPicker } from "./single-option-picker";
 import ProductVariant from "./component/product-variant";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
+import { groupBy } from "lodash";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -33,13 +34,17 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   product,
   selected,
 }) => {
+  const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const navigate = useNavigate();
-  console.log("selected", selected);
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState<SelectedOptions>({});
   const [quantity, setQuantity] = useState(1);
   const setCart = useSetRecoilState(cartState);
   const [isRedirect, setIsRedirect] = useState(false);
+  const variants = {
+    ...(product?.variants ? product?.variants : {}),
+    ...groupBy(globalInventories, "group"),
+  };
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -48,7 +53,6 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   }, [selected]);
 
   const addToCart = () => {
-    console.log("options", options);
     if (product) {
       setCart((cart) => {
         let res = [...cart];
@@ -152,13 +156,13 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 </Box>
               </Box>
               <Box className="space-y-5 overflow-y-auto h-[420px]">
-                {product.variants &&
-                  Object.keys(product.variants).map((key) => {
+                {variants &&
+                  Object.keys(variants).map((key) => {
                     return (
                       <ProductVariant
                         variant={key}
                         value={options[key] as string}
-                        values={product.variants[key]}
+                        values={variants[key]}
                         onChange={(selectedOption) => {
                           setOptions((prevOptions) => ({
                             ...prevOptions,

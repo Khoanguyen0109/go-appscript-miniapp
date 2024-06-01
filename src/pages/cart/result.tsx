@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { Box, Header, Page, Text } from "zmp-ui";
 import subscriptionDecor from "static/subscription-decor.svg";
 import {

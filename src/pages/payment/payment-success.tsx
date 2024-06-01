@@ -14,6 +14,7 @@ import {
   selectedPaymentMethod,
 } from "pages/cart/state";
 import supabase from "../../client/client";
+import logo from "static/logo.jpg";
 const PaymentSuccess: FC = () => {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
@@ -61,12 +62,12 @@ const PaymentSuccess: FC = () => {
   }, []);
 
   return (
-    <Page className="flex flex-col">
+    <Page className="flex flex-col bg-white">
       <div className="flex flex-1 flex-col justify-center align-middle p-10">
         {paymentMethod?.value === "chuyen_khoan" ? (
           <img src={qrImage} />
         ) : (
-          <img src={Success} />
+          <img src={logo} />
         )}
         <Text.Header className="mb-4 text-center mt-4 font-bold text-lg">
           Đặt hàng thành công

@@ -2,7 +2,7 @@ import { ActionSheet } from "components/fullscreen-sheet";
 import { ListItem } from "components/list-item";
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { selectedPaymentMethod } from "./state";
 
 type Props = {};

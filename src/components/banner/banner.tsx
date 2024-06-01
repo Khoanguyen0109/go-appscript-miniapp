@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Pagination } from "swiper";
+import { Autoplay, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Box } from "zmp-ui";
 
@@ -16,7 +16,7 @@ export const Banner: FC<TBannerProps> = ({ banners, onClick, padding }) => {
   return (
     <Box className="bg-white w-full" pb={padding ?? 0} onClick={onClick}>
       <Swiper
-        modules={[Pagination]}
+        modules={[Pagination, Autoplay]}
         pagination={{
           clickable: true,
         }}

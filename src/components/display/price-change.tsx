@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from "react";
 import { Option, Product } from "types/product";
-import { calcFinalPrice } from "utils/product";
 import { DisplayPrice } from "./price";
 
 export const DisplayPriceChange: FC<{ children: Product; option: Option }> = ({

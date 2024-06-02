@@ -17,12 +17,24 @@ import { DisplayPrice } from "../../components/display/price";
 import { openPhone } from "zmp-sdk";
 import { Divider } from "../../components/divider";
 import { EOrderStatus } from "../../constantsapp";
-import { clone, cloneDeep } from "lodash";
-import { globalProductInventoriesSelector } from "../../state";
+import { cloneDeep } from "lodash";
+import {
+  globalProductInventoriesSelector,
+  shipperPointSelector,
+  userTotalPointState,
+  userUncheckedPointState,
+} from "../../state";
 
 type Props = {};
 
 function ShippingDetail({}: Props) {
+  const [userTotalPoint, setUserTotalPoint] =
+    useRecoilState(userTotalPointState);
+  const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
+    userUncheckedPointState
+  );
+  const shipperPoint = useRecoilValue(shipperPointSelector);
+
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const [loading, setLoading] = useState(true);
   const [detail, setDetail] = useState({});
@@ -68,6 +80,14 @@ function ShippingDetail({}: Props) {
     cloneShipping[index].status = status;
     setShippingList(cloneShipping);
     await supabase.from("orders").update({ status }).eq("id", selected.id);
+    if (status === EOrderStatus.DELIVERED) {
+      await supabase.from("users").update({
+        totalPoint: userTotalPoint + shipperPoint,
+        uncheckedPoint: userUncheckedPoint + shipperPoint,
+      });
+      setUserTotalPoint(userTotalPoint + shipperPoint);
+      setUserUncheckedPoint(userUncheckedPoint + shipperPoint);
+    }
   };
 
   const statusColor = getStatusTextColor(detail.status);

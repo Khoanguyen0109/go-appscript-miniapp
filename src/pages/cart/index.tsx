@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { Divider } from "components/divider";
-import { Box, DatePicker, Header, Page, Text } from "zmp-ui";
+import { Box, DatePicker, Header, Input, Page, Text } from "zmp-ui";
 import { CartItems } from "./cart-items";
 import { CartPreview } from "./preview";
 import { Delivery } from "./delivery";
 import { useVirtualKeyboardVisible } from "hooks";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { cartState } from "state";
+import { calPointUserSelector, cartState } from "state";
 import Discount from "./discount";
 import PreviewInfo from "./previewInfo";
 import { dateSelectedState, timeSelectedState } from "./state";
@@ -16,6 +16,8 @@ const CartPage: FC = () => {
   const cart = useRecoilValue(cartState);
   const [date, setDate] = useRecoilState(dateSelectedState);
   const [time, setTime] = useRecoilState(timeSelectedState);
+
+  const calPointUser = useRecoilValue(calPointUserSelector);
   return (
     <Page className="flex flex-col bg-background">
       <Header className="text-center" title="Giỏ hàng" showBackIcon={false} />
@@ -27,7 +29,7 @@ const CartPage: FC = () => {
           <Box className="mb-3">
             <Text className="text-md font-bold px-2">Thời gian nhận hàng</Text>
             <Box className="flex p-2 justify-between w-screen">
-              <Box className="w-2/3">
+              <Box className="w-2/3 pr-2">
                 <DatePicker
                   value={date}
                   onChange={(value) => {
@@ -36,15 +38,23 @@ const CartPage: FC = () => {
                   dateFormat="dd/mm/yyyy"
                 />
               </Box>
-
-              <input
-                value={time}
-                type="time"
-                onChange={(e) => setTime(e.target.value)}
-              />
+              <Box className="w-1/3">
+                <Input
+                  value={time}
+                  type="time"
+                  onChange={(e) => setTime(e.target.value)}
+                />
+              </Box>
             </Box>
           </Box>
           <Discount />
+          {calPointUser && (
+            <Box>
+              <Text className="m-2 text-sm font-bold text-green">
+                {`Bạn  nhận dc ${calPointUser} cent mion tích lũy cho đơn hàng này`}
+              </Text>
+            </Box>
+          )}
           <Divider size={14} />
           <PreviewInfo />
         </>

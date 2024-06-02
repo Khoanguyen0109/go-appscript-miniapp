@@ -143,7 +143,7 @@ const Personal: FC = () => {
 
 const Other: FC = () => {
   const navigate = useNavigate();
-  const onClick = useToBeImplemented();
+  // const onClick = useToBeImplemented();
   const [dialogVisible, setDialogVisible] = useState(false);
   const [issue, setIssue] = useState("Vấn đề về đơn hàng");
   const [note, setNote] = useState("");
@@ -175,12 +175,11 @@ const Other: FC = () => {
         });
       }
 
-      const { data, error } = await supabase.from("feedbacks").insert({
+      await supabase.from("feedbacks").insert({
         feedback: issue,
         note,
         userId: user.id,
       });
-      console.log("error", error);
       setNote("");
       setDialogVisible(false);
       return openSnackbar({

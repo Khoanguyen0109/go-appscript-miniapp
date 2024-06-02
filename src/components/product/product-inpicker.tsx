@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box, Button, Icon, Text } from "zmp-ui";
 import { Product } from "../../types/product";
 import { FinalPrice } from "../display/final-price";
@@ -20,6 +20,7 @@ type Props = {
     quantity: number;
   };
   isRedirect: boolean;
+  visible: boolean;
 };
 
 function ProductInPicker({
@@ -30,14 +31,22 @@ function ProductInPicker({
   addToCart,
   selected,
   isRedirect,
+  visible,
 }: Props) {
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const [quantity, setQuantity] = useState(1);
 
-  const variants = {
-    ...(product?.variants ? product?.variants : {}),
-    ...groupBy(globalInventories, "group"),
-  };
+  const variants = useMemo(
+    () =>
+      visible
+        ? {
+            ...(product?.variants ? product?.variants : {}),
+            ...groupBy(globalInventories, "group"),
+          }
+        : {},
+    [visible]
+  );
+  console.log("variants", variants);
   return (
     <Box className="space-y-6 mt-4 " p={4}>
       <Box className="space-y-2">

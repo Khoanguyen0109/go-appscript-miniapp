@@ -12,19 +12,19 @@ export const ctvIncomeListRequestSelector = selector({
         .from("commission_requests")
         .select("*")
         .eq("userId", user.id);
-      return [
-        {
-          status: ECommissionRequest.DONE,
-          total: 500,
-          createdAt: "30/05/2024",
-        },
-        {
-          status: ECommissionRequest.DONE,
-          total: 500,
-          createdAt: "30/05/2024",
-        },
-      ];
-      console.log("data", data);
+      return data;
+      // return [
+      //   {
+      //     status: ECommissionRequest.DONE,
+      //     total: 500,
+      //     createdAt: "30/05/2024",
+      //   },
+      //   {
+      //     status: ECommissionRequest.DONE,
+      //     total: 500,
+      //     createdAt: "30/05/2024",
+      //   },
+      // ];
     } catch (error) {
       return [];
     }

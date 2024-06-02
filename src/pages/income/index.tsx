@@ -1,19 +1,28 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { Box, Button, Header, Page, Text } from "zmp-ui";
-import { userState } from "../../state";
+import {
+  userCanWithdrawState,
+  userCheckedPointState,
+  userState,
+  userTotalPointState,
+  userUncheckedPointState,
+} from "../../state";
 import { DisplayPrice } from "../../components/display/price";
 import { ctvIncomeListRequestState } from "../../state/ctv-state";
 import CommissionIcon from "../../static/commision-request.svg";
 import { formatDate } from "../../utils/date";
 import { ECommissionRequest } from "../../constants";
+import { DisplayCoin } from "../../components/display/display-coin";
 
 type Props = {};
 
 function Income({}: Props) {
-  const user = useRecoilValue(userState);
   const commissionRequest = useRecoilValue(ctvIncomeListRequestState);
-
+  const userTotalPoint = useRecoilValue(userTotalPointState);
+  const userUncheckedPoint = useRecoilValue(userUncheckedPointState);
+  const userCheckedPoint = useRecoilValue(userCheckedPointState);
+  const userCanWithdraw = useRecoilValue(userCanWithdrawState);
   const getStatusColor = (status) => {
     switch (status) {
       case ECommissionRequest.WAITING:
@@ -39,30 +48,38 @@ function Income({}: Props) {
     }
   };
   return (
-    <Page className="">
+    <Page className="bg-white">
       <Header title="Doanh thu liên kết" showBackIcon={true} />
       <Box className="p-3  bg-white">
         <Box className="p-4 rounded-lg bg-blue-600 text-white">
           <Box>
             <Text className="text-md font-bold">Số tiền có thể rút</Text>
             <Text className="text-xl mt-2 font-bold">
-              <DisplayPrice>{user?.daDoiSoat || 0}</DisplayPrice>
+              <DisplayCoin>{userCanWithdraw || 0}</DisplayCoin>
             </Text>
             <Button className="mt-3 bg-white rounded-lg" variant="secondary">
               Gửi yêu cầu thanh toán
             </Button>
           </Box>
           <Box className="mt-3 flex">
-            <Box className="border-r-2 flex-1 border-white">
+            <Box className=" flex-1 border-white">
               <Text className="text-sm">Số tiền tổng </Text>
               <Text className="text-xl mt-2 font-bold">
-                <DisplayPrice>{user?.totalHoaHong || 0}</DisplayPrice>
+                <DisplayCoin>{userTotalPoint || 0}</DisplayCoin>
+              </Text>
+            </Box>
+          </Box>
+          <Box className="mt-3 flex">
+            <Box className="border-r-2 flex-1 border-white">
+              <Text className="text-sm ">Đã đối soát</Text>
+              <Text className="text-xl mt-2 font-bold ">
+                <DisplayCoin>{userCheckedPoint || 0}</DisplayCoin>
               </Text>
             </Box>
             <Box className="flex-1">
               <Text className="text-sm  text-right">Chờ đối soát</Text>
               <Text className="text-xl mt-2 font-bold text-right">
-                <DisplayPrice>{user?.chuaDoiSoat || 0}</DisplayPrice>
+                <DisplayCoin>{userUncheckedPoint || 0}</DisplayCoin>
               </Text>
             </Box>
           </Box>

@@ -5,14 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   calDiscount,
+  calPointUserSelector,
   cartState,
+  ctvPointOrderSelector,
+  ctvPointWhenCustomerOrderSelector,
   discountState,
   minOrderItemSelector,
   phoneState,
   preTotalPriceState,
   totalPriceState,
   totalQuantityState,
+  userPointTodayOrderSettingSelector,
+  userPointTomorrowOrderSettingSelector,
   userState,
+  userTotalPointState,
+  userUncheckedPointState,
 } from "state";
 import pay from "utils/product";
 import { Box, Button, Text, useSnackbar } from "zmp-ui";
@@ -26,6 +33,8 @@ import {
 import supabase from "../../client/client";
 import { EOrderStatus } from "../../constantsapp";
 import { formatDate } from "../../utils/date";
+import { isToday, isTomorrow } from "date-fns";
+import { ERoles } from "../../constants";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
@@ -38,12 +47,34 @@ export const CartPreview: FC = () => {
   const preTotal = useRecoilValue(preTotalPriceState);
   const [note, setNote] = useRecoilState(noteState);
   const resetCart = useResetRecoilState(cartState);
-  const date = useRecoilValue(dateSelectedState);
-  const time = useRecoilValue(timeSelectedState);
+  const [date, setDate] = useRecoilState(dateSelectedState);
+  const [userTotalPoint, setUserTotalPoint] =
+    useRecoilState(userTotalPointState);
+  const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
+    userUncheckedPointState
+  );
+
+  const ctvPointOrder = useRecoilValue(ctvPointOrderSelector);
+  const ctvCommissionPoint = useRecoilValue(ctvPointWhenCustomerOrderSelector);
+  const userPointInday = useRecoilValue(userPointTodayOrderSettingSelector);
+  const userPointTomorrow = useRecoilValue(
+    userPointTomorrowOrderSettingSelector
+  );
+  const [time, setTime] = useRecoilState(timeSelectedState);
   const [discount, setDiscount] = useRecoilState(discountState);
   const phone = useRecoilValue(phoneState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
+  const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
 
+  const convertDate: Date = new Date(`${date}`);
+  convertDate.setHours(hours, minutes, 0, 0);
+  console.log("convertDate", convertDate);
+  const today: Date = new Date();
+  const diffInMilliseconds = convertDate - today;
+  const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
+  const isMoreThanTwoHoursAhead = diffInMilliseconds > twoHoursInMilliseconds;
+  const isTodayOrder = isToday(convertDate);
+  const isTomorrowOrder = isTomorrow(convertDate);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const timmerId = useRef();
 
@@ -54,6 +85,8 @@ export const CartPreview: FC = () => {
     },
     []
   );
+
+  const calPointUser = useRecoilValue(calPointUserSelector)
 
   const callBackPayment = async (data) => {
     try {
@@ -74,6 +107,8 @@ export const CartPreview: FC = () => {
           zaloOrderId: data?.orderId,
           receiveDate: formatDate(new Date(date).toISOString()),
           receiveTime: time,
+          userPoint: calPointUser,
+          ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
       const details = cart.reduce((acc, value) => {
@@ -89,9 +124,13 @@ export const CartPreview: FC = () => {
         return acc;
       }, []);
 
-      await supabase.from("order_details").insert(details);
+      await Promise.all([
+        supabase.from("order_details").insert(details),
+        updateUserPoint(),
+      ]);
       setAddressSelected(null);
-      // setPaymentMethod(null);
+      setDate(new Date());
+      setTime("");
       setNote("");
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
@@ -101,7 +140,43 @@ export const CartPreview: FC = () => {
     }
   };
 
+  const updateUserPoint = async () => {
+    if (user.idCTVShared) {
+      const { data: selectedCTV } = await supabase
+        .from("users")
+        .select()
+        .eq("id", user.idCTVShared);
+      console.log("selectedCTV", selectedCTV);
+      if (selectedCTV?.length > 0) {
+        await supabase
+          .from("users")
+          .update({
+            totalPoint: selectedCTV[0].totalPoint + ctvCommissionPoint,
+            uncheckedPoint: selectedCTV[0].uncheckedPoint + ctvCommissionPoint,
+          })
+          .eq("id", user.idCTVShared);
+      }
+    }
+    if (calPointUser) {
+      const payload = {
+        totalPoint: userTotalPoint + calPointUser,
+        uncheckedPoint: userUncheckedPoint + calPointUser,
+      };
+      await supabase.from("users").update(payload).eq("id", user.id);
+      setUserTotalPoint(userTotalPoint + calPointUser);
+      setUserUncheckedPoint(userUncheckedPoint + calPointUser);
+    }
+  };
+
   const makePayment = async () => {
+    if (!isMoreThanTwoHoursAhead) {
+      return openSnackbar({
+        text: `Thời gian giao hàng cách tối thiểu 2 giờ`,
+        type: "error",
+        icon: true,
+        duration: 1000,
+      });
+    }
     try {
       if (quantity < minOrderItems) {
         return openSnackbar({

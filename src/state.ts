@@ -12,6 +12,9 @@ import { wait } from "utils/async";
 import supabase from "./client/client";
 import { groupBy } from "lodash";
 import { upsertUser } from "./api/addUser";
+import { isToday, isTomorrow } from "date-fns";
+import { dateSelectedState } from "./pages/cart/state";
+import { ERoles } from "./constants";
 
 export const mapProduct = (item) => {
   return {
@@ -37,6 +40,58 @@ export const userState = selector({
   },
 });
 
+const totalPointSelector = selector({
+  key: "totalPointSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.totalPoint;
+  },
+});
+
+const unCheckedPointSelector = selector({
+  key: "unCheckedPointSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.uncheckedPoint;
+  },
+});
+
+const checkedPointSelector = selector({
+  key: "checkedPointSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.checkedPoint;
+  },
+});
+
+export const canWithdrawSelector = selector({
+  key: "canWithdrawSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.canWithdraw;
+  },
+});
+
+export const userTotalPointState = atom({
+  key: "userTotalPointState",
+  default: totalPointSelector,
+});
+
+export const userUncheckedPointState = atom({
+  key: "userUncheckedPointState",
+  default: unCheckedPointSelector,
+});
+
+export const userCheckedPointState = atom({
+  key: "userCheckedPointState",
+  default: checkedPointSelector,
+});
+
+export const userCanWithdrawState = atom({
+  key: "userCanWithdrawState",
+  default: canWithdrawSelector,
+});
+
 export const settingState = selector({
   key: "settings",
   get: async () => {
@@ -49,7 +104,7 @@ export const minOrderItemSelector = selector({
   key: "minOrderItemSelector",
   get: ({ get }) => {
     const setting = get(settingState);
-    return setting.find((item) => item.name === "min").value || 5;
+    return Number(setting.find((item) => item.name === "min").value) || 5;
   },
 });
 
@@ -57,7 +112,65 @@ export const shippingFeeState = selector({
   key: "shippingFee",
   get: ({ get }) => {
     const setting = get(settingState);
-    return setting.find((item) => item.name === "shippingFee").value || 0;
+    return (
+      Number(setting.find((item) => item.name === "shippingFee").value) || 0
+    );
+  },
+});
+
+export const userPointTodayOrderSettingSelector = selector({
+  key: "userPointTodayOrderSettingSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(setting.find((item) => item.name === "in_day_order").value) || 0
+    );
+  },
+});
+
+export const userPointTomorrowOrderSettingSelector = selector({
+  key: "userPointTomorrowOrderSettingSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(setting.find((item) => item.name === "tomorrow_order").value) || 0
+    );
+  },
+});
+
+export const ctvPointOrderSelector = selector({
+  key: "ctvPointOrderSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(
+        setting.find((item) => item.name === "ctv_commission_order").value
+      ) || 0
+    );
+  },
+});
+
+export const ctvPointWhenCustomerOrderSelector = selector({
+  key: "ctvPointWhenCustomerOrderSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(
+        setting.find(
+          (item) => Number(item.name === "ctv_commission_customer_order").value
+        )
+      ) || 0
+    );
+  },
+});
+
+export const shipperPointSelector = selector({
+  key: "shipperPointSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(setting.find((item) => item.name === "shipper_point").value) || 0
+    );
   },
 });
 
@@ -225,6 +338,28 @@ export const orderState = selector({
       .order("createdAt", { ascending: false });
 
     return data;
+  },
+});
+
+const orderPointSelector = selector({
+  key: "orderPointSelector",
+  get: async ({ get }) => {
+    get(forceOrderUpdate);
+    const user = get(userState);
+
+    const { data } = await supabase
+      .from("orders")
+      .select("*")
+      .or(`userId.eq.${user.id},ctvId.eq.${user.id},shipperId.eq.${user.id}`);
+    return data;
+  },
+});
+
+export const userPointSelector = selector({
+  key: "userPointSelector",
+  get: ({ get }) => {
+    const orders = get(orderPointSelector);
+    return orders;
   },
 });
 
@@ -485,6 +620,28 @@ export const globalProductInventoriesSelector = selector({
       return data;
     } else {
       return [];
+    }
+  },
+});
+
+export const calPointUserSelector = selector({
+  key: "calPointUserSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    const ctvPointOrder = get(ctvPointOrderSelector);
+    const userPointInday = get(userPointTodayOrderSettingSelector);
+    const userPointTomorrow = get(userPointTomorrowOrderSettingSelector);
+    const convertDate = get(dateSelectedState);
+    const isTodayOrder = isToday(convertDate);
+    const isTomorrowOrder = isTomorrow(convertDate);
+    if (user.role === ERoles.CTV) {
+      return ctvPointOrder;
+    } else {
+      if (isTodayOrder) {
+        return userPointInday;
+      } else if (isTomorrowOrder) {
+        return userPointTomorrow;
+      }
     }
   },
 });

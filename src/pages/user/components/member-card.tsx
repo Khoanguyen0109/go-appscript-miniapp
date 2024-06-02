@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userState } from "state";
+import { userState, userTotalPointState } from "state";
 import { Box, Progress, Text } from "zmp-ui";
 import silver from "static/member-card/silver.jpg";
 import gold from "static/member-card/gold.png";
@@ -10,6 +10,7 @@ import newMember from "static/subscription-decor.svg";
 import { ROUTES } from "pages/route";
 import { EScoreRank } from "constantsapp";
 import { scoreRankState } from "pages/index/state";
+import { DisplayCoin } from "../../../components/display/display-coin";
 
 type Props = {};
 
@@ -17,6 +18,7 @@ function MemberCard({}: Props) {
   const navigate = useNavigate();
   const scoreRank = useRecoilValue(scoreRankState);
   const user = useRecoilValue(userState);
+  const userTotalPoint = useRecoilValue(userTotalPointState);
   const backgroundCard = useMemo(() => {
     switch (user.memberClass) {
       case EScoreRank.NEW:
@@ -58,7 +60,8 @@ function MemberCard({}: Props) {
           <Text.Title className="font-bold">
             Thành viên {user?.memberClass || EScoreRank.NEW}
           </Text.Title>
-          <Text.Title className="font-bold">{user?.score || 0} Điểm</Text.Title>
+          {/* <Text.Title className="font-bold">{user?.score || 0} Điểm</Text.Title> */}
+          <DisplayCoin>{userTotalPoint}</DisplayCoin>
         </Box>
 
         {maxScore && (
@@ -70,9 +73,9 @@ function MemberCard({}: Props) {
                 maxCompleted={parseInt(maxScore)}
               />
             </Box>
-            <Text size="small">
+            {/* <Text size="small">
               Cần hoàn thành {maxScore} điểm để tăng hạng thành viên
-            </Text>
+            </Text> */}
           </>
         )}
       </Box>

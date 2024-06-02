@@ -10,7 +10,6 @@ type Props = {};
 function Discount({}: Props) {
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useRecoilState(discountState);
-  console.log(discount)
   const [loading, setLoading] = useState(false);
   const onChange = (e) => {
     const { value } = e.target;
@@ -38,6 +37,13 @@ function Discount({}: Props) {
           duration: 2000,
         });
         return data[0];
+      } else {
+        openSnackbar({
+          text: "Mã giảm giá không hợp lệ",
+          type: "error",
+          icon: true,
+          duration: 2000,
+        });
       }
     } catch (error) {
       setDiscount(null);
@@ -57,7 +63,6 @@ function Discount({}: Props) {
       <Text className="text-md font-bold mb-1">Mã khuyến mãi</Text>
       <Box className="flex items-center justify-between mt-2">
         <Input
-          size="small"
           placeholder="Nhập voucher giảm giá"
           className=" w-52 mr-2"
           value={voucher}

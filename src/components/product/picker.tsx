@@ -1,14 +1,18 @@
 import { Sheet } from "components/fullscreen-sheet";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { useSetRecoilState } from "recoil";
-import { cartState } from "state";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { cartState, globalProductInventoriesSelector } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
 import { isIdentical } from "utils/product";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
-import ProductInPicker from "./product-inpicker";
+import { Box, Button, Icon, Text } from "zmp-ui";
+import { FinalPrice } from "../display/final-price";
+import ProductVariant from "./component/product-variant";
+import { QuantityPicker } from "./quantity-picker";
+import { groupBy } from "lodash";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -28,6 +32,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   product,
   selected,
 }) => {
+  const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [options, setOptions] = useState<SelectedOptions>({});
@@ -35,6 +40,16 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   const setCart = useSetRecoilState(cartState);
   const [isRedirect, setIsRedirect] = useState(false);
 
+  const variants = useMemo(
+    () =>
+      visible
+        ? {
+            ...(product?.variants ? product?.variants : {}),
+            ...groupBy(globalInventories, "group"),
+          }
+        : {},
+    [visible]
+  );
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -119,15 +134,107 @@ export const ProductPicker: FC<ProductPickerProps> = ({
       {createPortal(
         <Sheet visible={visible} onClose={() => setVisible(false)} autoHeight>
           {product && (
-            <ProductInPicker
-              product={product}
-              setVisible={setVisible}
-              setOptions={setOptions}
-              addToCart={addToCart}
-              selected={selected}
-              options={options}
-              isRedirect={isRedirect}
-            />
+            <Box className="space-y-6 mt-4 " p={4}>
+              <Box className="space-y-2">
+                <Box className="flex items-start">
+                  <img
+                    loading="lazy"
+                    src={product.thumbnail}
+                    className="w-20 h-20 mr-2 rounded-xl"
+                  />
+                  <Box>
+                    <Text.Title className="font-bold">
+                      {product.name}
+                    </Text.Title>
+                    <Text className="font-bold mt-1">
+                      <FinalPrice options={options}>{product}</FinalPrice>
+                    </Text>
+                  </Box>
+                  <Box className="flex-1 text-right pr-2">
+                    <Icon
+                      icon="zi-close"
+                      onClick={() => {
+                        setVisible(false);
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+              <Box className="space-y-5 overflow-y-auto h-[420px]">
+                {variants &&
+                  Object.keys(variants).map((key) => {
+                    return (
+                      <ProductVariant
+                        variant={key}
+                        value={options[key] as string}
+                        values={variants[key]}
+                        onChange={(selectedOption) => {
+                          setOptions((prevOptions) => ({
+                            ...prevOptions,
+                            [key]: selectedOption,
+                          }));
+                        }}
+                      />
+                    );
+                  })}
+              </Box>
+
+              {/* {product.variants &&
+               product.variants.map((variant) =>
+               <ProductVariant variant={variant}/>
+                 // variant.type === "single" ? (
+                 //   <SingleOptionPicker
+                 //     key={variant.key}
+                 //     variant={variant}
+                 //     value={options[variant.key] as string}
+                 //     onChange={(selectedOption) =>
+                 //       setOptions((prevOptions) => ({
+                 //         ...prevOptions,
+                 //         [variant.key]: selectedOption,
+                 //       }))
+                 //     }
+                 //   />
+                 // ) : (
+                 //   <MultipleOptionPicker
+                 //     key={variant.key}
+                 //     product={product}
+                 //     variant={variant}
+                 //     value={options[variant.key] as string[]}
+                 //     onChange={(selectedOption) =>
+                 //       setOptions((prevOptions) => ({
+                 //         ...prevOptions,
+                 //         [variant.key]: selectedOption,
+                 //       }))
+                 //     }
+                 //   />
+                 // )
+               )} */}
+              <QuantityPicker value={quantity} onChange={setQuantity} />
+              {selected ? (
+                <Button
+                  variant={quantity > 0 ? "primary" : "secondary"}
+                  type={quantity > 0 ? "highlight" : "neutral"}
+                  fullWidth
+                  onClick={addToCart}
+                >
+                  {quantity > 0
+                    ? selected
+                      ? "Cập nhật giỏ hàng"
+                      : "Thêm vào giỏ hàng"
+                    : "Xoá"}
+                </Button>
+              ) : (
+                <Button
+                  disabled={!quantity}
+                  variant="primary"
+                  type="highlight"
+                  fullWidth
+                  onClick={addToCart}
+                >
+                  {isRedirect ? "Mua ngay" : "Thêm vào giỏ hàng"}
+                </Button>
+              )}
+            </Box>
           )}
         </Sheet>,
         document.body

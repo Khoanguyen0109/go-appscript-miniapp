@@ -6,7 +6,7 @@ import { CartPreview } from "./preview";
 import { Delivery } from "./delivery";
 import { useVirtualKeyboardVisible } from "hooks";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { calPointUserSelector, cartState } from "state";
+import { calPointUserSelector, cartState, totalQuantityState } from "state";
 import Discount from "./discount";
 import PreviewInfo from "./previewInfo";
 import { dateSelectedState, timeSelectedState } from "./state";
@@ -16,6 +16,7 @@ const CartPage: FC = () => {
   const cart = useRecoilValue(cartState);
   const [date, setDate] = useRecoilState(dateSelectedState);
   const [time, setTime] = useRecoilState(timeSelectedState);
+  const quantity = useRecoilValue(totalQuantityState);
 
   const calPointUser = useRecoilValue(calPointUserSelector);
   return (
@@ -51,7 +52,9 @@ const CartPage: FC = () => {
           {calPointUser && (
             <Box>
               <Text className="m-2 text-sm font-bold text-green">
-                {`Bạn  nhận dc ${calPointUser} cent mion tích lũy cho đơn hàng này`}
+                {`Bạn  nhận dc ${
+                  calPointUser * quantity
+                } xu tích lũy cho đơn hàng này`}
               </Text>
             </Box>
           )}

@@ -1,7 +1,6 @@
 import { atom, selector } from "recoil";
 import { userState } from "../state";
 import supabase from "../client/client";
-import { ECommissionRequest } from "../constants";
 
 export const ctvIncomeListRequestSelector = selector({
   key: "ctvIncomeListRequestSelector",
@@ -12,7 +11,7 @@ export const ctvIncomeListRequestSelector = selector({
         .from("commission_requests")
         .select("*")
         .eq("userId", user.id);
-      return data;
+      return data || [];
       // return [
       //   {
       //     status: ECommissionRequest.DONE,

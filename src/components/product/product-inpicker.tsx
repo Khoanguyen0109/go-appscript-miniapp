@@ -46,7 +46,6 @@ function ProductInPicker({
         : {},
     [visible]
   );
-  console.log("variants", variants);
   return (
     <Box className="space-y-6 mt-4 " p={4}>
       <Box className="space-y-2">
@@ -92,36 +91,6 @@ function ProductInPicker({
           })}
       </Box>
 
-      {/* {product.variants &&
-        product.variants.map((variant) =>
-        <ProductVariant variant={variant}/>
-          // variant.type === "single" ? (
-          //   <SingleOptionPicker
-          //     key={variant.key}
-          //     variant={variant}
-          //     value={options[variant.key] as string}
-          //     onChange={(selectedOption) =>
-          //       setOptions((prevOptions) => ({
-          //         ...prevOptions,
-          //         [variant.key]: selectedOption,
-          //       }))
-          //     }
-          //   />
-          // ) : (
-          //   <MultipleOptionPicker
-          //     key={variant.key}
-          //     product={product}
-          //     variant={variant}
-          //     value={options[variant.key] as string[]}
-          //     onChange={(selectedOption) =>
-          //       setOptions((prevOptions) => ({
-          //         ...prevOptions,
-          //         [variant.key]: selectedOption,
-          //       }))
-          //     }
-          //   />
-          // )
-        )} */}
       <QuantityPicker value={quantity} onChange={setQuantity} />
       {selected ? (
         <Button

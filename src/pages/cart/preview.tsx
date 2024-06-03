@@ -5,13 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   calDiscount,
-  calPointUserSelector,
   cartState,
   ctvPointOrderSelector,
   ctvPointWhenCustomerOrderSelector,
   discountState,
   minOrderItemSelector,
-  phoneState,
   preTotalPriceState,
   totalPriceState,
   totalQuantityState,
@@ -33,8 +31,6 @@ import {
 import supabase from "../../client/client";
 import { EOrderStatus } from "../../constantsapp";
 import { formatDate } from "../../utils/date";
-import { isToday, isTomorrow } from "date-fns";
-import { ERoles } from "../../constants";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
@@ -62,7 +58,6 @@ export const CartPreview: FC = () => {
   );
   const [time, setTime] = useRecoilState(timeSelectedState);
   const [discount, setDiscount] = useRecoilState(discountState);
-  const phone = useRecoilValue(phoneState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
 
@@ -73,8 +68,7 @@ export const CartPreview: FC = () => {
   const diffInMilliseconds = convertDate - today;
   const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
   const isMoreThanTwoHoursAhead = diffInMilliseconds > twoHoursInMilliseconds;
-  const isTodayOrder = isToday(convertDate);
-  const isTomorrowOrder = isTomorrow(convertDate);
+
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const timmerId = useRef();
 
@@ -86,7 +80,7 @@ export const CartPreview: FC = () => {
     []
   );
 
-  const calPointUser = useRecoilValue(calPointUserSelector)
+  // const calPointUser = useRecoilValue(calPointUserSelector)
 
   const callBackPayment = async (data) => {
     try {
@@ -107,8 +101,8 @@ export const CartPreview: FC = () => {
           zaloOrderId: data?.orderId,
           receiveDate: formatDate(new Date(date).toISOString()),
           receiveTime: time,
-          userPoint: calPointUser,
-          ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
+          // userPoint: calPointUser,
+          // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
       const details = cart.reduce((acc, value) => {
@@ -126,7 +120,7 @@ export const CartPreview: FC = () => {
 
       await Promise.all([
         supabase.from("order_details").insert(details),
-        updateUserPoint(),
+        // updateUserPoint(),
       ]);
       setAddressSelected(null);
       setDate(new Date());
@@ -140,33 +134,33 @@ export const CartPreview: FC = () => {
     }
   };
 
-  const updateUserPoint = async () => {
-    if (user.idCTVShared) {
-      const { data: selectedCTV } = await supabase
-        .from("users")
-        .select()
-        .eq("id", user.idCTVShared);
-      console.log("selectedCTV", selectedCTV);
-      if (selectedCTV?.length > 0) {
-        await supabase
-          .from("users")
-          .update({
-            totalPoint: selectedCTV[0].totalPoint + ctvCommissionPoint,
-            uncheckedPoint: selectedCTV[0].uncheckedPoint + ctvCommissionPoint,
-          })
-          .eq("id", user.idCTVShared);
-      }
-    }
-    if (calPointUser) {
-      const payload = {
-        totalPoint: userTotalPoint + calPointUser,
-        uncheckedPoint: userUncheckedPoint + calPointUser,
-      };
-      await supabase.from("users").update(payload).eq("id", user.id);
-      setUserTotalPoint(userTotalPoint + calPointUser);
-      setUserUncheckedPoint(userUncheckedPoint + calPointUser);
-    }
-  };
+  // const updateUserPoint = async () => {
+  //   if (user.idCTVShared) {
+  //     const { data: selectedCTV } = await supabase
+  //       .from("users")
+  //       .select()
+  //       .eq("id", user.idCTVShared);
+  //     console.log("selectedCTV", selectedCTV);
+  //     if (selectedCTV?.length > 0) {
+  //       await supabase
+  //         .from("users")
+  //         .update({
+  //           totalPoint: selectedCTV[0].totalPoint + ctvCommissionPoint,
+  //           uncheckedPoint: selectedCTV[0].uncheckedPoint + ctvCommissionPoint,
+  //         })
+  //         .eq("id", user.idCTVShared);
+  //     }
+  //   }
+  //   if (calPointUser) {
+  //     const payload = {
+  //       totalPoint: userTotalPoint + calPointUser,
+  //       uncheckedPoint: userUncheckedPoint + calPointUser,
+  //     };
+  //     await supabase.from("users").update(payload).eq("id", user.id);
+  //     setUserTotalPoint(userTotalPoint + calPointUser);
+  //     setUserUncheckedPoint(userUncheckedPoint + calPointUser);
+  //   }
+  // };
 
   const makePayment = async () => {
     if (!isMoreThanTwoHoursAhead) {

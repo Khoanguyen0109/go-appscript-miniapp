@@ -2,7 +2,6 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { Box, Button, Header, Page, Text } from "zmp-ui";
 import {
-  userCanWithdrawState,
   userCheckedPointState,
   userState,
   userTotalPointState,
@@ -14,6 +13,7 @@ import CommissionIcon from "../../static/commision-request.svg";
 import { formatDate } from "../../utils/date";
 import { ECommissionRequest } from "../../constants";
 import { DisplayCoin } from "../../components/display/display-coin";
+import { useToBeImplemented } from "../../hooks";
 
 type Props = {};
 
@@ -22,7 +22,6 @@ function Income({}: Props) {
   const userTotalPoint = useRecoilValue(userTotalPointState);
   const userUncheckedPoint = useRecoilValue(userUncheckedPointState);
   const userCheckedPoint = useRecoilValue(userCheckedPointState);
-  const userCanWithdraw = useRecoilValue(userCanWithdrawState);
   const getStatusColor = (status) => {
     switch (status) {
       case ECommissionRequest.WAITING:
@@ -47,6 +46,9 @@ function Income({}: Props) {
         return "";
     }
   };
+
+  const onClick = useToBeImplemented();
+
   return (
     <Page className="bg-white">
       <Header title="Doanh thu liên kết" showBackIcon={true} />
@@ -55,25 +57,21 @@ function Income({}: Props) {
           <Box>
             <Text className="text-md font-bold">Số tiền có thể rút</Text>
             <Text className="text-xl mt-2 font-bold">
-              <DisplayCoin>{userCanWithdraw || 0}</DisplayCoin>
+              <DisplayCoin>{userCheckedPoint || 0}</DisplayCoin>
             </Text>
-            <Button className="mt-3 bg-white rounded-lg" variant="secondary">
-              Gửi yêu cầu thanh toán
+            <Button
+              className="mt-3 bg-white rounded-lg"
+              variant="secondary"
+              onClick={onClick}
+            >
+              Gửi yêu cầu rút xu
             </Button>
           </Box>
           <Box className="mt-3 flex">
-            <Box className=" flex-1 border-white">
-              <Text className="text-sm">Số tiền tổng </Text>
-              <Text className="text-xl mt-2 font-bold">
-                <DisplayCoin>{userTotalPoint || 0}</DisplayCoin>
-              </Text>
-            </Box>
-          </Box>
-          <Box className="mt-3 flex">
             <Box className="border-r-2 flex-1 border-white">
-              <Text className="text-sm ">Đã đối soát</Text>
+              <Text className="text-sm ">Số tiền tổng</Text>
               <Text className="text-xl mt-2 font-bold ">
-                <DisplayCoin>{userCheckedPoint || 0}</DisplayCoin>
+                <DisplayCoin>{userTotalPoint || 0}</DisplayCoin>
               </Text>
             </Box>
             <Box className="flex-1">

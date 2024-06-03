@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
 import {
@@ -17,23 +17,38 @@ import { DisplayPrice } from "../../components/display/price";
 import { openPhone } from "zmp-sdk";
 import { Divider } from "../../components/divider";
 import { EOrderStatus } from "../../constantsapp";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual } from "lodash";
 import {
+  ctvPointOrderSelector,
+  ctvPointWhenCustomerOrderSelector,
   globalProductInventoriesSelector,
   shipperPointSelector,
+  userPointTodayOrderSettingSelector,
+  userPointTomorrowOrderSettingSelector,
+  userState,
   userTotalPointState,
   userUncheckedPointState,
 } from "../../state";
+import { ERoles } from "../../constants";
+import { add, format, startOfDay } from "date-fns";
+import { convertToDate } from "../../utils/date";
 
 type Props = {};
 
 function ShippingDetail({}: Props) {
+  const user = useRecoilValue(userState);
   const [userTotalPoint, setUserTotalPoint] =
     useRecoilState(userTotalPointState);
   const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
     userUncheckedPointState
   );
   const shipperPoint = useRecoilValue(shipperPointSelector);
+  const ctvCommissionPoint = useRecoilValue(ctvPointWhenCustomerOrderSelector);
+  const ctvPointOrder = useRecoilValue(ctvPointOrderSelector);
+  const userPointInday = useRecoilValue(userPointTodayOrderSettingSelector);
+  const userPointTomorrow = useRecoilValue(
+    userPointTomorrowOrderSettingSelector
+  );
 
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const [loading, setLoading] = useState(true);
@@ -73,20 +88,88 @@ function ShippingDetail({}: Props) {
     return <LoadingScreenOverLay />;
   }
 
+  const totalQuantity = () => {
+    return detail.orderDetails.reduce((total, item) => {
+      return total + item.quantity;
+    }, 0);
+  };
+
+  console.log('first', totalQuantity())
+  const calUserPoint = (user) => {
+    const isTodayOrder = isEqual(
+      startOfDay(new Date(convertToDate(detail.receiveDate))),
+      startOfDay(new Date(detail.createdAt))
+    );
+
+    const isTomorrowOrder = isEqual(
+      startOfDay(new Date(convertToDate(detail.receiveDate))),
+      startOfDay(add(new Date(detail.createdAt), { days: 1 }))
+    );
+    console.log("isTomorrowOrder", isTomorrowOrder);
+    if (user.role === ERoles.CTV) {
+      return ctvPointOrder * totalQuantity();
+    } else {
+      if (isTodayOrder) {
+        return userPointInday * totalQuantity();
+      } else if (isTomorrowOrder) {
+        return userPointTomorrow * totalQuantity();
+      }
+    }
+    return 0;
+  };
+
   const updateStatusOrder = async (status) => {
     setDetail((pre) => ({ ...pre, status }));
     const index = shippingList.findIndex((item) => item.id === selected.id);
     const cloneShipping = cloneDeep(shippingList);
     cloneShipping[index].status = status;
     setShippingList(cloneShipping);
-    await supabase.from("orders").update({ status }).eq("id", selected.id);
+    const payload = { status };
     if (status === EOrderStatus.DELIVERED) {
-      await supabase.from("users").update({
-        totalPoint: userTotalPoint + shipperPoint,
-        uncheckedPoint: userUncheckedPoint + shipperPoint,
-      });
+      payload.deliverdAt = new Date();
+    }
+    await supabase
+      .from("orders")
+      .update({ ...payload })
+      .eq("id", selected.id);
+    if (status === EOrderStatus.DELIVERED) {
+      console.log("shipperPoint", shipperPoint);
+      await supabase
+        .from("users")
+        .update({
+          totalPoint:
+            userTotalPoint + shipperPoint * detail.orderDetails.length,
+        })
+        .eq("id", user.id);
       setUserTotalPoint(userTotalPoint + shipperPoint);
       setUserUncheckedPoint(userUncheckedPoint + shipperPoint);
+      const { data: orderUserList } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", detail.userId);
+      if (orderUserList?.length > 0) {
+        const orderUser = orderUserList[0];
+        await supabase
+          .from("users")
+          .update({
+            totalPoint: orderUser.totalPoint + calUserPoint(orderUser),
+          })
+          .eq("id", orderUser.id);
+        if (orderUser.idCTVShared) {
+          const { data: selectedCTV } = await supabase
+            .from("users")
+            .select()
+            .eq("id", orderUser.idCTVShared);
+          if (selectedCTV?.length > 0) {
+            await supabase
+              .from("users")
+              .update({
+                totalPoint: orderUser.totalPoint + ctvCommissionPoint,
+              })
+              .eq("id", orderUser.id);
+          }
+        }
+      }
     }
   };
 
@@ -173,7 +256,7 @@ function ShippingDetail({}: Props) {
               return acc;
             }, []);
             return (
-              <Box className="flex items-center mb-2">
+              <Box key={item.id} className="flex items-center mb-2">
                 <Text>{item.quantity}x</Text>
                 <Text className=" ml-2">{item.product.name}</Text>
                 <Text>{options.map((item) => item.name).join(",")}</Text>

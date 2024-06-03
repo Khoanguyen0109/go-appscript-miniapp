@@ -31,7 +31,13 @@ export function displayDate(date: Date, hint?: boolean) {
   return `${day}/${month}/${year}`;
 }
 
+export function formatDate(date) {
+  return DateTime.fromISO(date).toFormat("dd/MM/yyyy");
+}
 
-export function formatDate (date) {
-  return DateTime.fromISO(date).toFormat("dd/MM/yyyy")
+export function convertToDate(dateString) {
+  //  Convert a "dd/MM/yyyy" string into a Date object
+  let d = dateString.split("/");
+  let dat = new Date(d[2] + "/" + d[1] + "/" + d[0]);
+  return dat;
 }

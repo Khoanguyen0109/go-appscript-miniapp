@@ -64,14 +64,6 @@ const checkedPointSelector = selector({
   },
 });
 
-export const canWithdrawSelector = selector({
-  key: "canWithdrawSelector",
-  get: ({ get }) => {
-    const user = get(userState);
-    return user.canWithdraw;
-  },
-});
-
 export const userTotalPointState = atom({
   key: "userTotalPointState",
   default: totalPointSelector,
@@ -85,11 +77,6 @@ export const userUncheckedPointState = atom({
 export const userCheckedPointState = atom({
   key: "userCheckedPointState",
   default: checkedPointSelector,
-});
-
-export const userCanWithdrawState = atom({
-  key: "userCanWithdrawState",
-  default: canWithdrawSelector,
 });
 
 export const settingState = selector({

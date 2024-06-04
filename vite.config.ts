@@ -8,9 +8,18 @@ export default () => {
   return defineConfig({
     root: "./src",
     base: "",
-    plugins: [tsconfigPaths(), reactRefresh(), macrosPlugin()],
-    build: {
-      target: "es2020",
-    },
+    plugins: [
+      tsconfigPaths(),
+      reactRefresh(),
+      macrosPlugin(),
+      {
+        name: "override-config",
+        config: () => ({
+          build: {
+            target: "esnext",
+          },
+        }),
+      },
+    ],
   });
 };

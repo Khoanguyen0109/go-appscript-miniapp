@@ -44,8 +44,8 @@
     "swiper": "^9.1.0",
     "twin.macro": "^3.4.0",
     "vite-plugin-babel-macros": "^1.0.6",
-    "zmp-sdk": "^2.27.2",
-    "zmp-ui": "^1.6.0-rc.6"
+    "zmp-sdk": "^2.37.1",
+    "zmp-ui": "^1.9.5"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

@@ -32,8 +32,17 @@ export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   // if (variant) {
   //   return variant.price;
   // }
+  // const totalOptionPrice = options
+  //   ? Object.keys(options).reduce((acc, key) => acc + options[key].price, 0)
+  //   : 0;
   const totalOptionPrice = options
-    ? Object.keys(options).reduce((acc, key) => acc + options[key].price, 0)
+    ? Object.keys(options).reduce((acc, key) => {
+        const totalOption = options[key].reduce(
+          (child, item) => child + item.price,
+          0
+        );
+        return acc + totalOption;
+      }, 0)
     : 0;
   return finalPrice + totalOptionPrice;
 }
@@ -94,8 +103,11 @@ export const getOptionString = (options) => {
   }
   let variants: string[] = [];
   for (const [key, value] of Object.entries(options)) {
-    variants.push(`${capitalize(key.replace("_", ""))}: ${value.name}`);
+    variants.push(
+      `${capitalize(key.replace("_", ""))}: ${options[key]
+        .map((item) => item.name)
+        .join(",")}`
+    );
   }
-  console.log("first", variants);
   return variants.join(". ");
 };

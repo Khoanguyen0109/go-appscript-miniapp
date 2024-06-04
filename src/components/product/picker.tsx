@@ -12,7 +12,8 @@ import { Box, Button, Icon, Text } from "zmp-ui";
 import { FinalPrice } from "../display/final-price";
 import ProductVariant from "./component/product-variant";
 import { QuantityPicker } from "./quantity-picker";
-import { groupBy } from "lodash";
+import { groupBy, includes, uniq } from "lodash";
+import { DisplaySelectedOptions } from "../display/selected-options";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -39,7 +40,6 @@ export const ProductPicker: FC<ProductPickerProps> = ({
   const [quantity, setQuantity] = useState(1);
   const setCart = useSetRecoilState(cartState);
   const [isRedirect, setIsRedirect] = useState(false);
-
   const variants = useMemo(
     () =>
       visible
@@ -50,6 +50,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         : {},
     [visible]
   );
+  console.log("options", options);
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -149,6 +150,11 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                     <Text className="font-bold mt-1">
                       <FinalPrice options={options}>{product}</FinalPrice>
                     </Text>
+                    <Text className="text-xs ">
+                      <DisplaySelectedOptions options={options}>
+                        {product}
+                      </DisplaySelectedOptions>
+                    </Text>
                   </Box>
                   <Box className="flex-1 text-right pr-2">
                     <Icon
@@ -166,13 +172,26 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                     return (
                       <ProductVariant
                         variant={key}
-                        value={options[key] as string}
+                        value={options[key] as string[]}
                         values={variants[key]}
                         onChange={(selectedOption) => {
-                          setOptions((prevOptions) => ({
-                            ...prevOptions,
-                            [key]: selectedOption,
-                          }));
+                          console.log("options[key] ", options[key]);
+                          if (key === "Món thêm") {
+                            console.log("first");
+                            setOptions((prevOptions) => ({
+                              ...prevOptions,
+                              [key]: includes(prevOptions[key], selectedOption)
+                                ? prevOptions[key].filter(
+                                    (item) => item.id !== selectedOption.id
+                                  )
+                                : [...(prevOptions[key] ?? []), selectedOption],
+                            }));
+                          } else {
+                            setOptions((prevOptions) => ({
+                              ...prevOptions,
+                              [key]: [selectedOption],
+                            }));
+                          }
                         }}
                       />
                     );

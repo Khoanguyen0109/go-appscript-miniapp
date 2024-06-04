@@ -1,11 +1,11 @@
-import { capitalize } from "lodash";
+import { capitalize, includes } from "lodash";
 import React from "react";
 import { Box, Button, Checkbox, Radio, Text } from "zmp-ui";
 import { DisplayPrice } from "../../display/price";
 
 type Props = {
   variant: string;
-  value: string;
+  value: string[];
   values: string[];
   onChange: (value: string) => void;
 };
@@ -18,7 +18,7 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
         {variantLabel}
       </Text.Title>
       {values.map((option) => {
-        const isActive = option?.name === value?.name;
+        const isActive = includes(value, option);
         if (!option.status) {
           return <></>;
         }

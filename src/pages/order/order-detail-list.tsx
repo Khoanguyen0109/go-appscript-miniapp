@@ -1,16 +1,11 @@
 import React from "react";
-import { ListRenderer } from "../../components/list-renderer";
 import { Box, Text } from "zmp-ui";
 import { DisplayPrice } from "../../components/display/price";
-import { FinalPrice } from "../../components/display/final-price";
-import { DisplaySelectedOptions } from "../../components/display/selected-options";
-import { isString } from "lodash";
 import { useRecoilValue } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
 
 function OrderDetailList({ detail }) {
   const imgSize = "w-24 h-24";
-  console.log("detail", detail);
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   return (
     <Box className="px-2">

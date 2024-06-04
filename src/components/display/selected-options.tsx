@@ -45,6 +45,6 @@ export const DisplaySelectedOptions: FC<{
       //   });
     }
     return getOptionString(options);
-  }, [children]);
+  }, [children, options]);
   return <>{description}</>;
 };

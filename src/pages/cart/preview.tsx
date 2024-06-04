@@ -112,12 +112,14 @@ export const CartPreview: FC = () => {
           total: parseFloat(value.price) * parseInt(value.quantity),
           quantity: value.quantity,
           inventoryIds: Object.keys(value.options)
-            .map((key) => value.options[key].id)
+            .reduce((acc, key) => {
+              value.options[key].forEach((item) => acc.push(item.id));
+              return acc;
+            }, [])
             .join(","),
         });
         return acc;
       }, []);
-
       await Promise.all([
         supabase.from("order_details").insert(details),
         // updateUserPoint(),

@@ -5,7 +5,11 @@ import { getConfig } from "utils/config";
 import { Layout } from "./layout";
 import { ConfigProvider } from "./config-provider";
 import LoadingScreenOverLay from "./loading-screen";
-import { closeApp, offConfirmToExit, onConfirmToExit } from "zmp-sdk";
+import {
+  closeApp,
+  offConfirmToExit,
+  onConfirmToExit,
+} from "zmp-sdk";
 
 const MyApp = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);

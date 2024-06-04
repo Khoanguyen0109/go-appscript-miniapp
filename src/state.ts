@@ -1,5 +1,12 @@
 import { atom, selector, selectorFamily } from "recoil";
-import { getAppInfo, getLocation, getPhoneNumber, getUserInfo } from "zmp-sdk";
+import {
+  getAppInfo,
+  getLocation,
+  getPhoneNumber,
+  getUserInfo,
+  getSetting,
+  authorize,
+} from "zmp-sdk";
 import logo from "static/logo.jpg";
 import { Category } from "types/category";
 import { Product } from "types/product";
@@ -27,10 +34,22 @@ export const mapProduct = (item) => {
   };
 };
 
+export const authorizedState = selector({
+  key: "authorized",
+  get: async () => {
+    const { authSetting } = await getSetting({});
+    if (!authSetting["scope.userInfo"]) {
+      await authorize({ scopes: [] });
+    }
+  },
+});
+
 export const userState = selector({
   key: "user",
-  get: async () => {
+  get: async ({ get }) => {
+    get(authorizedState);
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
+    console.log("zaloUser", zaloUser);
     try {
       const data = upsertUser(zaloUser);
       return data;

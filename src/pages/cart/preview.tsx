@@ -90,6 +90,7 @@ export const CartPreview: FC = () => {
           // userId: user.role == ERoles.CTV ? address.userId : user.id,
           // ctvId: user.role == ERoles.CTV ? user.id : null,
           userId: user.id,
+          ctvId: user.idCTVShared,
           addressId: address?.id,
           total: totalPrice,
           discount: discount ? calDiscount(discount, totalPrice) : 0,

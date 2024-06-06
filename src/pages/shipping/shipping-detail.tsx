@@ -44,6 +44,7 @@ function ShippingDetail({}: Props) {
   );
   const shipperPoint = useRecoilValue(shipperPointSelector);
   const ctvCommissionPoint = useRecoilValue(ctvPointWhenCustomerOrderSelector);
+  console.log("ctvCommissionPoint", ctvCommissionPoint);
   const ctvPointOrder = useRecoilValue(ctvPointOrderSelector);
   const userPointInday = useRecoilValue(userPointTodayOrderSettingSelector);
   const userPointTomorrow = useRecoilValue(
@@ -94,7 +95,7 @@ function ShippingDetail({}: Props) {
     }, 0);
   };
 
-  console.log('first', totalQuantity())
+  console.log("first", totalQuantity());
   const calUserPoint = (user) => {
     const isTodayOrder = isEqual(
       startOfDay(new Date(convertToDate(detail.receiveDate))),
@@ -117,7 +118,7 @@ function ShippingDetail({}: Props) {
     }
     return 0;
   };
-
+  console.log("detail", detail);
   const updateStatusOrder = async (status) => {
     setDetail((pre) => ({ ...pre, status }));
     const index = shippingList.findIndex((item) => item.id === selected.id);
@@ -125,52 +126,65 @@ function ShippingDetail({}: Props) {
     cloneShipping[index].status = status;
     setShippingList(cloneShipping);
     const payload = { status };
+
     if (status === EOrderStatus.DELIVERED) {
       payload.deliverdAt = new Date();
-    }
-    await supabase
-      .from("orders")
-      .update({ ...payload })
-      .eq("id", selected.id);
-    if (status === EOrderStatus.DELIVERED) {
-      console.log("shipperPoint", shipperPoint);
+
+      const shipperPointTotal = userTotalPoint + shipperPoint * totalQuantity();
+      const shipperUncheckedPoint =
+        userUncheckedPoint + shipperPoint * totalQuantity();
+      payload.shipperPoint = shipperPointTotal;
       await supabase
         .from("users")
         .update({
-          totalPoint:
-            userTotalPoint + shipperPoint * detail.orderDetails.length,
+          totalPoint: shipperPointTotal,
+          uncheckedPoint: shipperUncheckedPoint,
         })
         .eq("id", user.id);
-      setUserTotalPoint(userTotalPoint + shipperPoint);
-      setUserUncheckedPoint(userUncheckedPoint + shipperPoint);
+      setUserTotalPoint(shipperPointTotal);
+      setUserUncheckedPoint(shipperUncheckedPoint);
       const { data: orderUserList } = await supabase
         .from("users")
         .select("*")
         .eq("id", detail.userId);
       if (orderUserList?.length > 0) {
         const orderUser = orderUserList[0];
+        const userPoint = orderUser.totalPoint + calUserPoint(orderUser);
+        payload.userPoint = userPoint;
+
         await supabase
           .from("users")
           .update({
-            totalPoint: orderUser.totalPoint + calUserPoint(orderUser),
+            totalPoint: userPoint,
+            uncheckedPoint: orderUser.uncheckedPoint + calUserPoint(orderUser),
           })
           .eq("id", orderUser.id);
-        if (orderUser.idCTVShared) {
+        if (detail.ctvId) {
           const { data: selectedCTV } = await supabase
             .from("users")
             .select()
             .eq("id", orderUser.idCTVShared);
-          if (selectedCTV?.length > 0) {
+          if (selectedCTV && selectedCTV?.length > 0) {
+            const ctvPoint =
+              selectedCTV[0].totalPoint + ctvCommissionPoint * totalQuantity();
+            payload.ctvPoint = ctvPoint;
             await supabase
               .from("users")
               .update({
-                totalPoint: orderUser.totalPoint + ctvCommissionPoint,
+                totalPoint: ctvPoint,
+                uncheckedPoint:
+                  selectedCTV[0].uncheckedPoint +
+                  ctvCommissionPoint * totalQuantity(),
               })
-              .eq("id", orderUser.id);
+              .eq("id", detail.ctvId);
           }
         }
       }
     }
+    await supabase
+      .from("orders")
+      .update({ ...payload })
+      .eq("id", selected.id);
   };
 
   const statusColor = getStatusTextColor(detail.status);

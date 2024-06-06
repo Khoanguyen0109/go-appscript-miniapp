@@ -168,7 +168,7 @@ function AddUserAddress({}: Props) {
             errorText={getErrorMessage("type")}
           />
         </Box>
-        <Box mt={4}>
+        {/* <Box mt={4}>
           <Select
             value={addressSelected?.province}
             label={getFieldName("province")}
@@ -197,7 +197,7 @@ function AddUserAddress({}: Props) {
             show={Boolean(errors?.province)}
             errorText={getErrorMessage("province")}
           />
-        </Box>
+        </Box> */}
         <Box mt={4}>
           <Select
             value={addressSelected?.district}

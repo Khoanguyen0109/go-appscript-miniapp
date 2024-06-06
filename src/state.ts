@@ -162,9 +162,8 @@ export const ctvPointWhenCustomerOrderSelector = selector({
     const setting = get(settingState);
     return (
       Number(
-        setting.find(
-          (item) => Number(item.name === "ctv_commission_customer_order").value
-        )
+        setting.find((item) => item.name === "ctv_commission_customer_order")
+          .value
       ) || 0
     );
   },
@@ -391,7 +390,10 @@ export const notificationsState = atom<Notification[]>({
 export const newNotificationState = selector({
   key: "newNotifications",
   get: async ({ get }) => {
-    const { data } = await supabase.from("notifications").select();
+    const { data } = await supabase
+      .from("notifications")
+      .select()
+      .order("createdAt", { ascending: false });
     return data;
   },
 });

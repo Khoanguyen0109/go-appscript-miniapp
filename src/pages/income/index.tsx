@@ -57,7 +57,7 @@ function Income({}: Props) {
           <Box>
             <Text className="text-md font-bold">Số tiền có thể rút</Text>
             <Text className="text-xl mt-2 font-bold">
-              <DisplayCoin>{userCheckedPoint || 0}</DisplayCoin>
+              <DisplayCoin>{userUncheckedPoint || 0}</DisplayCoin>
             </Text>
             <Button
               className="mt-3 bg-white rounded-lg"
@@ -77,7 +77,7 @@ function Income({}: Props) {
             <Box className="flex-1">
               <Text className="text-sm  text-right">Chờ đối soát</Text>
               <Text className="text-xl mt-2 font-bold text-right">
-                <DisplayCoin>{userUncheckedPoint || 0}</DisplayCoin>
+                <DisplayCoin>{userCheckedPoint || 0}</DisplayCoin>
               </Text>
             </Box>
           </Box>

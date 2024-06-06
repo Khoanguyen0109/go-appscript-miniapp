@@ -5,14 +5,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState, globalProductInventoriesSelector } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
-import { isIdentical } from "utils/product";
+import { isIdentical, isIdenticalV2 } from "utils/product";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
 import { Box, Button, Icon, Text } from "zmp-ui";
 import { FinalPrice } from "../display/final-price";
 import ProductVariant from "./component/product-variant";
 import { QuantityPicker } from "./quantity-picker";
-import { groupBy, includes, uniq } from "lodash";
+import { groupBy, includes, isEmpty, uniq } from "lodash";
 import { DisplaySelectedOptions } from "../display/selected-options";
 
 export interface ProductPickerProps {
@@ -44,13 +44,31 @@ export const ProductPicker: FC<ProductPickerProps> = ({
     () =>
       visible
         ? {
-            ...(product?.variants ? product?.variants : {}),
+            ...(product?.variants ? product?.variants.so : {}),
             ...groupBy(globalInventories, "group"),
           }
         : {},
     [visible]
   );
-  console.log("options", options);
+
+  const sortVariant = useMemo(() => {
+    const newVariants = {
+      "Món phụ": [],
+      "Món canh": [],
+      "Món tráng miệng": [],
+      "Món thêm": [],
+    };
+    Object.keys(variants).forEach((key) => {
+      Object.keys(newVariants).forEach((newKey) => {
+        if (key === newKey) {
+          newVariants[newKey] = variants[key];
+        }
+      });
+    });
+
+    return newVariants;
+  }, [variants]);
+  console.log("variants", variants);
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -67,7 +85,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
           const editing = cart.find(
             (item) =>
               item.product.id === product.id &&
-              isIdentical(item.options, selected.options)
+              isIdenticalV2(item.options, selected.options)
           )!;
           if (quantity === 0) {
             res.splice(cart.indexOf(editing), 1);
@@ -76,7 +94,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
               (item, i) =>
                 i !== cart.indexOf(editing) &&
                 item.product.id === product.id &&
-                isIdentical(item.options, options)
+                isIdenticalV2(item.options, options)
             )!;
             res.splice(cart.indexOf(editing), 1, {
               ...editing,
@@ -92,7 +110,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
           const existed = cart.find(
             (item) =>
               item.product.id === product.id &&
-              isIdentical(item.options, options)
+              isIdenticalV2(item.options, options)
           );
           if (existed) {
             res.splice(cart.indexOf(existed), 1, {
@@ -167,8 +185,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                 </Box>
               </Box>
               <Box className="space-y-5 overflow-y-auto h-[420px]">
-                {variants &&
-                  Object.keys(variants).map((key) => {
+                {!isEmpty(variants) &&
+                  Object.keys(sortVariant).map((key) => {
                     return (
                       <ProductVariant
                         variant={key}

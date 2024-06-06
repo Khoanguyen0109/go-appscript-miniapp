@@ -12,6 +12,7 @@ import { requestSendNotification } from "zmp-sdk";
 import logo from "static/logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "./route";
+import { formatDate } from "../utils/date";
 
 const NotificationList: FC = () => {
   const newNotification = useRecoilValue(newNotificationState);
@@ -55,7 +56,7 @@ const NotificationList: FC = () => {
         return (
           <Box
             onClick={() => onClick(item)}
-            className="flex bg-background mb-2 px-2 py-4"
+            className="flex bg-background mb-2 px-2 py-4 rounded-lg"
           >
             <img
               className="w-12 h-12 rounded-full mr-3"
@@ -65,15 +66,15 @@ const NotificationList: FC = () => {
               <Text.Header className="font-bold">{item.title}</Text.Header>
               <Text
                 size="small"
-                className=" overflow-hidden whitespace-nowrap text-ellipsis mb-2"
+                className=" overflow-hidden  text-ellipsis mb-2"
               >
-                {item.short_desc}
+                {item.desc}
               </Text>
               <Text
                 size="xSmall"
                 className="text-gray overflow-hidden whitespace-nowrap text-ellipsis"
               >
-                {item.time}
+                {formatDate(item.createdAt)}
               </Text>
             </Box>
           </Box>

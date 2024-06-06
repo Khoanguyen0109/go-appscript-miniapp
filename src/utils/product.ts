@@ -80,6 +80,10 @@ export function isIdentical(
   return true;
 }
 
+export const isIdenticalV2 = (option1: SelectedOptions, option2: SelectedOptions) => {
+  return isEqual(JSON.stringify(option1), JSON.stringify(option2));
+};
+
 const pay = (amount: number, callback: (data: any) => void) => {
   return createOrder({
     desc: `Thanh toán cho ${getConfig((config) => config.app.title)}`,

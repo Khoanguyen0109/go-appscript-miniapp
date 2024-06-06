@@ -9,7 +9,7 @@ import React, { FC, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { cartState } from "state";
 import { Cart, CartItem } from "types/cart";
-import { isIdentical } from "utils/product";
+import { isIdentical, isIdenticalV2 } from "utils/product";
 import { Box, Checkbox, Icon, Text } from "zmp-ui";
 
 type TCartItemProps = {
@@ -30,7 +30,7 @@ export const CartItems: FC<TCartItemProps> = ({
       const editing = cart.find(
         (item) =>
           item.product.id === productItem.product.id &&
-          isIdentical(item.options, productItem.options)
+          isIdenticalV2(item.options, productItem.options)
       )!;
       if (quantity === 0) {
         res.splice(cart.indexOf(editing), 1);
@@ -39,7 +39,7 @@ export const CartItems: FC<TCartItemProps> = ({
           (item, i) =>
             i !== cart.indexOf(editing) &&
             item.product.id === product.id &&
-            isIdentical(item.options, options)
+            isIdenticalV2(item.options, options)
         )!;
         res.splice(cart.indexOf(editing), 1, {
           ...editing,
@@ -60,7 +60,7 @@ export const CartItems: FC<TCartItemProps> = ({
       const editing = cart.find(
         (item) =>
           item.product.id === productItem.product.id &&
-          isIdentical(item.options, productItem.options)
+          isIdenticalV2(item.options, productItem.options)
       )!;
       res.splice(cart.indexOf(editing), 1, {
         ...editing,
@@ -76,7 +76,7 @@ export const CartItems: FC<TCartItemProps> = ({
       const editing = cart.find(
         (item) =>
           item.product.id === productItem.product.id &&
-          isIdentical(item.options, productItem.options)
+          isIdenticalV2(item.options, productItem.options)
       )!;
       res.splice(cart.indexOf(editing), 1);
 

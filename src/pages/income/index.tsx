@@ -14,10 +14,13 @@ import { formatDate } from "../../utils/date";
 import { ECommissionRequest } from "../../constants";
 import { DisplayCoin } from "../../components/display/display-coin";
 import { useToBeImplemented } from "../../hooks";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../route";
 
 type Props = {};
 
 function Income({}: Props) {
+  const navigate = useNavigate();
   const commissionRequest = useRecoilValue(ctvIncomeListRequestState);
   const userTotalPoint = useRecoilValue(userTotalPointState);
   const userUncheckedPoint = useRecoilValue(userUncheckedPointState);
@@ -47,11 +50,17 @@ function Income({}: Props) {
     }
   };
 
-  const onClick = useToBeImplemented();
+  const onClick = () => {
+    navigate(ROUTES.REQUEST_COMMISSION);
+  };
 
   return (
     <Page className="bg-white">
-      <Header title="Doanh thu liên kết" showBackIcon={true} />
+      <Header
+        title="Doanh thu liên kết"
+        showBackIcon={true}
+        onBackClick={() => navigate("/profile")}
+      />
       <Box className="p-3  bg-white">
         <Box className="p-4 rounded-lg bg-blue-600 text-white">
           <Box>

@@ -1,10 +1,9 @@
 import React from "react";
 import { FunctionComponent } from "react";
-import { Box, Button, Icon, Text } from "zmp-ui";
+import { Box, Text } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import { Product } from "types/product";
 import { ROUTES } from "pages/route";
-import { BsCartPlus, BsFire } from "react-icons/bs";
 import { DisplayPrice } from "components/display/price";
 import { ProductPicker } from "components/product/picker";
 import { useSetRecoilState } from "recoil";
@@ -39,7 +38,7 @@ const ProductHotItem: FunctionComponent<RestaurantProps> = ({
       {({ open }) => (
         <div
           onClick={onClick ?? viewDetail}
-          className="relative bg-white mt-3 w-40 h-52 pb-3 overflow-hidden p-0 restaurant-with-cover shadow-md mb-3"
+          className="relative bg-white mt-3 w-40 h-52 pb-3 overflow-hidden p-0 restaurant-with-cover shadow-md rounded-md  mb-3"
         >
           <div className="aspect-cinema relative h-24 w-full">
             <img

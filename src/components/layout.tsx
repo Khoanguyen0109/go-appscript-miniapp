@@ -40,6 +40,7 @@ import LoadingScreenOverLay from "./loading-screen";
 import { ERoles } from "../constants";
 import ShippingDetail from "../pages/shipping/shipping-detail";
 import CTVUserList from "../pages/user/ctv-user-list";
+import RequestCommission from "../pages/request-commission";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -153,6 +154,11 @@ export const Layout: FC = () => {
               element={<NotificationDetail />}
             ></Route>
             <Route path={ROUTES.COMMISSION} element={<Commission />}></Route>
+            <Route
+              path={ROUTES.REQUEST_COMMISSION}
+              element={<RequestCommission />}
+            ></Route>
+
             <Route path={ROUTES.MEMBER_CARD} element={<MemberInfo />}></Route>
             <Route
               path={ROUTES.RESULT}

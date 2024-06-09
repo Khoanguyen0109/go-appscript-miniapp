@@ -20,4 +20,8 @@ export const ROUTES = {
   SHIPPING: "/shipping",
   SHIPPING_DETAIL: "/shipping-detail",
   CTV_USER_LIST: "/ctv-user-list",
+
+  BUY_VOUCHER: '/buy-voucher',
+  USER_VOUCHER:'/user-voucher',
+  
 };

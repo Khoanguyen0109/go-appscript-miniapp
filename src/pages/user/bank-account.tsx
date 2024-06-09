@@ -5,10 +5,13 @@ import { Box, Button, Header, Page } from "zmp-ui";
 import { userState } from "../../state";
 import supabase from "../../client/client";
 import AppInput from "../../components/customize/Input";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../route";
 
 type Props = {};
 
 function BankAccount({}: Props) {
+  const navigate = useNavigate();
   const user = useRecoilValue(userState);
   const {
     register,
@@ -34,7 +37,11 @@ function BankAccount({}: Props) {
   };
   return (
     <Page>
-      <Header title="Tài khoản" showBackIcon={true} />
+      <Header
+        title="Tài khoản"
+        showBackIcon={true}
+        onBackClick={() => navigate(ROUTES.INCOME)}
+      />
 
       <form className="p-4 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <Box>

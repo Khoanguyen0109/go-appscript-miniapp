@@ -19,7 +19,7 @@ import {
   userTotalPointState,
   userUncheckedPointState,
 } from "state";
-import pay from "utils/product";
+import pay, { calcFinalPrice } from "utils/product";
 import { Box, Button, Text, useSnackbar } from "zmp-ui";
 import Loading from "components/loading";
 import {
@@ -110,7 +110,7 @@ export const CartPreview: FC = () => {
         acc.push({
           orderId: orderCreated.data[0].id,
           productId: value.product.id,
-          total: parseFloat(value.price) * parseInt(value.quantity),
+          total: calcFinalPrice(value.product, value.options),
           quantity: value.quantity,
           inventoryIds: Object.keys(value.options)
             .reduce((acc, key) => {

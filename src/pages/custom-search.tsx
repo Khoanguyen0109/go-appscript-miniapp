@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import {
   Box,
@@ -65,12 +65,19 @@ function Search({}: Props) {
     navigate(ROUTES.SEARCH_RESULT);
   };
 
+  const inputFocus = useCallback((inputElement) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
+
   return (
     <Page className=" bg-white">
       <Header title="Tìm kiếm" />
 
       <Box className="p-2 flex items-center">
         <Input
+          ref={inputFocus}
           size="small"
           value={input}
           onChange={(e) => setInput(e.target.value)}

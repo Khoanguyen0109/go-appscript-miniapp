@@ -4,7 +4,11 @@ import { Box, Button, Header, Page, Text } from "zmp-ui";
 import supabase from "../../client/client";
 import AppInput from "../../components/customize/Input";
 import { DisplayCoin } from "../../components/display/display-coin";
-import { userState, userUncheckedPointState } from "../../state";
+import {
+  userCheckedPointState,
+  userState,
+  userUncheckedPointState,
+} from "../../state";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { ECommissionRequest } from "../../constants";
 import { ctvIncomeListRequestState } from "../../state/ctv-state";
@@ -16,6 +20,9 @@ type Props = {};
 function RequestCommission({}: Props) {
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
+  const [userCheckedPoint, setUserCheckedPoint] = useRecoilState(
+    userCheckedPointState
+  );
   const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
     userUncheckedPointState
   );
@@ -44,19 +51,24 @@ function RequestCommission({}: Props) {
             status: ECommissionRequest.WAITING,
           })
           .select(),
-        await supabase.from("users").update({
-          userUncheckedPoint: userUncheckedPoint + Number(value.total),
-        }),
+        await supabase
+          .from("users")
+          .update({
+            checkedPoint: userCheckedPoint + Number(value.total),
+            uncheckedPoint: userUncheckedPoint - Number(value.total),
+          })
+          .eq("id", user.id),
       ]);
       if (commissionRequest?.length) {
         setCommissionRequest((pre) => [...pre, commissionRequest[0]]);
+        setUserCheckedPoint(userCheckedPoint + value.total);
+        setUserUncheckedPoint(userUncheckedPoint - value.total);
       }
-      setCommissionRequest((pre) => [...pre, commissionRequest[0]]);
-      setUserUncheckedPoint(userUncheckedPoint + value.total);
 
       if (!user.bank) {
-        navigate(ROUTES.BANK_ACCOUNT);
+        return navigate(ROUTES.BANK_ACCOUNT);
       }
+      return navigate(ROUTES.INCOME);
     } catch (error) {
       console.log("error", error);
     }
@@ -69,6 +81,7 @@ function RequestCommission({}: Props) {
         <Box>
           <AppInput
             type="number"
+            max={userUncheckedPoint}
             placeholder={`Số xu cần rút`}
             label="Số xu cần rút"
             {...register("total", { required: true })}
@@ -91,7 +104,7 @@ function RequestCommission({}: Props) {
           htmlType="submit"
           className="w-full mt-8"
         >
-          Cập nhật
+          Gửi
         </Button>
       </form>
     </Page>

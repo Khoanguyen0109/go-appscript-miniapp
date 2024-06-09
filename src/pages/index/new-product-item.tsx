@@ -7,7 +7,6 @@ import { ROUTES } from "../route";
 import { ProductPicker } from "../../components/product/picker";
 import { Box, Text } from "zmp-ui";
 import { FinalPrice } from "../../components/display/final-price";
-import { BsCartPlus } from "react-icons/bs";
 import { BiPlus } from "react-icons/bi";
 
 type Props = {};
@@ -23,7 +22,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
     <ProductPicker product={product}>
       {({ open }) => (
         <div
-          className="flex shadow-md px-2 mb-3"
+          className="flex shadow-md rounded-md mb-3"
           onClick={() => navigateProductDetail(product)}
         >
           <Box className="w-24 h-24 mr-2 ">

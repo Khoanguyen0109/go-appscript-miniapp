@@ -10,8 +10,9 @@ import {
   BsCart,
   BsFillChatFill,
   BsChatDots,
+  BsFillSearchHeartFill,
 } from "react-icons/bs";
-import { BiUser, BiSolidUser } from "react-icons/bi";
+import { BiUser, BiSolidUser, BiSearch } from "react-icons/bi";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import { ROUTES } from "pages/route";
 import { useRecoilValue } from "recoil";
@@ -34,10 +35,10 @@ const tabs: Record<string, MenuItem> = {
     icon: <AiOutlineHome />,
     activeIcon: <AiFillHome />,
   },
-  "/openChat": {
-    label: "Chat OA",
-    icon: <BsChatDots />,
-    activeIcon: <BsFillChatFill />,
+  "/search": {
+    label: "Tìm kiếm",
+    icon: <BiSearch />,
+    activeIcon: <BsFillSearchHeartFill />,
   },
   "/profile": {
     label: "Cá nhân",
@@ -75,7 +76,7 @@ export const Navigation: FC = () => {
   if (noBottomNav || keyboardVisible) {
     return <></>;
   }
-  
+
   if (user.role === ERoles.SHIPPER) {
     return (
       <BottomNavigation

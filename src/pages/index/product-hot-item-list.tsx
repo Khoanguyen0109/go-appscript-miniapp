@@ -18,7 +18,7 @@ function ProductHotItemList() {
           <BsFire color="red" size={24} />
         </Box>
 
-        <div className="overflow-auto snap-x snap-mandatory scroll-p-4 no-scrollbar">
+        <div className="overflow-auto snap-x snap-mandatory scroll-p-2 no-scrollbar">
           <Box m={0} pr={4} flex className="w-max">
             {hotProducts.map((product) => (
               <Box

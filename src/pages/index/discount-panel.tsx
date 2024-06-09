@@ -4,13 +4,18 @@ import { Autoplay, EffectCoverflow, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Box } from "zmp-ui";
 import { discountBannersSelector } from "../../state/discount-state";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../route";
 
 type Props = {};
 
 function DiscountPanel({}: Props) {
+  const navigate = useNavigate();
   const discounts = useRecoilValue(discountBannersSelector);
   console.log("discounts", discounts);
-  const onClick = () => {};
+  const onClick = () => {
+    return navigate(ROUTES.BUY_VOUCHER);
+  };
   return (
     <Box className="bg-white w-full mt-3" onClick={onClick}>
       <Swiper

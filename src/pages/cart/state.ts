@@ -30,3 +30,8 @@ export const timeSelectedState = atom({
   key: "timeSelectedState",
   default: null,
 });
+
+export const voucherSelectedState = atom({
+  key: "voucherSelectedState",
+  default: null,
+});

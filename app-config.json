@@ -15,15 +15,9 @@
   "listCSS": [],
   "listSyncJS": [],
   "listAsyncJS": [],
-  "pages": [
-    "/user",
-    "/form",
-    "/dynamic-route",
-    "/about",
-    "/404"
-  ],
+  "pages": ["/user", "/form", "/dynamic-route", "/about", "/404"],
   "template": {
-    "primaryColor": "#006af5",
+    "primaryColor": "#EAB305",
     "prefixCurrencySymbol": false,
     "currencySymbol": "đ",
     "headerLogo": ""

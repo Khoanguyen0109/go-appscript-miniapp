@@ -41,6 +41,8 @@ import { ERoles } from "../constants";
 import ShippingDetail from "../pages/shipping/shipping-detail";
 import CTVUserList from "../pages/user/ctv-user-list";
 import RequestCommission from "../pages/request-commission";
+import DiscountList from "../pages/discount/discount-list";
+import UserDiscount from "../pages/discount/user-discount";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -166,6 +168,8 @@ export const Layout: FC = () => {
             ></Route>
             <Route path={ROUTES.INCOME} element={<Income />}></Route>
             <Route path={ROUTES.BANK_ACCOUNT} element={<BankAccount />}></Route>
+            <Route path={ROUTES.BUY_VOUCHER} element={<DiscountList />}></Route>
+            <Route path={ROUTES.USER_VOUCHER} element={<UserDiscount />}></Route>
 
             <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
           </Routes>

@@ -11,3 +11,8 @@ export enum EScoreRank {
   NEW = "Mới",
   DIAMOND = "Kim cương",
 }
+
+export enum EUserVoucherStatus {
+  UNUSED = "unused",
+  USED = "used",
+}

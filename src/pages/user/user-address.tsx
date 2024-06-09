@@ -39,13 +39,12 @@ function UserAddress({}: Props) {
     if (isRouteFromCart) {
       navigate(ROUTES.CART);
     } else {
-      navigate(-1)
-      // navigate(ROUTES.USER_ADDRESS_ADD);
+      navigate(-1);
     }
   };
-  
+
   const navigateToAdd = () => {
-    setAddressSelected(null)
+    setAddressSelected(null);
     navigate({
       pathname: ROUTES.USER_ADDRESS_ADD,
       search: createSearchParams({

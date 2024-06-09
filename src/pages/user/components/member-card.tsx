@@ -11,6 +11,7 @@ import { ROUTES } from "pages/route";
 import { EScoreRank } from "constantsapp";
 import { scoreRankState } from "pages/index/state";
 import { DisplayCoin } from "../../../components/display/display-coin";
+import { DisplayCoinNoMoney } from "../../../components/display/display-coin-with-no-money";
 
 type Props = {};
 
@@ -61,7 +62,7 @@ function MemberCard({}: Props) {
             Thành viên {user?.memberClass || EScoreRank.NEW}
           </Text.Title>
           {/* <Text.Title className="font-bold">{user?.score || 0} Điểm</Text.Title> */}
-          <DisplayCoin>{userTotalPoint}</DisplayCoin>
+          <DisplayCoinNoMoney>{userTotalPoint}</DisplayCoinNoMoney>
         </Box>
 
         {maxScore && (

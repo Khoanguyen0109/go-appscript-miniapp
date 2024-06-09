@@ -44,26 +44,15 @@ export const CartPreview: FC = () => {
   const [note, setNote] = useRecoilState(noteState);
   const resetCart = useResetRecoilState(cartState);
   const [date, setDate] = useRecoilState(dateSelectedState);
-  const [userTotalPoint, setUserTotalPoint] =
-    useRecoilState(userTotalPointState);
-  const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
-    userUncheckedPointState
-  );
 
-  const ctvPointOrder = useRecoilValue(ctvPointOrderSelector);
-  const ctvCommissionPoint = useRecoilValue(ctvPointWhenCustomerOrderSelector);
-  const userPointInday = useRecoilValue(userPointTodayOrderSettingSelector);
-  const userPointTomorrow = useRecoilValue(
-    userPointTomorrowOrderSettingSelector
-  );
   const [time, setTime] = useRecoilState(timeSelectedState);
   const [discount, setDiscount] = useRecoilState(discountState);
+  console.log('discount', discount)
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
 
   const convertDate: Date = new Date(`${date}`);
-  convertDate.setHours(hours, minutes, 0, 0);
-  console.log("convertDate", convertDate);
+
   const today: Date = new Date();
   const diffInMilliseconds = convertDate - today;
   const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;

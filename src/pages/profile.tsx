@@ -149,7 +149,6 @@ const Other: FC = () => {
   const [note, setNote] = useState("");
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const user = useRecoilValue(userState);
-  console.log("user", user);
   const onChange = (e) => {
     setNote(e.target.value);
   };

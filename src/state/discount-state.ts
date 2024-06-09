@@ -30,15 +30,24 @@ export const publicDiscountSelector = selector({
   },
 });
 
+export const payableDiscountSelector = selector({
+  key: "payableDiscountSelector",
+  get: ({ get }) => {
+    const discounts = get(discountListSelector);
+    return discounts.filter((item) => !Boolean(item.public));
+  },
+});
+
 export const userVouchersSelector = selector({
   key: "userVouchersSelector",
   get: async ({ get }) => {
     const user = get(userState);
     const { data } = await supabase
-      .from("user_voucher")
-      .select(`*, discount: discounts('*)`)
-      .eq("userId", user.id);
-    return data || [];
+      .from("users")
+      .select(`*, user_vouchers(*, discounts(*))`)
+      .eq("id", user.id)
+      .single();
+    return data.user_vouchers.map((item) => item.discounts) || [];
   },
 });
 
@@ -46,3 +55,4 @@ export const userVouchersState = atom({
   key: "userVouchersState",
   default: userVouchersSelector,
 });
+

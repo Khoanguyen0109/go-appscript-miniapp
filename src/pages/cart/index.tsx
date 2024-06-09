@@ -48,7 +48,7 @@ const CartPage: FC = () => {
               </Box>
             </Box>
           </Box>
-          <Discount />
+          {/* <Discount /> */}
           {calPointUser && (
             <Box>
               <Text className="m-2 text-sm font-bold text-green">

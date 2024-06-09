@@ -11,18 +11,20 @@ import { ROUTES } from "pages/route";
 import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
 
-import { userState } from "../../state";
+import { discountState, userState } from "../../state";
+import { CiDiscount1 } from "react-icons/ci";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
   const [note, setNote] = useRecoilState(noteState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
+  const discount = useRecoilValue(discountState);
   // const [customer, setCustomerSelected] = useRecoilState(customerSelectedState);
 
-  const navigateToAddress = () => {
+  const navigateFromCart = (route) => {
     navigate({
-      pathname: ROUTES.USER_ADDRESS,
+      pathname: route,
       search: createSearchParams({
         routeFrom: "cart",
       }).toString(),
@@ -50,18 +52,24 @@ export const Delivery: FC = () => {
             right: (
               <Suspense fallback={<RequestPayment />}>
                 <ListItem
-                  onClick={() =>
-                    // user.role === ERoles.CTV
-                    //   ? navigateCTVUserAddress()
-                    //   : navigateToAddress()
-                    navigateToAddress()
-                  }
+                  onClick={() => navigateFromCart(ROUTES.USER_ADDRESS)}
                   title={address?.name ?? "Địa chỉ giao hàng"}
                   subtitle={
                     getAddress(address) ?? "Vui lòng chọn địa chỉ giao hàng"
                   }
                 />
               </Suspense>
+            ),
+          },
+
+          {
+            left: <Icon icon="zi-check-circle" className="my-auto" />,
+            right: (
+              <ListItem
+                onClick={() => navigateFromCart(ROUTES.USER_VOUCHER)}
+                title={address?.name ?? "Voucher"}
+                subtitle={discount?.title || "Sử dụng voucher giảm giá"}
+              />
             ),
           },
           {

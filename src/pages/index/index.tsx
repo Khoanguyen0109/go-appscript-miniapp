@@ -8,7 +8,6 @@ import { Divider } from "components/divider";
 import BannerHome from "./banner";
 import ProductHotItemList from "./product-hot-item-list";
 import { Categories } from "./categories";
-import { Inquiry } from "./inquiry";
 import { useRecoilValueLoadable } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
 import DiscountPanel from "./discount-panel";

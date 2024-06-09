@@ -21,6 +21,7 @@ function PreviewInfo() {
     }
     return 0;
   }, [discount]);
+  console.log('discountPrice', discountPrice)
   
   return (
     <Box className="px-2">
@@ -40,8 +41,8 @@ function PreviewInfo() {
 
       <Box className="flex justify-between items-center mb-2">
         <Text className="font-bold">Giảm giá</Text>
-        <Text>
-          <DisplayPrice>{discountPrice}</DisplayPrice>
+        <Text className="text-green">
+          -<DisplayPrice>{discountPrice}</DisplayPrice>
         </Text>
       </Box>
     </Box>

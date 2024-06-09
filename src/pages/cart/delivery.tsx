@@ -67,7 +67,7 @@ export const Delivery: FC = () => {
             right: (
               <ListItem
                 onClick={() => navigateFromCart(ROUTES.USER_VOUCHER)}
-                title={address?.name ?? "Voucher"}
+                title={"Voucher"}
                 subtitle={discount?.title || "Sử dụng voucher giảm giá"}
               />
             ),

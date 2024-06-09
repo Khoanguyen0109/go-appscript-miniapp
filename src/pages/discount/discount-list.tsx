@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Header, Modal, Page, Text } from "zmp-ui";
+import { Box, Header, Modal, Page, Text } from "zmp-ui";
 import { DisplayCoinNoMoney } from "../../components/display/display-coin-with-no-money";
 import { CiDiscount1 } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
@@ -50,22 +50,28 @@ function DiscountList({}: Props) {
         setUserTotalPoint(pointLess);
 
         const { data } = await supabase
-          .from("user_voucher")
+          .from("user_vouchers")
           .insert({
             userId: user.id,
             discountId: selectDiscount.id,
             status: EUserVoucherStatus.UNUSED,
           })
-          .select();
+          .select("*, discounts(*)");
         if (data?.length) {
           setUserVouchers([...userVouchers, data[0]]);
         }
         await supabase
-          .from("user")
+          .from("users")
           .update({ totalPoint: pointLess })
           .eq("id", user.id);
         setConfirmModalVisible(false);
         setSelectDiscount(null);
+        return openSnackbar({
+          text: "Bạn đã thu thập cho voucher này!",
+          type: "success",
+          icon: true,
+          duration: 2000,
+        });
       } catch (error) {
         console.log("error", error);
       }
@@ -108,17 +114,17 @@ function DiscountList({}: Props) {
         description={`Bạn xác nhận đổi voucher ${selectDiscount?.title}`}
         actions={[
           {
-            text: "Ở lại ứng dụng",
-            onClick: () => {
-              handleRedeem();
-            },
-            highLight: true,
-          },
-          {
-            text: "Thoát",
+            text: "Huỷ",
             onClick: () => {
               setConfirmModalVisible(false);
               setSelectDiscount(null);
+            },
+          },
+          {
+            highLight: true,
+            text: "Đồng ý",
+            onClick: () => {
+              handleRedeem();
             },
           },
         ]}

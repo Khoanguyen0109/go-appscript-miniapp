@@ -2,6 +2,7 @@ import { atom, selector } from "recoil";
 import supabase from "../client/client";
 import { userState } from "../state";
 import { isNull } from "lodash";
+import { EUserVoucherStatus } from "../constantsapp";
 
 export const discountListSelector = selector({
   key: "discountListSelector",
@@ -47,7 +48,9 @@ export const userVouchersSelector = selector({
       .select(`*, user_vouchers(*, discounts(*))`)
       .eq("id", user.id)
       .single();
-    return data.user_vouchers.map((item) => item.discounts) || [];
+    return data.user_vouchers.filter(
+      (item) => item.status !== EUserVoucherStatus.USED
+    );
   },
 });
 
@@ -55,4 +58,3 @@ export const userVouchersState = atom({
   key: "userVouchersState",
   default: userVouchersSelector,
 });
-

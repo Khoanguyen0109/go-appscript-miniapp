@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { Box, Header, Page, Text } from "zmp-ui";
 import {
   publicDiscountSelector,
@@ -17,7 +17,8 @@ function UserDiscount({}: Props) {
   const navigate = useNavigate();
   const userVoucherList = useRecoilValue(userVouchersState);
   const publicVoucher = useRecoilValue(publicDiscountSelector);
-
+  const [voucherSelected, setVoucherSelected] =
+    useRecoilState(voucherSelectedState);
   let [searchParams, setSearchParams] = useSearchParams();
   const routeFrom = searchParams.get("routeFrom");
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
@@ -45,8 +46,11 @@ function UserDiscount({}: Props) {
         {userVoucherList.map((item) => (
           <DiscountItem
             key={item.id}
-            item={item}
+            item={item.discounts}
             onChoose={isRouteFromCart ? onChoose : undefined}
+            onUpdateItem={() => {
+              setVoucherSelected(item);
+            }}
           />
         ))}
       </Box>

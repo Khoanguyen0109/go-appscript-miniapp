@@ -122,6 +122,17 @@ const Personal: FC = () => {
             ),
           },
           {
+            left: <Icon icon="zi-check-circle" />,
+            right: (
+              <Box flex onClick={() => navigate(ROUTES.USER_VOUCHER)}>
+                <Text.Header className="flex-1 items-center font-normal">
+                  Ưu đãi của tôi
+                </Text.Header>
+                <Icon icon="zi-chevron-right" />
+              </Box>
+            ),
+          },
+          {
             onClick: () => navigateToUserAddress(),
             left: <Icon icon="zi-home" />,
             right: (

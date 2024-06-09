@@ -27,14 +27,22 @@ import {
   dateSelectedState,
   noteState,
   timeSelectedState,
+  voucherSelectedState,
 } from "./state";
 import supabase from "../../client/client";
-import { EOrderStatus } from "../../constantsapp";
+import { EOrderStatus, EUserVoucherStatus } from "../../constantsapp";
 import { formatDate } from "../../utils/date";
+import {
+  userVouchersSelector,
+  userVouchersState,
+} from "../../state/discount-state";
+import { cloneDeep } from "lodash";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
   const navigate = useNavigate();
+  const [userVoucher, setUserVoucher] = useRecoilState(userVouchersState);
+
   const minOrderItems = useRecoilValue(minOrderItemSelector);
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
@@ -44,15 +52,15 @@ export const CartPreview: FC = () => {
   const [note, setNote] = useRecoilState(noteState);
   const resetCart = useResetRecoilState(cartState);
   const [date, setDate] = useRecoilState(dateSelectedState);
-
   const [time, setTime] = useRecoilState(timeSelectedState);
   const [discount, setDiscount] = useRecoilState(discountState);
-  console.log('discount', discount)
+  const [voucherSelected, setVoucherSelected] =
+    useRecoilState(voucherSelectedState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
   const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
 
   const convertDate: Date = new Date(`${date}`);
-
+  convertDate.setHours(hours, minutes, 0, 0);
   const today: Date = new Date();
   const diffInMilliseconds = convertDate - today;
   const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
@@ -95,6 +103,19 @@ export const CartPreview: FC = () => {
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
+      if (discount && !discount?.public) {
+        const newUserVoucher = userVoucher.filter(
+          (item) => item.id !== voucherSelected.id
+        );
+        console.log('newUserVoucher', newUserVoucher)
+        setUserVoucher(newUserVoucher);
+        await supabase
+          .from("user_vouchers")
+          .update({
+            status: EUserVoucherStatus.USED,
+          })
+          .eq("id", voucherSelected.id);
+      }
       const details = cart.reduce((acc, value) => {
         acc.push({
           orderId: orderCreated.data[0].id,

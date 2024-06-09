@@ -6,19 +6,20 @@ type Props = {
   item: TDiscount;
   onClickRedeem?: (item: TDiscount) => void;
   onChoose?: (item: TDiscount) => void;
+  onUpdateItem?: () => void;
 };
 
-function DiscountItem({ item, onClickRedeem, onChoose }: Props) {
+function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
   return (
     <Box className="w-full  rounded-md shadow-lg mb-3 overflow-hidden">
-      <img src={item.panel} className="w-full h-32 object-cover" />
+      <img src={item?.panel} className="w-full h-32 object-cover" />
       <Box className="p-2 flex justify-between items-end">
         <Box className="">
-          <Text className="text-lg font-bold">{item.title}</Text>
+          <Text className="text-lg font-bold">{item?.title}</Text>
 
-          {!item.public && (
+          {!item?.public && (
             <Text className="font-semibold text-sm  text-yellow-500">
-              {item.point} Xu Mion
+              {item?.point || 0} Xu Mion
             </Text>
           )}
         </Box>
@@ -28,7 +29,13 @@ function DiscountItem({ item, onClickRedeem, onChoose }: Props) {
           </Button>
         )}
         {onChoose && (
-          <Button size="small" onClick={() => onChoose(item)}>
+          <Button
+            size="small"
+            onClick={() => {
+              onChoose(item);
+              onUpdateItem && onUpdateItem();
+            }}
+          >
             Sử dụng
           </Button>
         )}

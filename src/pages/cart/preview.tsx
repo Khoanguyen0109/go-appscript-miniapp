@@ -103,18 +103,17 @@ export const CartPreview: FC = () => {
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
-      if (discount && !discount?.public) {
+      if (discount && !discount?.public && voucherSelected) {
         const newUserVoucher = userVoucher.filter(
-          (item) => item.id !== voucherSelected.id
+          (item) => item.id !== voucherSelected?.id
         );
-        console.log('newUserVoucher', newUserVoucher)
         setUserVoucher(newUserVoucher);
         await supabase
           .from("user_vouchers")
           .update({
             status: EUserVoucherStatus.USED,
           })
-          .eq("id", voucherSelected.id);
+          .eq("id", voucherSelected?.id);
       }
       const details = cart.reduce((acc, value) => {
         acc.push({

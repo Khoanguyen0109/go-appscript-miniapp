@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   Box,
   Button,
@@ -15,27 +15,26 @@ import { DisplayPrice } from "components/display/price";
 import { Divider } from "components/divider";
 import { ProductPicker } from "components/product/picker";
 
-import { ROUTES } from "pages/route";
-import { CartIcon } from "components/cart-icon";
-import { cartState, userState } from "state";
+import { cartState, productsState, userState } from "state";
 import { openChat, openShareSheet } from "zmp-sdk";
 import { FaShare } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { OA_ID } from "enviroment";
 import LoadingScreenOverLay from "components/loading-screen";
 import { useLocation, useParams } from "react-router-dom";
-import { IoMdClose } from "react-icons/io";
 import supabase from "../../client/client";
 import { selectedProductState } from "./state";
 import { formatPrice } from "../../utils/price";
 
 type Props = {};
 
-function productSelected({}: Props) {
+function ProductDetail({}: Props) {
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
   const user = useRecoilValue(userState);
+  const products = useRecoilValue(productsState);
+
   const [productSelected, setProductSelected] =
     useRecoilState(selectedProductState);
   const paramsSearch = new URLSearchParams(location.search);
@@ -53,9 +52,14 @@ function productSelected({}: Props) {
               productSelected?.name + " " + formatPrice(productSelected?.price),
             description: productSelected?.descThumbnail || "",
             thumbnail: productSelected?.thumbnail,
+            // path: user?.ctv
+            //   ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${
+            //       user.id
+            //     }&env=TESTING&version=15`
+            //   : `${ROUTES.PRODUCT_DETAIL(params.id)}?env=TESTING&version=15`,
             path: user?.ctv
-              ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${user.id}`
-              : `${ROUTES.PRODUCT_DETAIL(params.id)}`,
+              ? `${location.pathname}?id_ctv_shared=${user.id}`
+              : `${location.pathname}`,
           },
         });
       } catch (err) {
@@ -63,6 +67,15 @@ function productSelected({}: Props) {
       }
     }
   };
+
+  useEffect(() => {
+    if (params?.id) {
+      const product = products.find((item) => item.id === Number(params?.id));
+      if (product) {
+        setProductSelected(product);
+      }
+    }
+  }, [params?.id, products]);
 
   const openChatScreen = () => {
     openChat({
@@ -225,4 +238,4 @@ function productSelected({}: Props) {
   );
 }
 
-export default productSelected;
+export default ProductDetail;

@@ -38,6 +38,7 @@ function Discount({}: Props) {
         });
         return data[0];
       } else {
+        setDiscount(null);
         openSnackbar({
           text: "Mã giảm giá không hợp lệ",
           type: "error",

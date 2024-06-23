@@ -10,12 +10,12 @@ import { calPointUserSelector, cartState, totalQuantityState } from "state";
 import Discount from "./discount";
 import PreviewInfo from "./previewInfo";
 import { dateSelectedState, timeSelectedState } from "./state";
+import { TimePicker } from "./time-picker";
 
 const CartPage: FC = () => {
   const keyboardVisible = useVirtualKeyboardVisible();
   const cart = useRecoilValue(cartState);
-  const [date, setDate] = useRecoilState(dateSelectedState);
-  const [time, setTime] = useRecoilState(timeSelectedState);
+
   const quantity = useRecoilValue(totalQuantityState);
 
   const calPointUser = useRecoilValue(calPointUserSelector);
@@ -23,14 +23,14 @@ const CartPage: FC = () => {
     <Page className="flex flex-col bg-background">
       <Header className="text-center" title="Giỏ hàng" showBackIcon={false} />
       <Text className="px-2 text-md font-bold">Chi tiết đơn hàng</Text>
-      <CartItems cart={cart} disableClick={false} />
+      <CartItems disableClick={false} />
       {cart.length > 0 && (
         <>
           <Delivery />
           <Box className="mb-3">
             <Text className="text-md font-bold px-2">Thời gian nhận hàng</Text>
             <Box className="flex p-2 justify-between w-screen">
-              <Box className="w-2/3 pr-2">
+              {/* <Box className="w-2/3 pr-2">
                 <DatePicker
                   value={date}
                   onChange={(value) => {
@@ -45,7 +45,8 @@ const CartPage: FC = () => {
                   type="time"
                   onChange={(e) => setTime(e.target.value)}
                 />
-              </Box>
+              </Box> */}
+              <TimePicker />
             </Box>
           </Box>
           {/* <Discount /> */}

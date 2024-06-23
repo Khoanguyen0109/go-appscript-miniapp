@@ -1,5 +1,7 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 import { addressesState } from "../user/state";
+import { selectedDeliveryTimeState } from "../../state";
+import { DateTime } from "luxon";
 
 export const noteState = atom({
   key: "note",
@@ -21,14 +23,29 @@ export const addressSelectedState = atom({
   default: addressesState?.[0] || null,
 });
 
-export const dateSelectedState = atom({
+export const dateSelectedState = selector({
   key: "dateSelectedState",
-  default: new Date(),
+  get: ({ get }) => {
+    const timestamp = get(selectedDeliveryTimeState);
+    const localDateOnly = DateTime.fromMillis(timestamp).toLocaleString({
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    return localDateOnly;
+  },
 });
 
-export const timeSelectedState = atom({
+export const timeSelectedState = selector({
   key: "timeSelectedState",
-  default: null,
+  get: ({ get }) => {
+    const timestamp = get(selectedDeliveryTimeState);
+    const localTimeOnly = DateTime.fromMillis(timestamp).toLocaleString(
+      DateTime.TIME_SIMPLE
+    );
+
+    return localTimeOnly;
+  },
 });
 
 export const voucherSelectedState = atom({

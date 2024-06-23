@@ -6,18 +6,14 @@ import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   calDiscount,
   cartState,
-  ctvPointOrderSelector,
-  ctvPointWhenCustomerOrderSelector,
   discountState,
+  minOrderDeliveryTimeSelector,
   minOrderItemSelector,
   preTotalPriceState,
+  selectedDeliveryTimeState,
   totalPriceState,
   totalQuantityState,
-  userPointTodayOrderSettingSelector,
-  userPointTomorrowOrderSettingSelector,
   userState,
-  userTotalPointState,
-  userUncheckedPointState,
 } from "state";
 import pay, { calcFinalPrice } from "utils/product";
 import { Box, Button, Text, useSnackbar } from "zmp-ui";
@@ -32,11 +28,8 @@ import {
 import supabase from "../../client/client";
 import { EOrderStatus, EUserVoucherStatus } from "../../constantsapp";
 import { formatDate } from "../../utils/date";
-import {
-  userVouchersSelector,
-  userVouchersState,
-} from "../../state/discount-state";
-import { cloneDeep } from "lodash";
+import { userVouchersState } from "../../state/discount-state";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
@@ -44,6 +37,8 @@ export const CartPreview: FC = () => {
   const [userVoucher, setUserVoucher] = useRecoilState(userVouchersState);
 
   const minOrderItems = useRecoilValue(minOrderItemSelector);
+  const minOrderDeliveryTime = useRecoilValue(minOrderDeliveryTimeSelector);
+
   const [loading, setLoading] = useState(false);
   const quantity = useRecoilValue(totalQuantityState);
   const totalPrice = useRecoilValue(totalPriceState);
@@ -51,20 +46,24 @@ export const CartPreview: FC = () => {
   const preTotal = useRecoilValue(preTotalPriceState);
   const [note, setNote] = useRecoilState(noteState);
   const resetCart = useResetRecoilState(cartState);
-  const [date, setDate] = useRecoilState(dateSelectedState);
-  const [time, setTime] = useRecoilState(timeSelectedState);
+  const date = useRecoilValue(dateSelectedState);
+  const time = useRecoilValue(timeSelectedState);
+  const [deliveryTime, setDeliveryTime] = useRecoilState(
+    selectedDeliveryTimeState
+  );
+  console.log("deliveryTime", deliveryTime);
   const [discount, setDiscount] = useRecoilState(discountState);
   const [voucherSelected, setVoucherSelected] =
     useRecoilState(voucherSelectedState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
-  const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
+  // const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
 
-  const convertDate: Date = new Date(`${date}`);
-  convertDate.setHours(hours, minutes, 0, 0);
-  const today: Date = new Date();
-  const diffInMilliseconds = convertDate - today;
-  const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-  const isMoreThanTwoHoursAhead = diffInMilliseconds > twoHoursInMilliseconds;
+  // const convertDate: Date = new Date(`${date}`);
+  // convertDate.setHours(hours, minutes, 0, 0);
+  // const today: Date = new Date();
+  // const diffInMilliseconds = convertDate - today;
+  // const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
+  // const isMoreThanTwoHoursAhead = diffInMilliseconds > twoHoursInMilliseconds;
 
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const timmerId = useRef();
@@ -97,7 +96,7 @@ export const CartPreview: FC = () => {
           note,
           status: EOrderStatus.WAITING,
           zaloOrderId: data?.orderId,
-          receiveDate: formatDate(new Date(date).toISOString()),
+          receiveDate: date,
           receiveTime: time,
           // userPoint: calPointUser,
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
@@ -135,8 +134,7 @@ export const CartPreview: FC = () => {
         // updateUserPoint(),
       ]);
       setAddressSelected(null);
-      setDate(new Date());
-      setTime("");
+      setDeliveryTime(+new Date());
       setNote("");
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
@@ -175,14 +173,25 @@ export const CartPreview: FC = () => {
   // };
 
   const makePayment = async () => {
-    if (!isMoreThanTwoHoursAhead) {
-      return openSnackbar({
-        text: `Thời gian giao hàng cách tối thiểu 2 giờ`,
-        type: "error",
-        icon: true,
-        duration: 1000,
-      });
+    if (minOrderDeliveryTime) {
+      const today = new Date();
+      const deliveryDate = new Date(deliveryTime);
+
+      // Calculate the difference in hours
+      const hoursDifference = differenceInMinutes(deliveryDate, today);
+
+      const isMoreThan2Hours = hoursDifference >= minOrderDeliveryTime;
+
+      if (!isMoreThan2Hours) {
+        return openSnackbar({
+          text: `Thời gian giao hàng cách tối thiểu ${minOrderDeliveryTime} phút`,
+          type: "error",
+          icon: true,
+          duration: 1000,
+        });
+      }
     }
+
     try {
       if (quantity < minOrderItems) {
         return openSnackbar({

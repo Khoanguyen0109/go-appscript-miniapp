@@ -11,7 +11,11 @@ export const upsertUser = async (zaloUser) => {
   } else {
     const { data: newUser } = await supabase
       .from("users")
-      .insert({ idByOA: zaloUser.id, name: zaloUser.name })
+      .insert({
+        idByOA: zaloUser.id,
+        name: zaloUser.name,
+        avatar: zaloUser.avatar,
+      })
       .select();
     return { avatar, ...newUser[0] };
   }

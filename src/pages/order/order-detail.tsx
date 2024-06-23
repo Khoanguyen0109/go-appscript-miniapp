@@ -1,5 +1,4 @@
 import LoadingScreenOverLay from "components/loading-screen";
-import { CartItems } from "pages/cart/cart-items";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";

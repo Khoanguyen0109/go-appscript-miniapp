@@ -35,7 +35,6 @@ function UserDiscount({}: Props) {
       navigate(ROUTES.CART);
     } else {
       navigate(-1);
-      // navigate(ROUTES.USER_ADDRESS_ADD);
     }
   };
 

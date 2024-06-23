@@ -23,6 +23,7 @@ import MemberCard from "./user/components/member-card";
 import supabase from "../client/client";
 import { ERoles } from "../constants";
 import { CiWallet } from "react-icons/ci";
+import { CiBank } from "react-icons/ci";
 
 const { OtpGroup, Option } = Select;
 
@@ -98,7 +99,7 @@ const Personal: FC = () => {
                   ),
                 },
                 {
-                  left: <CiWallet />,
+                  left: <CiBank />,
                   right: (
                     <Box flex onClick={() => navigate(ROUTES.BANK_ACCOUNT)}>
                       <Text.Header className="flex-1 items-center font-normal">

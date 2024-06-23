@@ -28,7 +28,6 @@ import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
 import supabase from "../client/client";
-import { useHandlePayment } from "../hooks/useHandlePayment";
 import CheckoutResultPage from "../pages/cart/result";
 import Search from "../pages/custom-search";
 import SearchResult from "../pages/search-result";
@@ -53,7 +52,6 @@ if (getSystemInfo().platform === "android") {
 }
 
 export const Layout: FC = () => {
-  // useHandlePayment();
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
   const addresses = useRecoilValueLoadable(addressesState);
@@ -147,10 +145,10 @@ export const Layout: FC = () => {
               path={ROUTES.USER_ADDRESS_ADD}
               element={<AddUserAddress />}
             ></Route>
-            <Route
+            {/* <Route
               path={ROUTES.USER_ADDRESS_ADD}
               element={<UserAddress />}
-            ></Route>
+            ></Route> */}
             <Route
               path={ROUTES.NOTIFICATION(":id")}
               element={<NotificationDetail />}
@@ -169,7 +167,10 @@ export const Layout: FC = () => {
             <Route path={ROUTES.INCOME} element={<Income />}></Route>
             <Route path={ROUTES.BANK_ACCOUNT} element={<BankAccount />}></Route>
             <Route path={ROUTES.BUY_VOUCHER} element={<DiscountList />}></Route>
-            <Route path={ROUTES.USER_VOUCHER} element={<UserDiscount />}></Route>
+            <Route
+              path={ROUTES.USER_VOUCHER}
+              element={<UserDiscount />}
+            ></Route>
 
             <Route path={ROUTES.NOT_FOUND} element={<NotFound />}></Route>
           </Routes>

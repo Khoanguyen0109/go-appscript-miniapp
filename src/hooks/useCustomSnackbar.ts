@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSnackbar } from "zmp-ui";
-
-type Props = {};
 
 function useCustomSnackbar() {
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();

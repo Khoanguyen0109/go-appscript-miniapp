@@ -1,5 +1,5 @@
 import { Divider } from "components/divider";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   useRecoilRefresher_UNSTABLE,
@@ -28,14 +28,13 @@ import { ROUTES } from "pages/route";
 import { userState } from "state";
 import { addressSelectedState } from "pages/cart/state";
 import supabase from "../../client/client";
-import { upsertUser } from "../../api/addUser";
-const { OtpGroup, Option } = Select;
+const { Option } = Select;
 
 type Props = {};
 
 function AddUserAddress({}: Props) {
   const navigate = useNavigate();
-  const provinces = useRecoilValue(provinceState);
+  useRecoilValue(provinceState);
   let [searchParams, setSearchParams] = useSearchParams();
   const routeFrom = searchParams.get("routeFrom");
 
@@ -53,7 +52,6 @@ function AddUserAddress({}: Props) {
     register,
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
@@ -81,9 +79,7 @@ function AddUserAddress({}: Props) {
       setWardId(null);
       setDistrictId(null);
       navigateBack();
-    } catch (error) {
-      console.log("error", error);
-    }
+    } catch (error) {}
   };
 
   const getFieldName = (field: string) => {

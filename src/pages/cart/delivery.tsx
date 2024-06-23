@@ -6,13 +6,11 @@ import { Box, Icon, Text } from "zmp-ui";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { addressSelectedState, noteState } from "./state";
-import { RequestPayment } from "./payment-picker";
 import { ROUTES } from "pages/route";
 import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
 
 import { discountState, userState } from "../../state";
-import { CiDiscount1 } from "react-icons/ci";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();
@@ -50,7 +48,7 @@ export const Delivery: FC = () => {
           {
             left: <Icon icon="zi-location" className="my-auto" />,
             right: (
-              <Suspense fallback={<RequestPayment />}>
+              <Suspense>
                 <ListItem
                   onClick={() => navigateFromCart(ROUTES.USER_ADDRESS)}
                   title={address?.name ?? "Địa chỉ giao hàng"}

@@ -44,13 +44,13 @@ export const ProductPicker: FC<ProductPickerProps> = ({
     () =>
       visible
         ? {
-            ...(product?.variants ? product?.variants.so : {}),
+            ...(product?.variants ? product?.variants : {}),
             ...groupBy(globalInventories, "group"),
           }
         : {},
     [visible]
   );
-
+  console.log('variants', variants)
   const sortVariant = useMemo(() => {
     const newVariants = {
       "Món phụ": [],

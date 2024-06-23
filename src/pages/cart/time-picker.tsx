@@ -7,8 +7,12 @@ import { Picker } from "zmp-ui";
 
 export const TimePicker: FC = () => {
   const [date, setDate] = useState(+new Date());
-  const [time, setTime] = useRecoilState(selectedDeliveryTimeState);
-
+  const [time, setTime] = useState(+new Date());
+  const [deliveryTime, setDeliveryTime] = useRecoilState(
+    selectedDeliveryTimeState
+  );
+  console.log("deliveryTime", deliveryTime);
+  console.log("time", time);
   const availableDates = useMemo(() => {
     const days: Date[] = [];
     const today = new Date();
@@ -31,14 +35,14 @@ export const TimePicker: FC = () => {
       time.setMinutes(minutes);
     } else {
       // Starting time is 7:00
-      time.setHours(7);
+      time.setHours(0);
       time.setMinutes(0);
     }
     time.setSeconds(0);
     time.setMilliseconds(0);
     const endTime = new Date();
-    endTime.setHours(21);
-    endTime.setMinutes(0);
+    endTime.setHours(23);
+    endTime.setMinutes(59);
     endTime.setSeconds(0);
     endTime.setMilliseconds(0);
     while (time <= endTime) {
@@ -52,7 +56,14 @@ export const TimePicker: FC = () => {
     <Picker
       mask
       maskClosable
-      onVisibilityChange={(visbile) => matchStatusBarColor(visbile)}
+      onVisibilityChange={(visbile) => {
+        matchStatusBarColor(visbile);
+        console.log("visbile", visbile);
+        if (!visbile) {
+          console.log("time", time);
+          setDeliveryTime(time);
+        }
+      }}
       inputClass="border-none bg-transparent text-sm text-primary font-medium text-md m-0 p-0 h-auto"
       placeholder="Chọn thời gian nhận hàng"
       title="Thời gian nhận hàng"
@@ -70,6 +81,7 @@ export const TimePicker: FC = () => {
           : `Chọn thời gian`
       }
       onChange={({ date, time }) => {
+        console.log("time", time);
         if (date) {
           setDate(+date.value);
         }
@@ -79,18 +91,18 @@ export const TimePicker: FC = () => {
       }}
       data={[
         {
-          options: availableTimes.map((time, i) => ({
-            displayName: displayHalfAnHourTimeRange(time),
-            value: +time,
-          })),
-          name: "time",
-        },
-        {
           options: availableDates.map((date, i) => ({
             displayName: displayDate(date, true),
             value: +date,
           })),
           name: "date",
+        },
+        {
+          options: availableTimes.map((time, i) => ({
+            displayName: displayHalfAnHourTimeRange(time),
+            value: +time,
+          })),
+          name: "time",
         },
       ]}
     />

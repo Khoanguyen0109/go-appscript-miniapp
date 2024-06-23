@@ -6,20 +6,18 @@ import { ProductPicker } from "components/product/picker";
 import { QuantityPicker } from "components/product/quantity-picker";
 import { isString } from "lodash";
 import React, { FC, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "state";
 import { Cart, CartItem } from "types/cart";
-import { isIdentical, isIdenticalV2 } from "utils/product";
+import { isIdenticalV2 } from "utils/product";
 import { Box, Checkbox, Icon, Text } from "zmp-ui";
 
 type TCartItemProps = {
-  cart: Cart;
   disableClick?: boolean;
 };
-export const CartItems: FC<TCartItemProps> = ({
-  cart,
-  disableClick = true,
-}) => {
+export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
+  const cart = useRecoilValue(cartState);
+
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
   const setCart = useSetRecoilState(cartState);
   const onChangeQuantity = (productItem, quantity) => {
@@ -132,7 +130,7 @@ export const CartItems: FC<TCartItemProps> = ({
                         <Text size="small">{item.product.name}</Text>
                         <Text className="text-lg font-semibold" size="xSmall">
                           {disableClick ? (
-                            <DisplayPrice>{item.product.total}</DisplayPrice>
+                            <DisplayPrice>{item.product?.total}</DisplayPrice>
                           ) : (
                             <FinalPrice options={item.options}>
                               {item.product}
@@ -140,7 +138,7 @@ export const CartItems: FC<TCartItemProps> = ({
                           )}
                         </Text>
                         <Text className="text-gray" size="xxxSmall">
-                          {isString(item.product.options) ? (
+                          {isString(item.product?.options) ? (
                             item.product.options
                           ) : (
                             <DisplaySelectedOptions options={item.options}>

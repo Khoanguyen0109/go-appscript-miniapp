@@ -114,6 +114,17 @@ export const minOrderItemSelector = selector({
   },
 });
 
+export const minOrderDeliveryTimeSelector = selector({
+  key: "minOrderDeliveryTime",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return (
+      Number(setting.find((item) => item.name === "min_delivery_time").value) ||
+      null
+    );
+  },
+});
+
 export const shippingFeeState = selector({
   key: "shippingFee",
   get: ({ get }) => {
@@ -291,7 +302,7 @@ export const totalPriceState = selector({
   get: ({ get }) => {
     const cart = get(cartState);
     const discount = get(discountState);
-    console.log('discount', discount)
+    console.log("discount", discount);
     const shippingFee = parseInt(get(shippingFeeState));
     if (cart.length === 0) {
       return 0;

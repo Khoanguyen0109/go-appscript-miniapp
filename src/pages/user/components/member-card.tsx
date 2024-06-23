@@ -10,7 +10,6 @@ import newMember from "static/subscription-decor.svg";
 import { ROUTES } from "pages/route";
 import { EScoreRank } from "constantsapp";
 import { scoreRankState } from "pages/index/state";
-import { DisplayCoin } from "../../../components/display/display-coin";
 import { DisplayCoinNoMoney } from "../../../components/display/display-coin-with-no-money";
 
 type Props = {};

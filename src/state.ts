@@ -49,7 +49,6 @@ export const userState = selector({
   get: async ({ get }) => {
     get(authorizedState);
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
-    console.log("zaloUser", zaloUser);
     try {
       const data = upsertUser(zaloUser);
       return data;
@@ -57,6 +56,19 @@ export const userState = selector({
       return zaloUser;
     }
   },
+});
+
+const userRequestStatusSelector = selector({
+  key: "userRequestStatusSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.requestCTVStatus;
+  },
+});
+
+export const userRequestStatusState = atom({
+  key: "userRequestStatusState",
+  default: userRequestStatusSelector,
 });
 
 const totalPointSelector = selector({
@@ -111,6 +123,14 @@ export const minOrderItemSelector = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return Number(setting.find((item) => item.name === "min").value) || 5;
+  },
+});
+
+export const qrImageSelector = selector({
+  key: "qrImageSelector",
+  get: ({ get }) => {
+    const setting = get(settingState);
+    return setting.find((item) => item.name === "qr_image").value || "";
   },
 });
 

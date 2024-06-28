@@ -16,3 +16,8 @@ export enum EUserVoucherStatus {
   UNUSED = "unused",
   USED = "used",
 }
+
+export enum EUserCTVRequestStatus {
+  WAITING = "waiting",
+  DONE = "done",
+}

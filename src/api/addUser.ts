@@ -6,8 +6,15 @@ export const upsertUser = async (zaloUser) => {
     .from("users")
     .select()
     .eq("idByOA", zaloUser.id);
-  if (data?.length > 0) {
-    return { avatar, ...data[0] };
+  if (data && data?.length > 0) {
+    const user = data[0];
+    if (!user.idUserToNotification && zaloUser.idByOA) {
+      await supabase
+        .from("users")
+        .update({ idUserToNotification: zaloUser.idByOA })
+        .eq("id", user.id);
+    }
+    return { ...data[0], avatar };
   } else {
     const { data: newUser } = await supabase
       .from("users")
@@ -17,6 +24,8 @@ export const upsertUser = async (zaloUser) => {
         avatar: zaloUser.avatar,
       })
       .select();
-    return { avatar, ...newUser[0] };
+    if (newUser) {
+      return { ...newUser[0], avatar };
+    }
   }
 };

@@ -18,6 +18,9 @@ import { ROUTES } from "pages/route";
 import { useRecoilValue } from "recoil";
 import { userState } from "../state";
 import { ERoles } from "../constants";
+import { IoChatbubblesOutline } from "react-icons/io5";
+import { IoChatbubbles } from "react-icons/io5";
+
 const tabs: Record<string, MenuItem> = {
   "/cart": {
     label: "Giỏ hàng",
@@ -39,6 +42,11 @@ const tabs: Record<string, MenuItem> = {
     label: "Tìm kiếm",
     icon: <BiSearch />,
     activeIcon: <BsFillSearchHeartFill />,
+  },
+  "/openChat": {
+    label: "Chat OA",
+    icon: <IoChatbubblesOutline />,
+    activeIcon: <IoChatbubbles />,
   },
   "/profile": {
     label: "Cá nhân",

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import {
   Box,
+  Button,
   Header,
   Icon,
   Input,
@@ -15,45 +16,88 @@ import { ListRenderer } from "components/list-renderer";
 import { useToBeImplemented } from "hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "./route";
-import { useRecoilValue } from "recoil";
-import { userState } from "state";
-import { openChat } from "zmp-sdk";
-import { OA_ID } from "enviroment";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { qrImageSelector, userRequestStatusState, userState } from "state";
 import MemberCard from "./user/components/member-card";
 import supabase from "../client/client";
 import { ERoles } from "../constants";
 import { CiWallet } from "react-icons/ci";
 import { CiBank } from "react-icons/ci";
-
+import logo from "static/logo.jpg";
+import { EUserCTVRequestStatus } from "../constantsapp";
+import qr_image from "assets/qr_image.jpg";
+import { openShareSheet, saveImageToGallery } from "zmp-sdk";
 const { OtpGroup, Option } = Select;
 
 const Subscription: FC = () => {
-  const onClick = useToBeImplemented();
-  const openChatScreen = () => {
-    openChat({
-      type: "oa",
-      id: OA_ID,
-      message: "CTV",
-      success: () => {},
-      fail: (err) => {
-        console.log("err", err);
-      },
-    });
+  const user = useRecoilValue(userState);
+  const [userRequestStatus, setUserRequestStatus] = useRecoilState(
+    userRequestStatusState
+  );
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+
+  const handleRegister = async () => {
+    await supabase
+      .from("users")
+      .update({
+        requestCTVStatus: EUserCTVRequestStatus.WAITING,
+      })
+      .eq("id", user.id);
+    setUserRequestStatus(EUserCTVRequestStatus.WAITING);
+    setConfirmModalVisible(false);
   };
-  return (
-    <Box className="m-4" onClick={openChatScreen}>
-      <Box
-        className="bg-green text-white rounded-xl p-4 space-y-2"
-        style={{
-          backgroundImage: `url(${subscriptionDecor})`,
-          backgroundPosition: "right 8px center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <Text.Title className="font-bold">Đăng ký Cộng tác viên</Text.Title>
-        {/* <Text size="xxSmall">Tích điểm đổi thưởng, mở rộng tiện ích</Text> */}
+  if (userRequestStatus === EUserCTVRequestStatus.WAITING) {
+    return (
+      <Box className="m-4">
+        <Box
+          className="bg-yellow-300 text-white rounded-xl p-4 space-y-2"
+          style={{
+            backgroundImage: `url(${subscriptionDecor})`,
+            backgroundPosition: "right 8px center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <Text.Title className="font-bold">Đăng chờ duyệt</Text.Title>
+        </Box>
       </Box>
-    </Box>
+    );
+  }
+  return (
+    <>
+      <Box className="m-4" onClick={() => setConfirmModalVisible(true)}>
+        <Box
+          className="bg-green text-white rounded-xl p-4 space-y-2"
+          style={{
+            backgroundImage: `url(${subscriptionDecor})`,
+            backgroundPosition: "right 8px center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <Text.Title className="font-bold">Đăng ký Cộng tác viên</Text.Title>
+        </Box>
+      </Box>
+      <Modal
+        visible={confirmModalVisible}
+        title="Đăng ký Cộng tác viên"
+        coverSrc={logo}
+        description={`Bạn xác nhận đăng ký làm công tác viên Mion?`}
+        actions={[
+          {
+            text: "Huỷ",
+            onClick: () => {
+              setConfirmModalVisible(false);
+            },
+          },
+          {
+            highLight: true,
+            text: "Đồng ý",
+            onClick: () => {
+              handleRegister();
+            },
+          },
+        ]}
+      ></Modal>
+    </>
   );
 };
 
@@ -283,6 +327,27 @@ const Other: FC = () => {
 const ProfilePage: FC = () => {
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
+  const qrImageUrl = useRecoilValue(qrImageSelector);
+  const saveImage = () => {
+    saveImageToGallery({
+      imageUrl: qrImageUrl,
+      success: () => {},
+      fail: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const shareImage = () => {
+    openShareSheet({
+      type: "image",
+      data: {
+        imageUrl: qrImageUrl,
+      },
+      success: (data) => {},
+      fail: (err) => {},
+    });
+  };
 
   return (
     <Page>
@@ -298,6 +363,20 @@ const ProfilePage: FC = () => {
       {user?.role !== ERoles.CTV && user?.role !== ERoles.SHIPPER && (
         <Subscription />
       )}
+
+      <img src={qr_image} className="w-56 m-auto" />
+      <Box className="flex justify-between w-1/2 m-auto mt-4 mb-4">
+        <Button
+          className="w-20 border-[1px] border-yellow-300 border-solid bg-white text-yellow-500"
+          size="small"
+          onClick={saveImage}
+        >
+          Tải về
+        </Button>
+        <Button className="w-20" size="small" onClick={shareImage}>
+          Chia sẻ
+        </Button>
+      </Box>
     </Page>
   );
 };

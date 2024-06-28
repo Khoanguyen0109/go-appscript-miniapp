@@ -102,6 +102,7 @@ export const CartPreview: FC = () => {
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
+      console.log("orderCreated", orderCreated.error);
       if (discount && !discount?.public && voucherSelected) {
         const newUserVoucher = userVoucher.filter(
           (item) => item.id !== voucherSelected?.id
@@ -129,12 +130,10 @@ export const CartPreview: FC = () => {
         });
         return acc;
       }, []);
-      await Promise.all([
-        supabase.from("order_details").insert(details),
-        // updateUserPoint(),
-      ]);
+      await Promise.all([supabase.from("order_details").insert(details)]);
       setAddressSelected(null);
       setDeliveryTime(+new Date());
+      setVoucherSelected(null);
       setNote("");
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
@@ -176,7 +175,6 @@ export const CartPreview: FC = () => {
     if (minOrderDeliveryTime) {
       const today = new Date();
       const deliveryDate = new Date(deliveryTime);
-
       // Calculate the difference in hours
       const hoursDifference = differenceInMinutes(deliveryDate, today);
 

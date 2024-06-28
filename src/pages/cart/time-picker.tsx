@@ -51,17 +51,19 @@ export const TimePicker: FC = () => {
     }
     return times;
   }, [date]);
-
   return (
     <Picker
       mask
       maskClosable
       onVisibilityChange={(visbile) => {
         matchStatusBarColor(visbile);
-        console.log("visbile", visbile);
         if (!visbile) {
-          console.log("time", time);
-          setDeliveryTime(time);
+          const newDate = new Date(date);
+          const hours = new Date(time).getHours();
+          const minutes = new Date(time).getMinutes();
+          newDate.setHours(hours);
+          newDate.setMinutes(minutes);
+          setDeliveryTime(newDate.getTime());
         }
       }}
       inputClass="border-none bg-transparent text-sm text-primary font-medium text-md m-0 p-0 h-auto"

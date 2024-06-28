@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { Button, Header, Icon, Page, Text } from "zmp-ui";
 
-import { followOA } from "zmp-sdk";
+import { followOA, getUserInfo } from "zmp-sdk";
 import { OA_ID } from "enviroment";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
@@ -34,9 +34,10 @@ const PaymentSuccess: FC = () => {
     navigate(ROUTES.HOME);
   };
   const updateFollowed = async () => {
+    const zaloUser = await getUserInfo().then((res) => res.userInfo);
     const { error } = await supabase
       .from("users")
-      .update({ followed: true })
+      .update({ followed: true, idUserToNotification: zaloUser.idByOA })
       .eq("id", user.id);
   };
   const bankInfo = useRecoilValue(bankState);

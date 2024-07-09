@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Box, Header, Page, Text } from "zmp-ui";
 import {
   publicDiscountSelector,
@@ -20,7 +20,6 @@ function UserDiscount({}: Props) {
   const [voucherSelected, setVoucherSelected] =
     useRecoilState(voucherSelectedState);
   let [searchParams, setSearchParams] = useSearchParams();
-  const routeFrom = searchParams.get("routeFrom");
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const [discount, setDiscount] = useRecoilState(discountState);
 

@@ -23,7 +23,7 @@ function OrderDetail({}: Props) {
   const fetchDetail = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("orders")
         .select(
           `* , address: user_addresses(*), orderDetails: order_details(* , product:products(* , inventories:product_inventories(*)))`

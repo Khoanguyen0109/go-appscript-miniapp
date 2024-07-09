@@ -73,9 +73,7 @@ function AddUserAddress({}: Props) {
       const { error } = await supabase
         .from("user_addresses")
         .insert({ userId: user.id, ...value });
-      console.log("error", error);
       refresh();
-      setProvinceId(null);
       setWardId(null);
       setDistrictId(null);
       navigateBack();

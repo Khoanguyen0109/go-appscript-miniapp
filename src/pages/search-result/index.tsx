@@ -3,27 +3,11 @@ import React from "react";
 import { useRecoilValueLoadable } from "recoil";
 import { searchResultState } from "../../state";
 import LoadingScreenOverLay from "../../components/loading-screen";
-import { openChat } from "zmp-sdk";
-import { getWindowDimensions } from "../../utils/size";
 import NewProductItem from "../index/new-product-item";
-import { OA_ID } from "../../enviroment";
 
 function SearchResult() {
   const searchResult = useRecoilValueLoadable(searchResultState);
-  const { width, height } = getWindowDimensions();
   const navigate = useNavigate();
-  console.log("searchResult", searchResult);
-  const handleChat = () => {
-    openChat({
-      type: "oa",
-      id: OA_ID,
-      message: `Yêu cầu tìm kiếm`,
-      success: () => {},
-      fail: (err) => {
-        console.log("err", err);
-      },
-    });
-  };
 
   if (searchResult.state === "loading") {
     return <LoadingScreenOverLay />;

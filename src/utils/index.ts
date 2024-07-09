@@ -8,7 +8,6 @@ export const getAddress = (address) => {
 };
 
 export const getOrderStatusLabel = (status) => {
-  console.log("status", status);
   switch (status) {
     case EOrderStatus.WAITING:
       return "Chờ xác nhận";

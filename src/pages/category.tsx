@@ -1,6 +1,4 @@
-import { ProductItem } from "components/product/item";
 import React, { FC, Suspense, useEffect, useRef, useState } from "react";
-import ReactPaginate from "react-paginate";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   categoriesState,

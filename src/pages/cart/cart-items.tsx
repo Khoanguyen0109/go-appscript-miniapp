@@ -8,7 +8,7 @@ import { isString } from "lodash";
 import React, { FC, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState } from "state";
-import { Cart, CartItem } from "types/cart";
+import { CartItem } from "types/cart";
 import { isIdenticalV2 } from "utils/product";
 import { Box, Checkbox, Icon, Text } from "zmp-ui";
 

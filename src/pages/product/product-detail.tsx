@@ -15,7 +15,7 @@ import { DisplayPrice } from "components/display/price";
 import { Divider } from "components/divider";
 import { ProductPicker } from "components/product/picker";
 
-import { cartState, productsState, userState } from "state";
+import { productsState, userState } from "state";
 import { openChat, openShareSheet } from "zmp-sdk";
 import { FaShare } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
@@ -39,7 +39,6 @@ function ProductDetail({}: Props) {
     useRecoilState(selectedProductState);
   const paramsSearch = new URLSearchParams(location.search);
   const ctvId = paramsSearch.get("id_ctv_shared");
-  const cart = useRecoilValue(cartState);
   const [visible, setVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const shareCurrentPage = async () => {
@@ -52,11 +51,6 @@ function ProductDetail({}: Props) {
               productSelected?.name + " " + formatPrice(productSelected?.price),
             description: productSelected?.descThumbnail || "",
             thumbnail: productSelected?.thumbnail,
-            // path: user?.ctv
-            //   ? `${ROUTES.PRODUCT_DETAIL(params.id)}?id_ctv_shared=${
-            //       user.id
-            //     }&env=TESTING&version=15`
-            //   : `${ROUTES.PRODUCT_DETAIL(params.id)}?env=TESTING&version=15`,
             path: user?.ctv
               ? `${location.pathname}?id_ctv_shared=${user.id}`
               : `${location.pathname}`,
@@ -91,7 +85,7 @@ function ProductDetail({}: Props) {
 
   const saveCTV = async (ctvId) => {
     try {
-      const { error } = await supabase
+      await supabase
         .from("users")
         .update({ idCTVShared: ctvId })
         .eq("id", user.id);
@@ -109,7 +103,6 @@ function ProductDetail({}: Props) {
   if (!productSelected) {
     return <LoadingScreenOverLay />;
   }
-  console.log("productSelected?.image", productSelected?.image);
   return (
     <Page className="flex flex-col bg-background">
       <Header
@@ -117,18 +110,6 @@ function ProductDetail({}: Props) {
         showBackIcon={true}
         onBackClick={() => navigate(-1)}
       />
-      {/* {open && (
-        <Box className=" absolute z-30 top-0 h-screen w-screen  flex justify-center items-center ">
-          <Box
-            className="absolute top-20 right-5 z-50 "
-            onClick={() => setOpen(false)}
-          >
-            <IoMdClose size={30} color="#000000" />
-          </Box>
-          <Box className="absolute top-0 w-full h-full bg-slate-400 opacity-90 "></Box>
-          <Banner banners={productSelected.image} padding={0} />
-        </Box>
-      )} */}
       <ImageViewer
         onClose={() => setVisible(false)}
         activeIndex={activeIndex}
@@ -181,9 +162,6 @@ function ProductDetail({}: Props) {
           </div>
         </Box>
 
-        {/* <Text.Header className="text-md font-bold mb-4">
-          Mô tả sản phẩm
-        </Text.Header> */}
         <Text className="mt-3 ">
           {productSelected.desc.indexOf("</") !== -1 ? (
             <div
@@ -226,14 +204,6 @@ function ProductDetail({}: Props) {
           )}
         </ProductPicker>
       </Box>
-      {/* {cart.length > 0 && (
-        <Button
-          onClick={() => navigate(ROUTES.CART)}
-          className=" w-12 min-w-0 p-0 h-12 rounded-full fixed bottom-20 right-10 !bg-slate-100 text-white"
-        >
-          <CartIcon />
-        </Button>
-      )} */}
     </Page>
   );
 }

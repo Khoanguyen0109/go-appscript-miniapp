@@ -6,7 +6,6 @@ import { DisplayPrice } from "components/display/price";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
 import { EOrderStatus } from "constantsapp";
-import { Divider } from "components/divider";
 import { formatDate } from "../../utils/date";
 type Props = {
   item: TOrder;
@@ -14,12 +13,10 @@ type Props = {
 };
 
 function OrderItem({ item, onOpenRating }: Props) {
-  console.log("item", item);
   const navigate = useNavigate();
   const onClick = () => {
     navigate(ROUTES.ORDER_DETAIL(item.id));
   };
-  console.log("item", item);
   return (
     <Box
       className="rounded-lg bg-background m-3 cursor-pointer"
@@ -53,7 +50,6 @@ function OrderItem({ item, onOpenRating }: Props) {
             </Text>
           </Box>
 
-          {/* <Divider size={32} className="border-b" /> */}
           {item.status === EOrderStatus.DELIVERED && (
             <Button
               className="float-right -m-2 mt-2"

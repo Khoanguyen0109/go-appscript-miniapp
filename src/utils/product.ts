@@ -2,25 +2,10 @@ import { createOrder } from "zmp-sdk";
 import { Product } from "types/product";
 import { getConfig } from "./config";
 import { SelectedOptions } from "types/cart";
-import { capitalize, chain, isEqual, omit } from "lodash";
+import { capitalize, isEqual } from "lodash";
 
 export const findVariant = (product, options) => {
   return product?.inventories?.find((item) => {
-    // const object = chain(item)
-    //   .omit([
-    //     "id",
-    //     "product_id",
-    //     "discount",
-    //     "price",
-    //     "image",
-    //     "active",
-    //     "created_at",
-    //     "updated_at",
-    //     "deleted_at",
-    //   ])
-    //   .omitBy((value) => value === "")
-    //   .value();
-    // console.log('object', object)
     const option = Object.values(options || {})?.[0];
     return isEqual(item.id, option?.id);
   });
@@ -28,13 +13,6 @@ export const findVariant = (product, options) => {
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   let finalPrice = product.costdown || product.price;
-  // const variant = findVariant(product, options);
-  // if (variant) {
-  //   return variant.price;
-  // }
-  // const totalOptionPrice = options
-  //   ? Object.keys(options).reduce((acc, key) => acc + options[key].price, 0)
-  //   : 0;
   const totalOptionPrice = options
     ? Object.keys(options).reduce((acc, key) => {
         const totalOption = options[key].reduce(
@@ -80,7 +58,10 @@ export function isIdentical(
   return true;
 }
 
-export const isIdenticalV2 = (option1: SelectedOptions, option2: SelectedOptions) => {
+export const isIdenticalV2 = (
+  option1: SelectedOptions,
+  option2: SelectedOptions
+) => {
   return isEqual(JSON.stringify(option1), JSON.stringify(option2));
 };
 
@@ -90,7 +71,6 @@ const pay = (amount: number, callback: (data: any) => void) => {
     item: [],
     amount: amount,
     success: (data) => {
-      console.log("data", data);
       callback(data);
     },
     fail: (err) => {
@@ -98,7 +78,6 @@ const pay = (amount: number, callback: (data: any) => void) => {
     },
   });
 };
-
 export default pay;
 
 export const getOptionString = (options) => {

@@ -27,9 +27,8 @@ import {
 } from "./state";
 import supabase from "../../client/client";
 import { EOrderStatus, EUserVoucherStatus } from "../../constantsapp";
-import { formatDate } from "../../utils/date";
 import { userVouchersState } from "../../state/discount-state";
-import { differenceInHours, differenceInMinutes } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 
 export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
@@ -51,19 +50,10 @@ export const CartPreview: FC = () => {
   const [deliveryTime, setDeliveryTime] = useRecoilState(
     selectedDeliveryTimeState
   );
-  console.log("deliveryTime", deliveryTime);
   const [discount, setDiscount] = useRecoilState(discountState);
   const [voucherSelected, setVoucherSelected] =
     useRecoilState(voucherSelectedState);
   const { openSnackbar, setDownloadProgress, closeSnackbar } = useSnackbar();
-  // const [hours, minutes] = time ? time?.split(":").map(Number) : [0, 0];
-
-  // const convertDate: Date = new Date(`${date}`);
-  // convertDate.setHours(hours, minutes, 0, 0);
-  // const today: Date = new Date();
-  // const diffInMilliseconds = convertDate - today;
-  // const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-  // const isMoreThanTwoHoursAhead = diffInMilliseconds > twoHoursInMilliseconds;
 
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const timmerId = useRef();
@@ -102,7 +92,6 @@ export const CartPreview: FC = () => {
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
-      console.log("orderCreated", orderCreated.error);
       if (discount && !discount?.public && voucherSelected) {
         const newUserVoucher = userVoucher.filter(
           (item) => item.id !== voucherSelected?.id
@@ -134,6 +123,7 @@ export const CartPreview: FC = () => {
       setAddressSelected(null);
       setDeliveryTime(+new Date());
       setVoucherSelected(null);
+      setDiscount(null);
       setNote("");
       resetCart();
       navigate(ROUTES.PAYMENT_SUCCESS);
@@ -142,34 +132,6 @@ export const CartPreview: FC = () => {
     } finally {
     }
   };
-
-  // const updateUserPoint = async () => {
-  //   if (user.idCTVShared) {
-  //     const { data: selectedCTV } = await supabase
-  //       .from("users")
-  //       .select()
-  //       .eq("id", user.idCTVShared);
-  //     console.log("selectedCTV", selectedCTV);
-  //     if (selectedCTV?.length > 0) {
-  //       await supabase
-  //         .from("users")
-  //         .update({
-  //           totalPoint: selectedCTV[0].totalPoint + ctvCommissionPoint,
-  //           uncheckedPoint: selectedCTV[0].uncheckedPoint + ctvCommissionPoint,
-  //         })
-  //         .eq("id", user.idCTVShared);
-  //     }
-  //   }
-  //   if (calPointUser) {
-  //     const payload = {
-  //       totalPoint: userTotalPoint + calPointUser,
-  //       uncheckedPoint: userUncheckedPoint + calPointUser,
-  //     };
-  //     await supabase.from("users").update(payload).eq("id", user.id);
-  //     setUserTotalPoint(userTotalPoint + calPointUser);
-  //     setUserUncheckedPoint(userUncheckedPoint + calPointUser);
-  //   }
-  // };
 
   const makePayment = async () => {
     if (minOrderDeliveryTime) {

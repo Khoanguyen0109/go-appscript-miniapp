@@ -4,7 +4,7 @@ import { Product } from "types/product";
 import { Box, Text } from "zmp-ui";
 import { ProductPicker } from "./picker";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { ROUTES } from "pages/route";
 import { BsCartPlus } from "react-icons/bs";
 import { selectedProductState } from "pages/product/state";

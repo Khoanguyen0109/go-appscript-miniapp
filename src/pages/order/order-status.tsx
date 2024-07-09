@@ -1,6 +1,6 @@
 import { EOrderStatus } from "constantsapp";
 import React, { useMemo } from "react";
-import { Box, Icon, Text } from "zmp-ui";
+import { Box, Text } from "zmp-ui";
 
 type Props = { status };
 

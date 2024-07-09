@@ -17,9 +17,7 @@ import {
   totalQuantityState,
   userState,
 } from "state";
-import supabase from "../../client/client";
 import { addressSelectedState, noteState } from "./state";
-import { EOrderStatus } from "../../constantsapp";
 
 interface RenderResultProps {
   title: string;

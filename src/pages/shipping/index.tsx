@@ -23,7 +23,6 @@ function Shipping({}: Props) {
   const orderList = useRecoilValue(shippingListSelectorByStatus);
 
   const onItemClick = (item) => {
-    console.log("item", item);
     setSelected(item);
     navigate(ROUTES.SHIPPING_DETAIL);
   };

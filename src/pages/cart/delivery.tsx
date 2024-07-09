@@ -10,28 +10,17 @@ import { ROUTES } from "pages/route";
 import { ListItem } from "components/list-item";
 import { getAddress } from "utils";
 
-import { discountState, userState } from "../../state";
+import { discountState } from "../../state";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();
-  const user = useRecoilValue(userState);
   const [note, setNote] = useRecoilState(noteState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const discount = useRecoilValue(discountState);
-  // const [customer, setCustomerSelected] = useRecoilState(customerSelectedState);
 
   const navigateFromCart = (route) => {
     navigate({
       pathname: route,
-      search: createSearchParams({
-        routeFrom: "cart",
-      }).toString(),
-    });
-  };
-
-  const navigateCTVUserAddress = () => {
-    navigate({
-      pathname: ROUTES.CTV_USER_LIST,
       search: createSearchParams({
         routeFrom: "cart",
       }).toString(),

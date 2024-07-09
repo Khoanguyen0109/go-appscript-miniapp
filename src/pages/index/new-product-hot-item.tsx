@@ -1,6 +1,6 @@
 import React from "react";
 import { FunctionComponent } from "react";
-import { Box, Button, Icon, Text } from "zmp-ui";
+import { Box, Icon, Text } from "zmp-ui";
 import { useNavigate } from "react-router-dom";
 import { Product } from "types/product";
 import { ROUTES } from "pages/route";

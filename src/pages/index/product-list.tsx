@@ -4,27 +4,12 @@ import { useRecoilValue } from "recoil";
 import { productsState } from "state";
 import { Box } from "zmp-ui";
 import { ProductItemSkeleton } from "components/skeletons";
-import ReactPaginate from "react-paginate";
-import { getWindowDimensions } from "../../utils/size";
 import NewProductItem from "./new-product-item";
 
 export const ProductListContent: FC = () => {
-  const itemsPerPage = 20;
   const errorRef = useRef(null);
 
   const products = useRecoilValue(productsState);
-  const [itemOffset, setItemOffset] = useState(0);
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = products.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(products.length / itemsPerPage);
-  const { width, height } = getWindowDimensions();
-
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % products.length;
-
-    setItemOffset(newOffset);
-    errorRef.current.scrollIntoView();
-  };
 
   if (products.length <= 0) {
     return <></>;
@@ -32,45 +17,10 @@ export const ProductListContent: FC = () => {
   return (
     <Section title="Danh sách sản phẩm" mt={1}>
       <Box ref={errorRef} className="">
-        {currentItems.map((product) => (
+        {products.map((product) => (
           <NewProductItem key={product.id} product={product} />
         ))}
       </Box>
-      {/* <Box className="max-w-full mt-4 flex justify-center">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel=">"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={2}
-          pageCount={pageCount}
-          previousLabel="<"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-        breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-        />
-      </Box> */}
-      {/* <Box className="m-2 mt-3">
-        <List
-          height={height - 200}
-          itemCount={products.length}
-          itemSize={350}
-          width={"100%"}
-        >
-          {({ index, style }) => (
-            <div style={style}>
-              <NewProductItem product={products[index]} />
-            </div>
-          )}
-        </List>
-      </Box> */}
     </Section>
   );
 };

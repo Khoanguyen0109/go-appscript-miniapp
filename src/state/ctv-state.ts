@@ -12,18 +12,6 @@ export const ctvIncomeListRequestSelector = selector({
         .select("*")
         .eq("userId", user.id);
       return data || [];
-      // return [
-      //   {
-      //     status: ECommissionRequest.DONE,
-      //     total: 500,
-      //     createdAt: "30/05/2024",
-      //   },
-      //   {
-      //     status: ECommissionRequest.DONE,
-      //     total: 500,
-      //     createdAt: "30/05/2024",
-      //   },
-      // ];
     } catch (error) {
       return [];
     }
@@ -54,7 +42,6 @@ export const userAddressOfCTVSelector = selector({
   key: "userAddressOfCTVSelector",
   get: ({ get }) => {
     const list = get(userListOfCTVSelector);
-    console.log("list", list);
     if (list.length) {
       const addresses = list.reduce((acc, value) => {
         value.user_addresses.forEach((item) => {
@@ -62,7 +49,6 @@ export const userAddressOfCTVSelector = selector({
         });
         return acc;
       }, []);
-      console.log("addresses", addresses);
       return addresses;
     }
 

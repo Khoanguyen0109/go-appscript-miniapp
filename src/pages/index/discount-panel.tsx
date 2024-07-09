@@ -12,7 +12,6 @@ type Props = {};
 function DiscountPanel({}: Props) {
   const navigate = useNavigate();
   const discounts = useRecoilValue(discountBannersSelector);
-  console.log("discounts", discounts);
   const onClick = () => {
     return navigate(ROUTES.BUY_VOUCHER);
   };

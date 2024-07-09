@@ -27,7 +27,7 @@ import logo from "static/logo.jpg";
 import { EUserCTVRequestStatus } from "../constantsapp";
 import qr_image from "assets/qr_image.jpg";
 import { openShareSheet, saveImageToGallery } from "zmp-sdk";
-const { OtpGroup, Option } = Select;
+const { Option } = Select;
 
 const Subscription: FC = () => {
   const user = useRecoilValue(userState);
@@ -116,19 +116,7 @@ const Personal: FC = () => {
     <Box className="m-4">
       <ListRenderer
         padding={3}
-        // onClick={onClick}
         items={[
-          // {
-          //   left: <Icon icon="zi-user" />,
-          //   right: (
-          //     <Box flex onClick={onClick}>
-          //       <Text.Header className="flex-1 items-center font-normal">
-          //         Thông tin tài khoản
-          //       </Text.Header>
-          //       <Icon icon="zi-chevron-right" />
-          //     </Box>
-          //   ),
-          // },
           ...([ERoles.CTV, ERoles.SHIPPER].includes(user.role)
             ? [
                 {

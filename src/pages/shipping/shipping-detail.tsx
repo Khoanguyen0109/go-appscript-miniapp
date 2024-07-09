@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
 import {
   shippingDetailSelected,
-  shippingDetailState,
   shippingListState,
 } from "../../state/shipping-state";
 import supabase from "../../client/client";
@@ -30,7 +29,7 @@ import {
   userUncheckedPointState,
 } from "../../state";
 import { ERoles } from "../../constants";
-import { add, format, startOfDay } from "date-fns";
+import { add, startOfDay } from "date-fns";
 import { convertToDate } from "../../utils/date";
 
 type Props = {};
@@ -44,7 +43,6 @@ function ShippingDetail({}: Props) {
   );
   const shipperPoint = useRecoilValue(shipperPointSelector);
   const ctvCommissionPoint = useRecoilValue(ctvPointWhenCustomerOrderSelector);
-  console.log("ctvCommissionPoint", ctvCommissionPoint);
   const ctvPointOrder = useRecoilValue(ctvPointOrderSelector);
   const userPointInday = useRecoilValue(userPointTodayOrderSettingSelector);
   const userPointTomorrow = useRecoilValue(
@@ -95,7 +93,6 @@ function ShippingDetail({}: Props) {
     }, 0);
   };
 
-  console.log("first", totalQuantity());
   const calUserPoint = (user) => {
     const isTodayOrder = isEqual(
       startOfDay(new Date(convertToDate(detail.receiveDate))),
@@ -106,7 +103,6 @@ function ShippingDetail({}: Props) {
       startOfDay(new Date(convertToDate(detail.receiveDate))),
       startOfDay(add(new Date(detail.createdAt), { days: 1 }))
     );
-    console.log("isTomorrowOrder", isTomorrowOrder);
     if (user.role === ERoles.CTV) {
       return ctvPointOrder * totalQuantity();
     } else {
@@ -118,7 +114,6 @@ function ShippingDetail({}: Props) {
     }
     return 0;
   };
-  console.log("detail", detail);
   const updateStatusOrder = async (status) => {
     setDetail((pre) => ({ ...pre, status }));
     const index = shippingList.findIndex((item) => item.id === selected.id);

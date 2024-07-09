@@ -3,7 +3,6 @@ import { useRecoilValue } from "recoil";
 import { Box, Button, Header, Page, Text } from "zmp-ui";
 import {
   userCheckedPointState,
-  userState,
   userTotalPointState,
   userUncheckedPointState,
 } from "../../state";
@@ -13,7 +12,6 @@ import CommissionIcon from "../../static/commision-request.svg";
 import { formatDate } from "../../utils/date";
 import { ECommissionRequest } from "../../constants";
 import { DisplayCoin } from "../../components/display/display-coin";
-import { useToBeImplemented } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../route";
 

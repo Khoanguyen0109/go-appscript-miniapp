@@ -14,7 +14,6 @@ type Props = {};
 function Commission({}: Props) {
   const navigate = useNavigate();
   const appInfo = useRecoilValue(appInfoState);
-  console.log("appInfo", appInfo);
   const user = useRecoilValue(userState);
   const openOAPayment = () => {
     openChat({

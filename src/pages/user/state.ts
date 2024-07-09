@@ -20,7 +20,6 @@ export const districtState = selector({
   key: "districts",
   get: async ({ get }) => {
     const provinceId = get(selectedProvinceId);
-    // console.log('provinceId', provinceId)
     const provinces = get(provinceState);
     const code = provinces.find((item) => item.name === provinceId)?.code;
     if (provinceId) {

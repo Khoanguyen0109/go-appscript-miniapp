@@ -3,7 +3,6 @@ import { Box, Header, Text } from "zmp-ui";
 import { useRecoilValueLoadable } from "recoil";
 import { userState } from "state";
 import logo from "static/logo.jpg";
-import appConfig from "../../../app-config.json";
 import { getConfig } from "utils/config";
 import { ERoles } from "../../constants";
 
@@ -32,9 +31,6 @@ export const Welcome: FC = () => {
                     <Text size="small" className="text-slate-700">
                       {user.contents.name}
                     </Text>
-                    {/* <Text size="xxSmall" className="text-slate-400">
-                      Thành viên {user.contents?.memberClass || "Mới"}
-                    </Text> */}
                     {user.contents.role === ERoles.CTV && (
                       <Text size="xxSmall" className="text-slate-400">
                         Cộng tác viên

@@ -1,6 +1,6 @@
 import { capitalize, includes } from "lodash";
 import React from "react";
-import { Box, Button, Checkbox, Radio, Text } from "zmp-ui";
+import { Box, Checkbox, Text } from "zmp-ui";
 import { DisplayPrice } from "../../display/price";
 
 type Props = {

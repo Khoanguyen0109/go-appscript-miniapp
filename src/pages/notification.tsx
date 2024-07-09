@@ -1,11 +1,6 @@
 import React, { FC } from "react";
-import { ListRenderer } from "components/list-renderer";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  newNotificationState,
-  notificationSelectedState,
-  notificationsState,
-} from "state";
+import { newNotificationState, notificationSelectedState } from "state";
 import { Box, Header, Page, Text } from "zmp-ui";
 import { Divider } from "components/divider";
 import { requestSendNotification } from "zmp-sdk";
@@ -20,14 +15,6 @@ const NotificationList: FC = () => {
   const [notificationSelected, setNotificationSelected] = useRecoilState(
     notificationSelectedState
   );
-  const sendNotification = async () => {
-    try {
-      await requestSendNotification({});
-    } catch (error) {
-      // xử lý khi gọi api thất bại
-      console.log(error);
-    }
-  };
 
   const onClick = (item) => {
     setNotificationSelected(item);
@@ -35,23 +22,6 @@ const NotificationList: FC = () => {
   };
   return (
     <Box className=" p-2">
-      {/* <ListRenderer
-        items={newNotification}
-        renderLeft={(item) => (
-          <img className="w-10 h-10 rounded-full" src={item?.image || logo} />
-        )}
-        renderRight={(item) => (
-          <Box key={item.id} onClick={() => onClick(item)}>
-            <Text.Header>{item.title}</Text.Header>
-            <Text
-              size="small"
-              className="text-gray overflow-hidden whitespace-nowrap text-ellipsis"
-            >
-              {item.short_desc}
-            </Text>
-          </Box>
-        )}
-      /> */}
       {newNotification.map((item) => {
         return (
           <Box

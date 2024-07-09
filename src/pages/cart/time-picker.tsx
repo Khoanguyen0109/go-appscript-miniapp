@@ -11,8 +11,7 @@ export const TimePicker: FC = () => {
   const [deliveryTime, setDeliveryTime] = useRecoilState(
     selectedDeliveryTimeState
   );
-  console.log("deliveryTime", deliveryTime);
-  console.log("time", time);
+
   const availableDates = useMemo(() => {
     const days: Date[] = [];
     const today = new Date();
@@ -83,7 +82,6 @@ export const TimePicker: FC = () => {
           : `Chọn thời gian`
       }
       onChange={({ date, time }) => {
-        console.log("time", time);
         if (date) {
           setDate(+date.value);
         }

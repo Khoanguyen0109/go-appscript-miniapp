@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 import { Product } from "types/product";
 
 export const selectedProductState = atom<Product | null>({

@@ -17,8 +17,6 @@ const HomePage: React.FunctionComponent = () => {
   return (
     <Page className="relative flex-1 flex flex-col bg-white">
       <Welcome />
-      {/* <Inquiry /> */}
-
       <Box className="flex-1 overflow-auto mt-2">
         <BannerHome />
         <Categories />

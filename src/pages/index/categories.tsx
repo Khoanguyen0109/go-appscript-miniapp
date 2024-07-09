@@ -11,7 +11,6 @@ export const Categories: FC = () => {
   const setSelectedCategoryId = useSetRecoilState(selectedCategoryIdState);
 
   const gotoCategory = (categoryId: string) => {
-    console.log("categoryId", categoryId);
     setSelectedCategoryId(categoryId);
     navigate("/category");
   };

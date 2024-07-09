@@ -6,17 +6,10 @@ import { useRecoilValue } from "recoil";
 import { userState } from "state";
 import ReactStars from "react-rating-stars-component";
 import supabase from "../../client/client";
-const { Item } = List;
 
 type Props = {
   orders: TOrder[];
 };
-
-const SVGIcon = (props) => (
-  <svg className={props.className} pointerEvents="none">
-    <use xlinkHref={props.href} />
-  </svg>
-);
 
 function OrderList({ orders }: Props) {
   const [openModal, setOpenModal] = useState(false);

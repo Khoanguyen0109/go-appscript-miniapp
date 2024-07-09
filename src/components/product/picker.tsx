@@ -5,14 +5,14 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState, globalProductInventoriesSelector } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
-import { isIdentical, isIdenticalV2 } from "utils/product";
+import { isIdenticalV2 } from "utils/product";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
 import { Box, Button, Icon, Text } from "zmp-ui";
 import { FinalPrice } from "../display/final-price";
 import ProductVariant from "./component/product-variant";
 import { QuantityPicker } from "./quantity-picker";
-import { groupBy, includes, isEmpty, uniq } from "lodash";
+import { groupBy, includes, isEmpty } from "lodash";
 import { DisplaySelectedOptions } from "../display/selected-options";
 
 export interface ProductPickerProps {
@@ -50,7 +50,6 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         : {},
     [visible]
   );
-  console.log('variants', variants)
   const sortVariant = useMemo(() => {
     const newVariants = {
       "Món phụ": [],
@@ -68,7 +67,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
 
     return newVariants;
   }, [variants]);
-  console.log("variants", variants);
+
   useEffect(() => {
     if (selected) {
       setOptions(selected.options);
@@ -193,9 +192,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                         value={options[key] as string[]}
                         values={variants[key]}
                         onChange={(selectedOption) => {
-                          console.log("options[key] ", options[key]);
                           if (key === "Món thêm") {
-                            console.log("first");
                             setOptions((prevOptions) => ({
                               ...prevOptions,
                               [key]: includes(prevOptions[key], selectedOption)

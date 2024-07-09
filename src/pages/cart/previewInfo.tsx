@@ -21,7 +21,6 @@ function PreviewInfo() {
     }
     return 0;
   }, [discount]);
-  console.log('discountPrice', discountPrice)
   
   return (
     <Box className="px-2">

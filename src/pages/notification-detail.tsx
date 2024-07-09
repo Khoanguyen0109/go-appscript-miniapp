@@ -1,9 +1,7 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { notificationSelectedState } from "state";
-import { Box, Button, Header, Page, Text } from "zmp-ui";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FaCopy } from "react-icons/fa";
+import { Box, Header, Page, Text } from "zmp-ui";
 
 type Props = {};
 

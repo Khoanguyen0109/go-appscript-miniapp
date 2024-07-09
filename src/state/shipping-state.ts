@@ -1,5 +1,4 @@
 import { atom, selector } from "recoil";
-import { EOrderStatus } from "../constantsapp";
 import { userState } from "../state";
 import supabase from "../client/client";
 
@@ -18,7 +17,6 @@ export const shippingListSelector = selector({
       });
       return data;
     } catch (error) {
-      console.log("error", error);
       return [];
     }
   },
@@ -34,7 +32,6 @@ export const shippingListSelectorByStatus = selector({
   get: ({ get }) => {
     const currentStatus = get(selectedShippingStatusState);
     const shippingList = get(shippingListState);
-    console.log("shippingList", shippingList);
     const orders = shippingList?.filter(
       (item) => item.status === currentStatus
     );
@@ -51,7 +48,6 @@ export const shippingDetailSelector = selector({
   key: "shippingDetailSelector",
   get: async ({ get }) => {
     const selected = get(shippingDetailSelected);
-    console.log("selected", selected);
     const { data, error } = await supabase
       .from("orders")
       .select("*")

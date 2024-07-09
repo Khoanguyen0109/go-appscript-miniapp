@@ -2,16 +2,10 @@ import { useVirtualKeyboardVisible } from "hooks";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { MenuItem } from "types/menu";
-import { BottomNavigation, Icon } from "zmp-ui";
+import { BottomNavigation } from "zmp-ui";
 import { CartIcon } from "./cart-icon";
 import { AiFillHome, AiOutlineHome } from "react-icons/ai";
-import {
-  BsFillCartFill,
-  BsCart,
-  BsFillChatFill,
-  BsChatDots,
-  BsFillSearchHeartFill,
-} from "react-icons/bs";
+import { BsFillCartFill, BsFillSearchHeartFill } from "react-icons/bs";
 import { BiUser, BiSolidUser, BiSearch } from "react-icons/bi";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import { ROUTES } from "pages/route";
@@ -72,9 +66,6 @@ export const Navigation: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const noBottomNav = useMemo(() => {
-    // return NO_BOTTOM_NAVIGATION_PAGES.some((substring) =>
-    //   location.pathname.includes(substring)
-    // );
     return NO_BOTTOM_NAVIGATION_PAGES.includes(location.pathname);
   }, [location]);
   useEffect(() => {

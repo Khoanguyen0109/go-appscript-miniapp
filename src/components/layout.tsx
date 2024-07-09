@@ -9,7 +9,6 @@ import NotificationPage from "pages/notification";
 import ProfilePage from "pages/profile";
 import { useNavigate } from "react-router-dom";
 import size from "lodash/size";
-import SearchPage from "pages/search";
 import { getSystemInfo } from "zmp-sdk";
 import { ScrollRestoration } from "./scroll-restoration";
 import PaymentSuccess from "pages/payment/payment-success";

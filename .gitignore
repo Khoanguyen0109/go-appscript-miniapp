@@ -35,3 +35,8 @@ Thumbs.db
 
 # Production build
 www/
+
+
+app-config.json
+.env
+zmp-cli.json

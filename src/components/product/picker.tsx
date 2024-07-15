@@ -29,10 +29,10 @@ export interface ProductPickerProps {
 }
 
 export const ProductPicker: FC<ProductPickerProps> = ({
-  children,
-  product,
-  selected,
-}) => {
+                                                        children,
+                                                        product,
+                                                        selected,
+                                                      }) => {
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -44,9 +44,9 @@ export const ProductPicker: FC<ProductPickerProps> = ({
     () =>
       visible
         ? {
-            ...(product?.variants ? product?.variants : {}),
-            ...groupBy(globalInventories, "group"),
-          }
+          ...(product?.variants ? product?.variants : {}),
+          ...groupBy(globalInventories, "group"),
+        }
         : {},
     [visible]
   );
@@ -150,7 +150,14 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         },
       })}
       {createPortal(
-        <Sheet visible={visible} onClose={() => setVisible(false)} autoHeight>
+        <Sheet
+          visible={visible}
+          onClose={() => setVisible(false)}
+          autoHeight
+          style={{
+            marginTop: 16,
+          }}
+        >
           {product && (
             <Box className="space-y-6 mt-4 " p={4}>
               <Box className="space-y-2">
@@ -197,8 +204,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                               ...prevOptions,
                               [key]: includes(prevOptions[key], selectedOption)
                                 ? prevOptions[key].filter(
-                                    (item) => item.id !== selectedOption.id
-                                  )
+                                  (item) => item.id !== selectedOption.id
+                                )
                                 : [...(prevOptions[key] ?? []), selectedOption],
                             }));
                           } else {
@@ -243,7 +250,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                  //   />
                  // )
                )} */}
-              <QuantityPicker value={quantity} onChange={setQuantity} />
+              <QuantityPicker value={quantity} onChange={setQuantity}/>
               {selected ? (
                 <Button
                   variant={quantity > 0 ? "primary" : "secondary"}

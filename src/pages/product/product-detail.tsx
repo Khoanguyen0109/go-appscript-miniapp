@@ -125,16 +125,16 @@ function ProductDetail({}: Props) {
         banners={productSelected.image}
         onClick={() => setVisible(true)}
       />
-      {productSelected?.image.length > 1 && (
-        <Box className="flex gap-4 p-4 overflow-x-auto">
-          {productSelected.image.map((item) => (
-            <Box
-              className="w-1/4 rounded-xl aspect-[1/1] bg-cover bg-center bg-skeleton"
-              style={{backgroundImage: `url(${item.image})`}}
-            />
-          ))}
-        </Box>
-      )}
+      {/*{productSelected?.image.length > 1 && (*/}
+      {/*  <Box className="flex gap-4 p-4 overflow-x-auto">*/}
+      {/*    {productSelected.image.map((item) => (*/}
+      {/*      <Box*/}
+      {/*        className="w-1/4 rounded-xl aspect-[1/1] bg-cover bg-center bg-skeleton"*/}
+      {/*        style={{backgroundImage: `url(${item.image})`}}*/}
+      {/*      />*/}
+      {/*    ))}*/}
+      {/*  </Box>*/}
+      {/*)}*/}
       <Box className="p-3">
         <Text.Header className="text-lg font-bold">
           {productSelected.name}

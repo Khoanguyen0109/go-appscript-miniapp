@@ -1,5 +1,3 @@
-import qr_image from "assets/qr_image.jpg";
-import { ListRenderer } from "components/list-renderer";
 import { useToBeImplemented } from "hooks";
 import React, { FC, useEffect, useRef, useState } from "react";
 import { CiBank, CiWallet } from "react-icons/ci";
@@ -29,6 +27,7 @@ import { EUserCTVRequestStatus } from "../constantsapp";
 import { ROUTES } from "./route";
 import MemberCard from "./user/components/member-card";
 import UserInfoBlock from "./user/user-info";
+import {ListRendererUser} from "../components/user/list-renderer-user";
 
 const { Option } = Select;
 
@@ -117,7 +116,7 @@ const Personal: FC = () => {
   };
   return (
     <Box className="m-4">
-      <ListRenderer
+      <ListRendererUser
         padding={3}
         items={[
           ...([ERoles.CTV, ERoles.SHIPPER].includes(user.role)
@@ -241,7 +240,7 @@ const Other: FC = () => {
   };
   return (
     <Box className="m-4">
-      <ListRenderer
+      <ListRendererUser
         padding={3}
         items={[
           ...(user?.ctv

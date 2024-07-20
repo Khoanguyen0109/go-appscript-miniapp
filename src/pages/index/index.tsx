@@ -11,6 +11,8 @@ import { Categories } from "./categories";
 import { useRecoilValueLoadable } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
 import DiscountPanel from "./discount-panel";
+import {VoucherList} from "../../components/voucher-list/voucher-list";
+import VoucherHome from "./voucher-list";
 
 const HomePage: React.FunctionComponent = () => {
   useRecoilValueLoadable(globalProductInventoriesSelector);
@@ -21,9 +23,9 @@ const HomePage: React.FunctionComponent = () => {
         <BannerHome />
         <Categories />
         <DiscountPanel />
-        <ProductHotItemList />
         <ProductList />
         <Divider />
+        <VoucherHome/>
       </Box>
     </Page>
   );

@@ -17,7 +17,7 @@
   "listAsyncJS": [],
   "pages": ["/user", "/form", "/dynamic-route", "/about", "/404"],
   "template": {
-    "primaryColor": "#EAB305",
+    "primaryColor": "#274630",
     "prefixCurrencySymbol": false,
     "currencySymbol": "đ",
     "headerLogo": ""

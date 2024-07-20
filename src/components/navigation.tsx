@@ -1,51 +1,46 @@
-import { useVirtualKeyboardVisible } from "hooks";
-import React, { FC, useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
-import { MenuItem } from "types/menu";
-import { BottomNavigation } from "zmp-ui";
-import { CartIcon } from "./cart-icon";
-import { AiFillHome, AiOutlineHome } from "react-icons/ai";
-import { BsFillCartFill, BsFillSearchHeartFill } from "react-icons/bs";
-import { BiUser, BiSolidUser, BiSearch } from "react-icons/bi";
-import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
-import { ROUTES } from "pages/route";
-import { useRecoilValue } from "recoil";
-import { userState } from "../state";
-import { ERoles } from "../constants";
-import { IoChatbubblesOutline } from "react-icons/io5";
-import { IoChatbubbles } from "react-icons/io5";
+import {useVirtualKeyboardVisible} from "hooks";
+import React, {FC, useEffect, useMemo, useState} from "react";
+import {useLocation, useNavigate} from "react-router";
+import {MenuItem} from "types/menu";
+import {BottomNavigation} from "zmp-ui";
+import {CartIcon} from "./cart-icon";
+import {BsFillCartFill} from "react-icons/bs";
+import {BiSolidUser, BiUser} from "react-icons/bi";
+import {ROUTES} from "pages/route";
+import {useRecoilValue} from "recoil";
+import {userState} from "../state";
+import {ERoles} from "../constants";
+import userCircleIcon from "static/icons/userCircle.svg";
+import searchIcon from "static/icons/search.svg";
+import chatOaIcon from "static/icons/chatOa.svg";
+import cartIcon from "static/icons/cart.svg";
+import homeIcon from "static/icons/home.svg";
 
 const tabs: Record<string, MenuItem> = {
-  "/cart": {
-    label: "Giỏ hàng",
-    icon: <CartIcon />,
-    activeIcon: <BsFillCartFill />,
-  },
-  "/notification": {
-    label: "Thông báo",
-    icon: <IoMdNotificationsOutline />,
-    activeIcon: <IoMdNotifications />,
-  },
-
   "/": {
     label: "Trang chủ",
-    icon: <AiOutlineHome />,
-    activeIcon: <AiFillHome />,
+    icon: <img src={homeIcon} alt="Home"/>,
+    activeIcon: <img src={homeIcon} alt="Home" className={'nav-primary-color'}/>,
   },
   "/search": {
     label: "Tìm kiếm",
-    icon: <BiSearch />,
-    activeIcon: <BsFillSearchHeartFill />,
+    icon: <img src={searchIcon} alt="Search"/>,
+    activeIcon: <img src={searchIcon} alt="Search" className={'nav-primary-color'}/>,
+  },
+  "/cart": {
+    label: "Giỏ hàng",
+    icon: <img src={cartIcon} alt="Cart"/>,
+    activeIcon: <img src={cartIcon} alt="Cart" className={'nav-primary-color'}/>,
   },
   "/openChat": {
     label: "Chat OA",
-    icon: <IoChatbubblesOutline />,
-    activeIcon: <IoChatbubbles />,
+    icon: <img src={chatOaIcon} alt="Chat OA"/>,
+    activeIcon: <img src={chatOaIcon} alt="Chat OA" className={'nav-primary-color'}/>,
   },
   "/profile": {
     label: "Cá nhân",
-    icon: <BiUser />,
-    activeIcon: <BiSolidUser />,
+    icon: <img src={userCircleIcon} alt="User Circle"/>,
+    activeIcon: <img src={userCircleIcon} alt="User Circle" className={'nav-primary-color'}/>,
   },
 };
 
@@ -87,15 +82,15 @@ export const Navigation: FC = () => {
         <BottomNavigation.Item
           key={ROUTES.SHIPPING}
           label={"Đơn hàng"}
-          icon={<CartIcon />}
-          activeIcon={<BsFillCartFill />}
+          icon={<CartIcon/>}
+          activeIcon={<BsFillCartFill/>}
           onClick={() => navigate(ROUTES.SHIPPING)}
         />
         <BottomNavigation.Item
           key={"/profile"}
           label={"Tài khoản"}
-          icon={<BiUser />}
-          activeIcon={<BiSolidUser />}
+          icon={<BiUser/>}
+          activeIcon={<BiSolidUser/>}
           onClick={() => navigate("/profile")}
         />
       </BottomNavigation>

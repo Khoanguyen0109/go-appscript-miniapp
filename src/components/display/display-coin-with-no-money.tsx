@@ -4,7 +4,7 @@ import { Box, Text } from "zmp-ui";
 export const DisplayCoinNoMoney: FC<{ children: number | string }> = ({
   children,
 }) => {
-  const symbol = " Xu Mion";
+  const symbol = "";
   const format = new Intl.NumberFormat().format(
     parseFloat(children.toString())
   );

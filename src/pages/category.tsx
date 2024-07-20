@@ -56,7 +56,7 @@ const CategoryProducts: FC<{ categoryId: string }> = ({ categoryId }) => {
   }, [categoryId]);
   return (
     <>
-      <Box ref={errorRef} className="p-2">
+      <Box ref={errorRef} className="p-2 grid grid-cols-2 gap-2">
         {productsByCategory.map((product) => (
           <NewProductItem key={product.id} product={product} />
         ))}

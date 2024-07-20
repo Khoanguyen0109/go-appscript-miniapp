@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { FC } from "react";
-import { Box, Text } from "zmp-ui";
+import React, { FC, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { categoriesState, selectedCategoryIdState } from "state";
-import { useNavigate } from "react-router";
+import { Box, Text } from "zmp-ui";
 
 export const Categories: FC = () => {
   const categories = useRecoilValue(categoriesState);
@@ -17,8 +17,13 @@ export const Categories: FC = () => {
 
   return (
     <Box className="mt-2 px-2 max-w-full overflow-x-auto">
-      <Text className="font-bold text-lg">Tất cả mặt hàng</Text>
-      <Box className="bg-white  w-full mt-4 flex overflow-x-auto">
+      <Box className={"flex justify-between items-center"}>
+        <Text className="font-bold text-lg">Danh mục</Text>
+        <Link to={"/all-category"} className="font-medium text-md text-[#212529] no-underline">
+          Xem tất cả
+        </Link>
+      </Box>
+      <Box className="bg-white w-full mt-4 flex overflow-x-auto">
         {categories.map((category, i) => (
           <div
             key={i}
@@ -27,8 +32,9 @@ export const Categories: FC = () => {
             className="flex flex-col space-y-2 items-center mr-2  "
           >
             <img
-              className="w-12 max-w-none h-12 rounded-full shadow-lg object-contain"
+              className="w-12 max-w-none h-12 rounded-full object-contain bg-[#F3F5F7]"
               src={category.image}
+              alt={category.name}
             />
             <Text
               size="xxSmall"

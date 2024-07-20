@@ -1,46 +1,48 @@
-import React, { FC, useEffect } from "react";
-import { Route, Routes } from "react-router";
-import { Box } from "zmp-ui";
-import { Navigation } from "./navigation";
-import HomePage from "pages/index";
-import CategoryPage from "pages/category";
-import CartPage from "pages/cart";
-import NotificationPage from "pages/notification";
-import ProfilePage from "pages/profile";
-import { useNavigate } from "react-router-dom";
 import size from "lodash/size";
-import { getSystemInfo } from "zmp-sdk";
-import { ScrollRestoration } from "./scroll-restoration";
-import PaymentSuccess from "pages/payment/payment-success";
-import { ROUTES } from "pages/route";
+import CartPage from "pages/cart";
+import CategoryPage from "pages/category";
+import OpenChat from "pages/chat";
+import NotFound from "pages/error/not-found";
+import HomePage from "pages/index";
+import NotificationPage from "pages/notification";
+import NotificationDetail from "pages/notification-detail";
 import Order from "pages/order/order";
 import OrderDetail from "pages/order/order-detail";
+import PaymentSuccess from "pages/payment/payment-success";
 import ProductDetail from "pages/product/product-detail";
-import NotFound from "pages/error/not-found";
-import UserAddress from "pages/user/user-address";
+import ProfilePage from "pages/profile";
+import { ROUTES } from "pages/route";
 import AddUserAddress from "pages/user/add-user-address";
-import OpenChat from "pages/chat";
-import NotificationDetail from "pages/notification-detail";
 import Commission from "pages/user/commission";
-import { useRecoilState, useRecoilValueLoadable } from "recoil";
-import { settingState, userState } from "state";
 import MemberInfo from "pages/user/member-info";
 import { addressesState } from "pages/user/state";
+import UserAddress from "pages/user/user-address";
+import React, { FC, useEffect } from "react";
+import { Route, Routes } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
+import { settingState, userState } from "state";
+import { getSystemInfo } from "zmp-sdk";
+import { Box } from "zmp-ui";
 import supabase from "../client/client";
-import CheckoutResultPage from "../pages/cart/result";
-import Search from "../pages/custom-search";
-import SearchResult from "../pages/search-result";
-import { addressSelectedState } from "../pages/cart/state";
-import Income from "../pages/income";
-import BankAccount from "../pages/user/bank-account";
-import Shipping from "../pages/shipping";
-import LoadingScreenOverLay from "./loading-screen";
 import { ERoles } from "../constants";
-import ShippingDetail from "../pages/shipping/shipping-detail";
-import CTVUserList from "../pages/user/ctv-user-list";
-import RequestCommission from "../pages/request-commission";
+import CheckoutResultPage from "../pages/cart/result";
+import { addressSelectedState } from "../pages/cart/state";
+import Search from "../pages/custom-search";
 import DiscountList from "../pages/discount/discount-list";
 import UserDiscount from "../pages/discount/user-discount";
+import Income from "../pages/income";
+import AllProductPage from "../pages/product/all-product";
+import RequestCommission from "../pages/request-commission";
+import SearchResult from "../pages/search-result";
+import Shipping from "../pages/shipping";
+import ShippingDetail from "../pages/shipping/shipping-detail";
+import BankAccount from "../pages/user/bank-account";
+import CTVUserList from "../pages/user/ctv-user-list";
+import LoadingScreenOverLay from "./loading-screen";
+import { Navigation } from "./navigation";
+import { ScrollRestoration } from "./scroll-restoration";
+import AllCategoriesPage from "../pages/category/all-category";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -111,6 +113,8 @@ export const Layout: FC = () => {
             ></Route>
 
             <Route path="/category" element={<CategoryPage />}></Route>
+            <Route path="/all-products" element={<AllProductPage />}></Route>
+            <Route path="/all-category" element={<AllCategoriesPage />}></Route>
             <Route path="/notification" element={<NotificationPage />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>

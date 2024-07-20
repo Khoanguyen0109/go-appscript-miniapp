@@ -258,7 +258,6 @@ export const productsState = selector<Product[]>({
       product.categories.proviceTo.split(', ').includes(user.role)
     );
 
-    console.log('filteredData', filteredData);
 
     return filteredData?.map((item) => mapProduct(item));
   },

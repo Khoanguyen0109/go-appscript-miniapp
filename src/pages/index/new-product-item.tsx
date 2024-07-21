@@ -1,15 +1,12 @@
 import React, { FC } from "react";
-import { useSetRecoilState } from "recoil";
-import { selectedProductState } from "../product/state";
 import { useNavigate } from "react-router-dom";
-import { Product } from "../../types/product";
-import { ROUTES } from "../route";
-import { ProductPicker } from "../../components/product/picker";
-import { Box, Text } from "zmp-ui";
+import { useSetRecoilState } from "recoil";
+import { Text } from "zmp-ui";
 import { FinalPrice } from "../../components/display/final-price";
-import { BiPlus } from "react-icons/bi";
-
-type Props = {};
+import { ProductPicker } from "../../components/product/picker";
+import { Product } from "../../types/product";
+import { selectedProductState } from "../product/state";
+import { ROUTES } from "../route";
 
 export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
   const setSelectedProductId = useSetRecoilState(selectedProductState);
@@ -22,48 +19,32 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
     <ProductPicker product={product}>
       {({ open }) => (
         <div
-          className="flex shadow-md rounded-md mb-3"
+          className="flex flex-col shadow-md rounded-md mb-3 overflow-hidden"
           onClick={() => navigateProductDetail(product)}
         >
-          <Box className="w-24 h-24 mr-2 ">
-            <img
-              loading="lazy"
-              className="object-cover object-center"
-              src={product.thumbnail}
-            />
-          </Box>
-          <Box className="flex-1 flex flex-col justify-between">
-            <Box className="w-full">
-              <Text className="font-semibold text-sm">{product.name}</Text>
-
-              <Text
-                size="normal"
-                color=""
-                className="mt-1 w-56 text-xs truncate "
-              >
-                {product.descThumbnail}
-              </Text>
-            </Box>
-            <Box className="flex w-full mb-2 justify-between">
-              <Text
-                size="xLarge"
-                color=""
-                className="  text-blue-500 font-bold"
-              >
-                <FinalPrice>{product}</FinalPrice>
-              </Text>
-
-              <BiPlus
-                className="bg-red-500 rounded-xl"
-                color="white"
-                size={20}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  open();
-                }}
-              />
-            </Box>
-          </Box>
+          <img
+            loading="lazy"
+            className="w-full h-40 object-cover object-center"
+            src={product.thumbnail}
+            alt={product.name}
+          />
+          <div className="p-2 border-[#E2E8F0]">
+            <Text className="font-semibold text-lg max-h-28 h-20 line-clamp-3">
+              {product.name}
+            </Text>
+            <Text className="text-nature-500 font-semibold text-lg">
+              <FinalPrice>{product}</FinalPrice>
+            </Text>
+            <button
+              className="w-full bg-nature-800 text-white rounded-md py-2 mt-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                open();
+              }}
+            >
+              Thêm vào giỏ
+            </button>
+          </div>
         </div>
       )}
     </ProductPicker>

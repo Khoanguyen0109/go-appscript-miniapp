@@ -1,22 +1,24 @@
-import { ElasticTextarea } from "components/elastic-textarea";
-import { ListRenderer } from "components/list-renderer";
-import React, { FC, Suspense } from "react";
-import { Box, Icon, Text } from "zmp-ui";
+import {ElasticTextarea} from "components/elastic-textarea";
+import {ListRenderer} from "components/list-renderer";
+import React, {FC, Suspense} from "react";
+import {Box, Icon, Text} from "zmp-ui";
 
-import { createSearchParams, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { addressSelectedState, noteState } from "./state";
-import { ROUTES } from "pages/route";
-import { ListItem } from "components/list-item";
-import { getAddress } from "utils";
+import {createSearchParams, useNavigate} from "react-router-dom";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {addressSelectedState, noteState} from "./state";
+import {ROUTES} from "pages/route";
+import {ListItem} from "components/list-item";
+import {getAddress} from "utils";
 
-import { discountState } from "../../state";
+import {discountState, userState} from "../../state";
 
 export const Delivery: FC = () => {
   const navigate = useNavigate();
   const [note, setNote] = useRecoilState(noteState);
   const [address, setAddressSelected] = useRecoilState(addressSelectedState);
   const discount = useRecoilValue(discountState);
+  const user = useRecoilValue(userState);
+  const isShowVoucher = user?.role === "CTV" || user?.role === "Khách hàng";
 
   const navigateFromCart = (route) => {
     navigate({
@@ -35,7 +37,7 @@ export const Delivery: FC = () => {
         padding={2}
         items={[
           {
-            left: <Icon icon="zi-location" className="my-auto" />,
+            left: <Icon icon="zi-location" className="my-auto"/>,
             right: (
               <Suspense>
                 <ListItem
@@ -49,8 +51,8 @@ export const Delivery: FC = () => {
             ),
           },
 
-          {
-            left: <Icon icon="zi-check-circle" className="my-auto" />,
+          isShowVoucher && {
+            left: <Icon icon="zi-check-circle" className="my-auto"/>,
             right: (
               <ListItem
                 onClick={() => navigateFromCart(ROUTES.USER_VOUCHER)}
@@ -60,7 +62,7 @@ export const Delivery: FC = () => {
             ),
           },
           {
-            left: <Icon icon="zi-note" className="my-auto" />,
+            left: <Icon icon="zi-note" className="my-auto"/>,
             right: (
               <Box flex>
                 <ElasticTextarea

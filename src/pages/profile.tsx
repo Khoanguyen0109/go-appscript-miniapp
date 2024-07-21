@@ -1,4 +1,14 @@
+import { useToBeImplemented } from "hooks";
 import React, { FC, useEffect, useRef, useState } from "react";
+import { CiBank, CiWallet } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { qrImageSelector, userRequestStatusState, userState } from "state";
+import backIcon from "static/icons/back.svg";
+import logo from "static/logo.jpg";
+import subscriptionDecor from "static/subscription-decor.svg";
+import styled, { createGlobalStyle } from "styled-components";
+import { openShareSheet, saveImageToGallery } from "zmp-sdk";
 import {
   Box,
   Button,
@@ -11,22 +21,14 @@ import {
   Text,
   useSnackbar,
 } from "zmp-ui";
-import subscriptionDecor from "static/subscription-decor.svg";
-import { ListRenderer } from "components/list-renderer";
-import { useToBeImplemented } from "hooks";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "./route";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { qrImageSelector, userRequestStatusState, userState } from "state";
-import MemberCard from "./user/components/member-card";
 import supabase from "../client/client";
 import { ERoles } from "../constants";
-import { CiWallet } from "react-icons/ci";
-import { CiBank } from "react-icons/ci";
-import logo from "static/logo.jpg";
 import { EUserCTVRequestStatus } from "../constantsapp";
-import qr_image from "assets/qr_image.jpg";
-import { openShareSheet, saveImageToGallery } from "zmp-sdk";
+import { ROUTES } from "./route";
+import MemberCard from "./user/components/member-card";
+import UserInfoBlock from "./user/user-info";
+import {ListRendererUser} from "../components/user/list-renderer-user";
+
 const { Option } = Select;
 
 const Subscription: FC = () => {
@@ -114,7 +116,7 @@ const Personal: FC = () => {
   };
   return (
     <Box className="m-4">
-      <ListRenderer
+      <ListRendererUser
         padding={3}
         items={[
           ...([ERoles.CTV, ERoles.SHIPPER].includes(user.role)
@@ -238,7 +240,7 @@ const Other: FC = () => {
   };
   return (
     <Box className="m-4">
-      <ListRenderer
+      <ListRendererUser
         padding={3}
         items={[
           ...(user?.ctv
@@ -336,35 +338,60 @@ const ProfilePage: FC = () => {
       fail: (err) => {},
     });
   };
+  const StyledHeader = styled(Header)`
+    .zaui-btn-icon-only .zaui-btn-icon {
+      display: flex;
+    }
+  `;
 
   return (
-    <Page>
-      <Header showBackIcon={false} title="&nbsp;" />
-      {user?.role !== ERoles.CTV && (
-        <Box onClick={() => navigate(ROUTES.MEMBER_CARD)}>
-          <MemberCard />
-        </Box>
-      )}
+    <Page
+      style={{
+        background: "#1C472E",
+      }}
+    >
+      <StyledHeader
+        title="Tài khoản"
+        showBackIcon={true}
+        backIcon={<img src={backIcon} alt={"back"} className={"mr-2"} />}
+        textColor={"#fff"}
+        backgroundColor={"#1C472E"}
+        style={{
+          background: "unset",
+        }}
+      />
+      <UserInfoBlock />
 
-      <Personal />
-      <Other />
-      {user?.role !== ERoles.CTV && user?.role !== ERoles.SHIPPER && (
-        <Subscription />
-      )}
+      <div className="bg-white rounded-tl-3xl rounded-tr-3xl min-h-96 py-2">
+        {user?.role !== ERoles.CTV && (
+          <Box
+            onClick={() => navigate(ROUTES.MEMBER_CARD)}
+            className="relative z-10 -mt-32"
+          >
+            <MemberCard />
+          </Box>
+        )}
+        <Personal />
+        <Other />
+      </div>
 
-      <img src={qr_image} className="w-56 m-auto" />
-      <Box className="flex justify-between w-1/2 m-auto mt-4 mb-4">
-        <Button
-          className="w-20 border-[1px] border-yellow-300 border-solid bg-white text-yellow-500"
-          size="small"
-          onClick={saveImage}
-        >
-          Tải về
-        </Button>
-        <Button className="w-20" size="small" onClick={shareImage}>
-          Chia sẻ
-        </Button>
-      </Box>
+      {/*{user?.role !== ERoles.CTV && user?.role !== ERoles.SHIPPER && (*/}
+      {/*  <Subscription />*/}
+      {/*)}*/}
+
+      {/*<img src={qr_image} className="w-56 m-auto" />*/}
+      {/*<Box className="flex justify-between w-1/2 m-auto mt-4 mb-4">*/}
+      {/*  <Button*/}
+      {/*    className="w-20 border-[1px] border-yellow-300 border-solid bg-white text-yellow-500"*/}
+      {/*    size="small"*/}
+      {/*    onClick={saveImage}*/}
+      {/*  >*/}
+      {/*    Tải về*/}
+      {/*  </Button>*/}
+      {/*  <Button className="w-20" size="small" onClick={shareImage}>*/}
+      {/*    Chia sẻ*/}
+      {/*  </Button>*/}
+      {/*</Box>*/}
     </Page>
   );
 };

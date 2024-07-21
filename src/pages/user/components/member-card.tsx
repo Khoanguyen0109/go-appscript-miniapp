@@ -1,16 +1,19 @@
+import { EScoreRank } from "constantsapp";
+import { scoreRankState } from "pages/index/state";
+import { ROUTES } from "pages/route";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState, userTotalPointState } from "state";
-import { Box, Progress, Text } from "zmp-ui";
-import silver from "static/member-card/silver.jpg";
-import gold from "static/member-card/gold.png";
+import badgeIcon from "static/icons/badge.svg";
 import diamond from "static/member-card/diamond.jpg";
+import gold from "static/member-card/gold.png";
+import silver from "static/member-card/silver.jpg";
 import newMember from "static/subscription-decor.svg";
-import { ROUTES } from "pages/route";
-import { EScoreRank } from "constantsapp";
-import { scoreRankState } from "pages/index/state";
+import { Box, Icon, Progress, Text } from "zmp-ui";
 import { DisplayCoinNoMoney } from "../../../components/display/display-coin-with-no-money";
+import { Divider } from "../../../components/divider";
+import { formatDecimal } from "../../../utils/number";
 
 type Props = {};
 
@@ -49,35 +52,69 @@ function MemberCard({}: Props) {
 
   return (
     <Box className="m-4" onClick={() => navigate(ROUTES.MEMBER_CARD)}>
-      <Box
-        className="bg-green text-black rounded-xl p-4 space-y-2"
-        style={{
-          backgroundImage: `url(${backgroundCard})`,
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <Box className="flex justify-between items-center">
-          <Text.Title className="font-bold">
-            Thành viên {user?.memberClass || EScoreRank.NEW}
-          </Text.Title>
-          {/* <Text.Title className="font-bold">{user?.score || 0} Điểm</Text.Title> */}
-          <DisplayCoinNoMoney>{userTotalPoint}</DisplayCoinNoMoney>
+      <Box className="bg-white rounded-xl p-4 space-y-2 border-2">
+        <Box className="flex items-center space-x-2">
+          <Box
+            className={
+              "bg-nature-100 border-[1px] border-solid rounded-xl size-8 border-nature-800 flex items-center justify-center"
+            }
+          >
+            <img
+              src={badgeIcon}
+              alt="Badge"
+              className="size-6 filter-bg-nature-900"
+            />
+          </Box>
+          <Box>
+            <Text size="small">Thứ hạng của bạn</Text>
+            <Text size={"small"} className="font-bold">
+              {user?.memberClass || EScoreRank.NEW}
+            </Text>
+          </Box>
         </Box>
 
-        {maxScore && (
-          <>
-            <Box mb={4}>
+        <Text size="xSmall" className="text-gray-500">
+          Để nâng lên thứ hạng tiếp theo
+        </Text>
+
+        <Box className="flex justify-between items-center">
+          <Text size={"xSmall"}>Chi tiêu</Text>
+          <Text.Title className="text-nature-700 font-semibold">
+            {formatDecimal(parseInt(maxScore))}
+          </Text.Title>
+        </Box>
+        <Divider size={1} className="flex-1 my-2 bg-nature-500" />
+
+        <Box className="flex justify-between mt-1">
+          <Box className="w-1/2">
+            <Text size="normal" className="text-nature-700 font-bold">
+              <DisplayCoinNoMoney>{userTotalPoint}</DisplayCoinNoMoney>
+            </Text>
+            <Text size="xxSmall" className="text-gray-500">
+              Điểm
+            </Text>
+          </Box>
+
+          <Box className="w-1/2 justify-end">
+            <Text className={"flex place-content-end"}>
+              {userTotalPoint}/{parseInt(maxScore)}
+            </Text>
+            <Box className={"flex"}>
               <Progress
-                strokeColor="black"
-                completed={parseInt(user.score)}
+                completed={user?.scorce}
                 maxCompleted={parseInt(maxScore)}
+                trailColor={"#e0e0e0"}
+                strokeColor={"#0B8A3F"}
+                strokeWidth={10}
+              />
+              <img
+                src={badgeIcon}
+                alt="Badge"
+                className="size-6 filter-primary"
               />
             </Box>
-            {/* <Text size="small">
-              Cần hoàn thành {maxScore} điểm để tăng hạng thành viên
-            </Text> */}
-          </>
-        )}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

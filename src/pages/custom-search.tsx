@@ -81,13 +81,13 @@ function Search({}: Props) {
           size="small"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="inquiry  bg-white border-primary"
+          className="inquiry  bg-[#EFFEF5] border-nature-700 text-black"
           placeholder="Tìm kiếm"
         />
         <Button
           size="small"
           onClick={submitSearch}
-          className={"ml-1  flex items-center justify-center rounded-md"}
+          className={"ml-2  flex items-center p-2 justify-center rounded-lg"}
         >
           <Icon icon="zi-search" />
         </Button>

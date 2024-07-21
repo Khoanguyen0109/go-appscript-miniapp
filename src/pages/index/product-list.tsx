@@ -1,11 +1,27 @@
-import React, { FC, Suspense, useRef, useState } from "react";
 import { Section } from "components/section";
+import { ProductItemSkeleton } from "components/skeletons";
+import React, { FC, Suspense, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { productsState } from "state";
+import { Grid } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Box } from "zmp-ui";
-import { ProductItemSkeleton } from "components/skeletons";
 import NewProductItem from "./new-product-item";
+import "swiper/css";
+import styled from "styled-components";
 
+const StyledSwiper = styled(Swiper)`
+  .swiper-grid-column > .swiper-wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .swiper-wrapper {
+    flex-direction: unset;
+    flex-wrap: wrap;
+  }
+`;
 export const ProductListContent: FC = () => {
   const errorRef = useRef(null);
 
@@ -15,11 +31,31 @@ export const ProductListContent: FC = () => {
     return <></>;
   }
   return (
-    <Section title="Danh sách sản phẩm" mt={1}>
+    <Section
+      title="Danh sách sản phẩm"
+      mt={1}
+      rightText={"Xem tất cả"}
+      rightTo={'/all-products'}
+    >
       <Box ref={errorRef} className="">
-        {products.map((product) => (
-          <NewProductItem key={product.id} product={product} />
-        ))}
+        <StyledSwiper
+          slidesPerView={2.1}
+          grid={{
+            rows: 2,
+            fill: "row",
+          }}
+          spaceBetween={10}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Grid]}
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.id}>
+              <NewProductItem product={product} />
+            </SwiperSlide>
+          ))}
+        </StyledSwiper>
       </Box>
     </Section>
   );

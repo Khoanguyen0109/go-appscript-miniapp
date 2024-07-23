@@ -306,7 +306,7 @@ export const discountEditCartState = atom({
 });
 
 export const totalQuantityState = selector({
-  key: "totalQuantityEditCart",
+  key: "totalQuantity",
   get: ({get}) => {
     const cart = get(cartState);
     return cart.reduce((total, item) => {

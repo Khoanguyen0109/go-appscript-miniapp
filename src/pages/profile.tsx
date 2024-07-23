@@ -28,7 +28,7 @@ import { ROUTES } from "./route";
 import MemberCard from "./user/components/member-card";
 import UserInfoBlock from "./user/user-info";
 import {ListRendererUser} from "../components/user/list-renderer-user";
-
+import returnIcon from "static/icons/return.svg";
 const { Option } = Select;
 
 const Subscription: FC = () => {
@@ -160,7 +160,7 @@ const Personal: FC = () => {
             ),
           },
           {
-            left: <Icon icon="zi-memory" />,
+            left: <img src={returnIcon} alt="return" className={'filter-white'} />,
             right: (
               <Box flex onClick={navigateToReturn}>
                 <Text.Header className="flex-1 items-center font-normal">

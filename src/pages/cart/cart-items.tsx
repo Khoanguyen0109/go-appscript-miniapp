@@ -21,41 +21,26 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
   const setCart = useSetRecoilState(cartState);
   const onChangeQuantity = (productItem, quantity) => {
-    console.log('onChangeQuantity called with:', { productItem, quantity });
     const product = productItem.product;
     const options = productItem.options;
     setCart((cart) => {
-      console.log('Current cart:', cart);
       const res = [...cart];
       const editing = cart.find(
         (item) =>
           item.product.id === productItem.product.id &&
           isIdenticalV2(item.options, productItem.options)
       )!;
-      console.log('Editing item:', editing);
       if (quantity === 0) {
         res.splice(cart.indexOf(editing), 1);
-        console.log('Item removed from cart');
       } else {
         const existed = cart.find((item, i) => {
-          console.log("Checking item:", item);
-          console.log("Current index:", i);
-          console.log("Index of editing item:", cart.indexOf(editing));
-          debugger
-          console.log("Item product id:", item.product.id);
-          console.log("Product id:", product.id);
-          console.log(
-            "Are options identical:",
-            isIdenticalV2(item.options, options)
-          );
-
           return (
             i !== cart.indexOf(editing) &&
             item.product.id === product.id &&
             isIdenticalV2(item.options, options)
           );
         })!;
-        console.log('Existing item:', existed);
+
         res.splice(cart.indexOf(editing), 1, {
           ...editing,
           options,
@@ -63,10 +48,9 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
         });
         if (existed) {
           res.splice(cart.indexOf(existed), 1);
-          console.log('Existing item removed and merged');
         }
       }
-      console.log('Updated cart:', res);
+      console.log("Updated cart:", res);
       return res;
     });
   };

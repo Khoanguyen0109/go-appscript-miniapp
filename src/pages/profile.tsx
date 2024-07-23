@@ -110,6 +110,9 @@ const Personal: FC = () => {
   const navigateToOrder = () => {
     navigate(ROUTES.ORDER);
   };
+  const navigateToReturn = () => {
+    navigate(ROUTES.RETURN);
+  };
 
   const navigateToUserAddress = () => {
     navigate(ROUTES.USER_ADDRESS);
@@ -151,6 +154,17 @@ const Personal: FC = () => {
               <Box flex onClick={navigateToOrder}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Lịch sử đơn hàng
+                </Text.Header>
+                <Icon icon="zi-chevron-right" />
+              </Box>
+            ),
+          },
+          {
+            left: <Icon icon="zi-memory" />,
+            right: (
+              <Box flex onClick={navigateToReturn}>
+                <Text.Header className="flex-1 items-center font-normal">
+                  Lịch sử hoàn đơn
                 </Text.Header>
                 <Icon icon="zi-chevron-right" />
               </Box>

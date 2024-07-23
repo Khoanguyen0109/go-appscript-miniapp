@@ -1,12 +1,12 @@
-import React, { FC } from "react";
 import { Divider } from "components/divider";
-import { Box, Header, Page, Text } from "zmp-ui";
-import { CartItems } from "./cart-items";
-import { CartPreview } from "./preview";
-import { Delivery } from "./delivery";
 import { useVirtualKeyboardVisible } from "hooks";
+import React, { FC } from "react";
 import { useRecoilValue } from "recoil";
 import { calPointUserSelector, cartState, totalQuantityState } from "state";
+import { Box, Header, Page, Text } from "zmp-ui";
+import { CartItems } from "./cart-items";
+import { Delivery } from "./delivery";
+import { CartPreview } from "./preview";
 import PreviewInfo from "./previewInfo";
 import { TimePicker } from "./time-picker";
 

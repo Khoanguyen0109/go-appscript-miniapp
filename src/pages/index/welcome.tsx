@@ -18,7 +18,7 @@ export const Welcome: FC = () => {
         title={
           (
             <Box flex alignItems="center" className="space-x-3">
-              <Box flex justifyContent="space-between" alignItems="center" className="w-full">
+              <Box flex justifyContent="space-between" alignItems="center" className="w-3/4">
                 <Box flex alignItems="center" className="space-x-3">
                   <img
                     className="w-8 h-8 rounded-full border-inset"
@@ -51,7 +51,7 @@ export const Welcome: FC = () => {
                     )}
                   </Box>
                 </Box>
-                <Box className="mr-16">
+                <Box className="">
                   <Link to="/notification">
                     <img src={notificationIcon} alt="Notification"/>
                   </Link>

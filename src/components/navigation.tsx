@@ -12,6 +12,7 @@ import {userState} from "../state";
 import {ERoles} from "../constants";
 import userCircleIcon from "static/icons/userCircle.svg";
 import searchIcon from "static/icons/search.svg";
+import returnIcon from "static/icons/return.svg";
 import chatOaIcon from "static/icons/chatOa.svg";
 import cartIcon from "static/icons/cart.svg";
 import homeIcon from "static/icons/home.svg";
@@ -21,6 +22,11 @@ const tabs: Record<string, MenuItem> = {
     label: "Trang chủ",
     icon: <img src={homeIcon} alt="Home"/>,
     activeIcon: <img src={homeIcon} alt="Home" className={'nav-primary-color'}/>,
+  },
+  "/return": {
+    label: "Hoàn đơn",
+    icon: <img src={returnIcon} alt="Return"/>,
+    activeIcon: <img src={returnIcon} alt="Return" className={'nav-primary-color'}/>,
   },
   "/search": {
     label: "Tìm kiếm",

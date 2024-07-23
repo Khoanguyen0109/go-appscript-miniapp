@@ -29,7 +29,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
             alt={product.name}
           />
           <div className="p-2 border-[#E2E8F0]">
-            <Text className="font-semibold text-lg max-h-28 h-20 line-clamp-3">
+            <Text className="font-semibold text-base h-14 line-clamp-2">
               {product.name}
             </Text>
             <Text className="text-nature-500 font-semibold text-lg">

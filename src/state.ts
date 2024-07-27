@@ -3,7 +3,7 @@ import {authorize, getAppInfo, getLocation, getPhoneNumber, getSetting, getUserI
 import logo from "static/logo.jpg";
 import {Category} from "types/category";
 import {Product} from "types/product";
-import {Cart} from "types/cart";
+import {Cart, CartItem} from "types/cart";
 import {Notification} from "types/notification";
 import {calculateDistance} from "utils/location";
 import {Store} from "types/delivery";
@@ -291,8 +291,17 @@ export const cartState = atom<Cart>({
   default: [],
 });
 
+export const editCartState = atom<Cart>({
+  key: "edit_cart",
+  default: [],
+});
+
 export const discountState = atom({
   key: "voucher-discount",
+  default: null,
+});
+export const discountEditCartState = atom({
+  key: "voucher-discount-edit-cart",
   default: null,
 });
 
@@ -308,6 +317,17 @@ export const totalQuantityState = selector({
     }, 0);
   },
 });
+
+export const totalQuantityEditCartState = selector({
+  key: "totalQuantityEditCart",
+  get: ({get}) => {
+    const cart = get(editCartState);
+    return cart.reduce((total, item) => {
+      return total + item.quantity;
+    }, 0);
+  },
+});
+
 
 export function calDiscount(discount, total) {
   switch (discount.discountBy) {
@@ -346,6 +366,28 @@ export const totalPriceState = selector({
   },
 });
 
+export const totalPriceEditCartState = selector({
+  key: "totalPriceEditCart",
+  get: ({get}) => {
+    const cart = get(editCartState);
+    const discount = get(discountState);
+    const shippingFee = parseInt(get(shippingFeeState));
+    if (cart.length === 0) {
+      return 0;
+    }
+    const total =
+      cart.reduce((total, item) => {
+        return (
+          total + item.quantity * calcFinalPrice(item.product, item.options)
+        );
+      }, 0) + shippingFee;
+    if (discount) {
+      return calDiscount(discount, total);
+    }
+    return total;
+  },
+});
+
 export const preTotalPriceState = selector({
   key: "preTotalPriceState",
   get: ({get}) => {
@@ -354,6 +396,18 @@ export const preTotalPriceState = selector({
       if (!item.selected) {
         return total;
       }
+      return total + item.quantity * calcFinalPrice(item.product, item.options);
+    }, 0);
+
+    return total;
+  },
+});
+
+export const preTotalPriceEditCartState = selector({
+  key: "preTotalPriceEditCartState",
+  get: ({get}) => {
+    const cart = get(editCartState);
+    const total = cart.reduce((total, item) => {
       return total + item.quantity * calcFinalPrice(item.product, item.options);
     }, 0);
 
@@ -374,6 +428,21 @@ export const orderState = selector({
     const {data, error} = await supabase
       .from("orders")
       .select(`* , orderDetails: order_details(* , product:products(*))`)
+      .eq("userId", user.id)
+      .order("createdAt", {ascending: false});
+
+    return data;
+  },
+});
+
+export const returnState = selector({
+  key: "returns",
+  get: async ({get}) => {
+    get(forceOrderUpdate);
+    const user = get(userState);
+    const {data, error} = await supabase
+      .from("returns")
+      .select(`*`)
       .eq("userId", user.id)
       .order("createdAt", {ascending: false});
 

@@ -43,6 +43,9 @@ import LoadingScreenOverLay from "./loading-screen";
 import { Navigation } from "./navigation";
 import { ScrollRestoration } from "./scroll-restoration";
 import AllCategoriesPage from "../pages/category/all-category";
+import EditCart from "../pages/edit-cart/edit-cart";
+import EditCartPage from "../pages/edit-cart/edit-cart";
+import Return from "../pages/return/return";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -116,6 +119,7 @@ export const Layout: FC = () => {
             <Route path="/all-products" element={<AllProductPage />}></Route>
             <Route path="/all-category" element={<AllCategoriesPage />}></Route>
             <Route path="/notification" element={<NotificationPage />}></Route>
+            <Route path="/edit-cart/:id" element={<EditCartPage />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>
             <Route path="/openChat" element={<OpenChat />}></Route>
@@ -139,6 +143,7 @@ export const Layout: FC = () => {
               element={<PaymentSuccess />}
             ></Route>
             <Route path={ROUTES.ORDER} element={<Order />}></Route>
+            <Route path={ROUTES.RETURN} element={<Return />}></Route>
             <Route
               path={ROUTES.ORDER_DETAIL(":id")}
               element={<OrderDetail />}

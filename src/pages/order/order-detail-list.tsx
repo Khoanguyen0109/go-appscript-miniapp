@@ -22,7 +22,7 @@ function OrderDetailList({ detail }) {
         );
 
         return (
-          <Box flex className=" bg-background rounded-lg p-3">
+          <Box key={item.id} flex className=" bg-background rounded-lg p-3">
             <img
               className={`${imgSize} max-w-none max-h-none rounded-lg`}
               src={item.product.thumbnail}

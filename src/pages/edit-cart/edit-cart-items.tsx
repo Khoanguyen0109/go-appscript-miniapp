@@ -7,19 +7,19 @@ import { QuantityPicker } from "components/product/quantity-picker";
 import { isString } from "lodash";
 import React, { FC, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { cartState } from "state";
+import { editCartState } from "state";
 import { CartItem } from "types/cart";
 import { isIdenticalV2 } from "utils/product";
-import { Box, Checkbox, Icon, Text } from "zmp-ui";
+import { Box, Icon, Text } from "zmp-ui";
+
 
 type TCartItemProps = {
   disableClick?: boolean;
 };
-export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
-  const cart = useRecoilValue(cartState);
-
+export const EditCartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
+  const cart = useRecoilValue(editCartState);
   const [editingItem, setEditingItem] = useState<CartItem | undefined>();
-  const setCart = useSetRecoilState(cartState);
+  const setCart = useSetRecoilState(editCartState);
   const onChangeQuantity = (productItem, quantity) => {
     const product = productItem.product;
     const options = productItem.options;
@@ -27,7 +27,7 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
       const res = [...cart];
       const editing = cart.find(
         (item) =>
-          item.product.id === productItem.product.id &&
+          item.product?.id === productItem.product?.id &&
           isIdenticalV2(item.options, productItem.options)
       )!;
       if (quantity === 0) {
@@ -40,7 +40,6 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
             isIdenticalV2(item.options, options)
           );
         })!;
-
         res.splice(cart.indexOf(editing), 1, {
           ...editing,
           options,
@@ -50,7 +49,6 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
           res.splice(cart.indexOf(existed), 1);
         }
       }
-      console.log("Updated cart:", res);
       return res;
     });
   };
@@ -72,6 +70,8 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
   };
 
   const onRemoveProduct = (productItem) => {
+    console.log("onRemoveProduct", productItem);
+    console.log("Product Item:", JSON.stringify(productItem, null, 2));
     setCart((cart) => {
       const res = [...cart];
       const editing = cart.find(
@@ -104,23 +104,7 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
                 setEditingItem(item);
                 open();
               }}
-              renderLeft={(item) =>
-                !disableClick ? (
-                  <Box onClick={(e) => e.stopPropagation()}>
-                    <Checkbox
-                      size="small"
-                      value=""
-                      checked={item.selected}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        onCheckProduct(item);
-                      }}
-                    />
-                  </Box>
-                ) : (
-                  <></>
-                )
-              }
+              renderLeft={(item) => <></>}
               renderRight={(item) => (
                 <Box flex className="">
                   <img
@@ -130,33 +114,37 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
                   <Box className="space-y-1 ml-4 flex-1">
                     <Box>
                       <Box className="mb-1">
-                        <Text size="small">{item.product.name}</Text>
-                        <Text className="text-lg font-semibold" size="xSmall">
-                          {disableClick ? (
-                            <DisplayPrice>{item.product?.total}</DisplayPrice>
-                          ) : (
-                            <FinalPrice options={item.options}>
-                              {item.product}
-                            </FinalPrice>
-                          )}
-                        </Text>
-                        <Text className="text-gray" size="xxxSmall">
-                          {isString(item.product?.options) ? (
-                            item.product.options
-                          ) : (
-                            <DisplaySelectedOptions options={item.options}>
-                              {item.product}
-                            </DisplaySelectedOptions>
-                          )}
-                        </Text>
+                        <Text size="small" className={'min-h-12 line-clamp-2'}>{item.product.name}</Text>
+                        <Box className={'flex w-full justify-between items-center'}>
+                          <Text className="text-lg font-semibold w-1/2" size="xSmall">
+                            {disableClick ? (
+                              <DisplayPrice>{item.product?.total}</DisplayPrice>
+                            ) : (
+                              <FinalPrice options={item.options}>
+                                {item.product}
+                              </FinalPrice>
+                            )}
+                          </Text>
+                          <Text className="text-gray" size="xxxSmall">
+                            {isString(item.product?.options) ? (
+                              item.product.options
+                            ) : (
+                              <DisplaySelectedOptions options={item.options}>
+                                {item.product}
+                              </DisplaySelectedOptions>
+                            )}
+                          </Text>
+                          <Box className={'w-1/2'}>
+                            {!disableClick && (
+                              <QuantityPicker
+                                value={item.quantity}
+                                onChange={(value) => onChangeQuantity(item, value)}
+                                noTitle={true}
+                              />
+                            )}
+                          </Box>
+                        </Box>
                       </Box>
-                      {!disableClick && (
-                        <QuantityPicker
-                          value={item.quantity}
-                          onChange={(value) => onChangeQuantity(item, value)}
-                          noTitle={true}
-                        />
-                      )}
                     </Box>
                   </Box>
                   {disableClick && (

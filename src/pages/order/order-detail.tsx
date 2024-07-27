@@ -1,21 +1,23 @@
+import { DisplayPrice } from "components/display/price";
+import { ListRenderer } from "components/list-renderer";
 import LoadingScreenOverLay from "components/loading-screen";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "state";
-import { Box, Header, Icon, Page, Text } from "zmp-ui";
-import OrderInfo from "./order-info";
-import { ListRenderer } from "components/list-renderer";
-import { getAddress } from "utils";
 import { TOrder } from "types/order";
-import { DisplayPrice } from "components/display/price";
+import { getAddress } from "utils";
+import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
 import supabase from "../../client/client";
 import OrderDetailList from "./order-detail-list";
+import OrderInfo from "./order-info";
 
 type Props = {};
 
 function OrderDetail({}: Props) {
   const params = useParams();
+  const navigate = useNavigate();
+
   const { id } = params;
   const user = useRecoilValue(userState);
   const [loading, setLoading] = useState(true);
@@ -65,6 +67,16 @@ function OrderDetail({}: Props) {
       </Box>
       <Box className="px-2 mt-4"></Box>
       <OrderDetailList detail={detail?.orderDetails || []} />
+
+      <Box className="px-4 py-2">
+        <Button
+          size="large"
+          fullWidth
+          onClick={() => navigate(`/edit-cart/${id}`)}
+        >
+          Chỉnh sửa giỏ hàng
+        </Button>
+      </Box>
       <Box className="px-2 mt-4">
         <Box className=" bg-background p-4 rounded-lg mb-4">
           <Text>Phương thức thanh toán</Text>
@@ -81,7 +93,7 @@ function OrderDetail({}: Props) {
                   <Text.Header className="flex-1 items-center font-normal">
                     Tổng tiền
                   </Text.Header>
-                  <Text>
+                  <Text className={'text-nature-500 font-bold'}>
                     <DisplayPrice>{detail?.total}</DisplayPrice>
                   </Text>
                 </Box>

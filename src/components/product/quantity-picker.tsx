@@ -13,19 +13,20 @@ export const QuantityPicker: FC<{
           Số lượng
         </Text.Title>
       )}
-      <Box flex className="w-2/3 justify-around">
+      <Box flex className="w-full justify-around">
         <Button
           disabled={value < 1}
           onClick={(e) => {
             e.stopPropagation();
             onChange(value - 1);
           }}
-          variant="secondary"
+          variant="tertiary"
           type="neutral"
+          className={'border-[1px] border-[#E2E2E2] border-solid'}
           size="small"
           icon={
             <div className="py-2 px-1">
-              <div className="w-full h-[2px] bg-black" />
+              <div className="w-full h-[1.5px] bg-[#E2E2E2]" />
             </div>
           }
         />
@@ -46,9 +47,10 @@ export const QuantityPicker: FC<{
             e.stopPropagation();
             onChange(value + 1);
           }}
-          variant="secondary"
+          variant="tertiary"
+          className={'border-[1px] border-[#E2E2E2] border-solid'}
           type="neutral"
-          icon={<Icon icon="zi-plus" />}
+          icon={<Icon icon="zi-plus" className={'text-nature-500'} />}
         />
       </Box>
     </Box>

@@ -38,9 +38,6 @@ const UserInfoBlock = () => {
             </Text.Title>
           </Box>
         </Box>
-        <Box className="flex items-center gap-2">
-          <img src={editIcon} alt={"Edit"} />
-        </Box>
       </Box>
       {/*<Box className="flex justify-between">*/}
       {/*  <Box className="flex items-center gap-2">*/}

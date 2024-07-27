@@ -12,6 +12,7 @@ interface ListRendererProps<T> {
   noDivider?: boolean;
   gap?: number;
   padding?: number;
+  divider?: boolean;
 }
 
 export function ListRenderer<T>({
@@ -22,6 +23,7 @@ export function ListRenderer<T>({
   renderRight,
   renderKey,
   onClick,
+  divider = false,
   noDivider,
   gap,
   padding = 4,
@@ -34,12 +36,12 @@ export function ListRenderer<T>({
   return (
     <Box className="bg-background rounded-xl">
       {title && <Text.Title className="p-4 pb-0">{title}</Text.Title>}
-      <Box>
+        <Box className={`${divider && 'divide-y divide-[#D7DAE0]'}`}>
         {(isCollapsed ? collapsedItems : items).map((item, i, list) => (
           <div
             key={renderKey ? renderKey(item) : i}
             onClick={() => onClick?.(item)}
-            className={`flex items-start space-x-1 p-${padding} items-center last:pb-0  border-gray-200`}
+            className={`flex items-start space-x-1 p-${padding} items-center last:pb-0 border-gray-200`}
           >
             {renderLeft(item)}
             <Box className="flex-1 min-w-0 mt-1  relative">

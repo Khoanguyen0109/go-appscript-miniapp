@@ -234,6 +234,18 @@ export const categoriesState = selector<Category[]>({
   },
 });
 
+export const categoriesReturnState = selector<Category[]>({
+  key: "returnCategories",
+  get: async ({get}) => {
+    const user = get(userState);
+    const {data} = await supabase.from("categories")
+      .select();
+    return data?.filter(category => {
+      return category.proviceTo.split(', ').includes(user.role);
+    });
+  },
+});
+
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
   get: async ({get}) => {
@@ -276,8 +288,22 @@ export const selectedCategoryIdState = atom({
   default: `1`,
 });
 
+export const selectedCategoryIdReturnState = atom({
+  key: "selectedCategoryReturnId",
+  default: `1`,
+});
+
 export const productsByCategoryState = selectorFamily<Product[], string>({
   key: "productsByCategory",
+  get:
+    (categoryId) =>
+      ({get}) => {
+        const allProducts = get(productsState);
+        return allProducts.filter((product) => product.categoryId === categoryId);
+      },
+});
+export const productsByCategoryReturnState = selectorFamily<Product[], string>({
+  key: "productsByCategoryReturn",
   get:
     (categoryId) =>
       ({get}) => {
@@ -293,6 +319,11 @@ export const cartState = atom<Cart>({
 
 export const editCartState = atom<Cart>({
   key: "edit_cart",
+  default: [],
+});
+
+export const returnState = atom<Cart>({
+  key: "return",
   default: [],
 });
 
@@ -313,6 +344,16 @@ export const totalQuantityState = selector({
       if (!item.selected) {
         return total;
       }
+      return total + item.quantity;
+    }, 0);
+  },
+});
+
+export const totalQuantityReturnState = selector({
+  key: "totalQuantityReturn",
+  get: ({get}) => {
+    const cart = get(returnState);
+    return cart.reduce((total, item) => {
       return total + item.quantity;
     }, 0);
   },
@@ -388,6 +429,29 @@ export const totalPriceEditCartState = selector({
   },
 });
 
+
+export const totalPriceReturnState = selector({
+  key: "totalPriceReturn",
+  get: ({get}) => {
+    const cart = get(returnState);
+    const discount = get(discountState);
+    if (cart.length === 0) {
+      return 0;
+    }
+    const total =
+      cart.reduce((total, item) => {
+        return (
+          total + item.quantity * calcFinalPrice(item.product, item.options)
+        );
+      }, 0);
+    if (discount) {
+      return calDiscount(discount, total);
+    }
+    return total;
+  },
+});
+
+
 export const preTotalPriceState = selector({
   key: "preTotalPriceState",
   get: ({get}) => {
@@ -407,6 +471,17 @@ export const preTotalPriceEditCartState = selector({
   key: "preTotalPriceEditCartState",
   get: ({get}) => {
     const cart = get(editCartState);
+    const total = cart.reduce((total, item) => {
+      return total + item.quantity * calcFinalPrice(item.product, item.options);
+    }, 0);
+
+    return total;
+  },
+});
+export const preTotalPriceReturnState = selector({
+  key: "preTotalPriceReturnCartState",
+  get: ({get}) => {
+    const cart = get(returnState);
     const total = cart.reduce((total, item) => {
       return total + item.quantity * calcFinalPrice(item.product, item.options);
     }, 0);
@@ -435,21 +510,20 @@ export const orderState = selector({
   },
 });
 
-export const returnState = selector({
+export const returnHistoryState = selector({
   key: "returns",
   get: async ({get}) => {
     get(forceOrderUpdate);
     const user = get(userState);
     const {data, error} = await supabase
       .from("returns")
-      .select(`*`)
+      .select(`*, returnDetails: return_details(* , product:products(*))`)
       .eq("userId", user.id)
       .order("createdAt", {ascending: false});
 
     return data;
   },
 });
-
 const orderPointSelector = selector({
   key: "orderPointSelector",
   get: async ({get}) => {

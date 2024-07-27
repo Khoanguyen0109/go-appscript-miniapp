@@ -25,6 +25,21 @@ export enum EOrderReturnStatus {
   COMPLETED = "completed",
 }
 
+export function getOrderReturnStatusLabel(status: EOrderReturnStatus): string {
+  switch (status) {
+    case EOrderReturnStatus.WAITING_CONFIRMATION:
+      return "Chờ xác nhận";
+    case EOrderReturnStatus.ACCEPT_RETURN:
+      return "Chấp nhận hoàn trả";
+    case EOrderReturnStatus.REJECT_RETURN:
+      return "Không chấp nhận hoàn trả";
+    case EOrderReturnStatus.COMPLETED:
+      return "Hoàn thành";
+    default:
+      return "Không xác định";
+  }
+}
+
 export enum EScoreRank {
   SILVER = "Bạc",
   GOLD = "Vàng",

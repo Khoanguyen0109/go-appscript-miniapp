@@ -82,7 +82,7 @@ const Subscription: FC = () => {
         visible={confirmModalVisible}
         title="Đăng ký Cộng tác viên"
         coverSrc={logo}
-        description={`Bạn xác nhận đăng ký làm công tác viên Mion?`}
+        description={`Bạn xác nhận đăng ký làm công tác viên?`}
         actions={[
           {
             text: "Huỷ",

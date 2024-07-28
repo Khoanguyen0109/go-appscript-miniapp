@@ -1,10 +1,11 @@
-import React, {FC, Suspense, useRef} from "react";
-import {Section} from "components/section";
-import {useRecoilValue} from "recoil";
-import {bannerState} from "./state";
-import {Box} from "zmp-ui";
-import {ImageSkeleton} from "components/skeletons";
-import {VoucherList} from "../../components/voucher-list/voucher-list";
+import React, { FC, Suspense, useRef } from "react";
+import { Section } from "components/section";
+import { useRecoilValue } from "recoil";
+import { bannerState } from "./state";
+import { Box } from "zmp-ui";
+import { ImageSkeleton } from "components/skeletons";
+import { VoucherList } from "../../components/voucher-list/voucher-list";
+import { ROUTES } from "../route";
 
 export const VoucherHomeContent: FC = () => {
   const errorRef = useRef(null);
@@ -14,9 +15,14 @@ export const VoucherHomeContent: FC = () => {
     return <></>;
   }
   return (
-    <Section title="Danh sách voucher" mt={1}>
+    <Section
+      title="Voucher"
+      mt={1}
+      rightText={"Xem tất cả"}
+      rightTo={ROUTES.BUY_VOUCHER}
+    >
       <Box ref={errorRef} className="">
-        <VoucherList banners={banners}/>
+        <VoucherList banners={banners} />
       </Box>
     </Section>
   );
@@ -26,7 +32,7 @@ export const VoucherHomeFallback: FC = () => {
   return (
     <Section title="Vouchers">
       <Box className="w-full">
-        <ImageSkeleton className="w-full"/>
+        <ImageSkeleton className="w-full" />
       </Box>
     </Section>
   );
@@ -34,8 +40,8 @@ export const VoucherHomeFallback: FC = () => {
 
 const VoucherHome: FC = () => {
   return (
-    <Suspense fallback={<VoucherHomeFallback/>}>
-      <VoucherHomeContent/>
+    <Suspense fallback={<VoucherHomeFallback />}>
+      <VoucherHomeContent />
     </Suspense>
   );
 };

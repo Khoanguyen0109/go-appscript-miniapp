@@ -81,7 +81,7 @@ function DiscountList({}: Props) {
     <Page>
       <Header title="Ưu đãi" showBackIcon={true}></Header>
 
-      <Box className="flex justify-between items-center p-2 py-4 mb-3 bg-yellow-400 text-white">
+      <Box className="flex justify-between items-center p-2 py-4 mb-3 bg-green text-white">
         <Box>
           <Text>Điểm có thể sử dụng</Text>
           <Text>
@@ -89,7 +89,7 @@ function DiscountList({}: Props) {
           </Text>
         </Box>
         <Box
-          className="!flex  !bg-white text-yellow-400 p-2 rounded-full items-center font-bold"
+          className="!flex  !bg-white text-green p-2 rounded-full items-center font-bold"
           onClick={() => navigate(ROUTES.USER_VOUCHER)}
         >
           <CiDiscount1 className="font-bold" />

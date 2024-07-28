@@ -18,8 +18,8 @@ function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
           <Text className="text-lg font-bold">{item?.title}</Text>
 
           {!item?.public && (
-            <Text className="font-semibold text-sm  text-yellow-500">
-              {item?.point || 0} Xu Mion
+            <Text className="font-semibold text-sm  text-green">
+              {item?.point || 0} Xu
             </Text>
           )}
         </Box>

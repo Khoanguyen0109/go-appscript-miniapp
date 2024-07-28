@@ -38,6 +38,7 @@ function AddUserAddress({}: Props) {
   let [searchParams, setSearchParams] = useSearchParams();
   const routeFrom = searchParams.get("routeFrom");
 
+  const provinces = useRecoilValue(provinceState);
   const setProvinceId = useSetRecoilState(selectedProvinceId);
   const districts = useRecoilValue(districtState);
   const setDistrictId = useSetRecoilState(selectedDistrictId);
@@ -162,7 +163,7 @@ function AddUserAddress({}: Props) {
             errorText={getErrorMessage("type")}
           />
         </Box>
-        {/* <Box mt={4}>
+        <Box mt={4}>
           <Select
             value={addressSelected?.province}
             label={getFieldName("province")}
@@ -191,7 +192,7 @@ function AddUserAddress({}: Props) {
             show={Boolean(errors?.province)}
             errorText={getErrorMessage("province")}
           />
-        </Box> */}
+        </Box>
         <Box mt={4}>
           <Select
             value={addressSelected?.district}

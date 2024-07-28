@@ -1,20 +1,27 @@
-import {atom, selector, selectorFamily} from "recoil";
-import {authorize, getAppInfo, getLocation, getPhoneNumber, getSetting, getUserInfo,} from "zmp-sdk";
+import { atom, selector, selectorFamily } from "recoil";
+import {
+  authorize,
+  getAppInfo,
+  getLocation,
+  getPhoneNumber,
+  getSetting,
+  getUserInfo,
+} from "zmp-sdk";
 import logo from "static/logo.jpg";
-import {Category} from "types/category";
-import {Product} from "types/product";
-import {Cart, CartItem} from "types/cart";
-import {Notification} from "types/notification";
-import {calculateDistance} from "utils/location";
-import {Store} from "types/delivery";
-import {calcFinalPrice} from "utils/product";
-import {wait} from "utils/async";
+import { Category } from "types/category";
+import { Product } from "types/product";
+import { Cart, CartItem } from "types/cart";
+import { Notification } from "types/notification";
+import { calculateDistance } from "utils/location";
+import { Store } from "types/delivery";
+import { calcFinalPrice } from "utils/product";
+import { wait } from "utils/async";
 import supabase from "./client/client";
-import {groupBy} from "lodash";
-import {upsertUser} from "./api/addUser";
-import {isToday, isTomorrow} from "date-fns";
-import {dateSelectedState} from "./pages/cart/state";
-import {ERoles} from "./constants";
+import { groupBy } from "lodash";
+import { upsertUser } from "./api/addUser";
+import { isToday, isTomorrow } from "date-fns";
+import { dateSelectedState } from "./pages/cart/state";
+import { ERoles } from "./constants";
 
 export const mapProduct = (item) => {
   return {
@@ -23,23 +30,23 @@ export const mapProduct = (item) => {
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
     variants: groupBy([...item.inventories], "group"),
-    image: item.image.split(",").map((item) => ({image: item})),
+    image: item.image.split(",").map((item) => ({ image: item })),
   };
 };
 
 export const authorizedState = selector({
   key: "authorized",
   get: async () => {
-    const {authSetting} = await getSetting({});
+    const { authSetting } = await getSetting({});
     if (!authSetting["scope.userInfo"]) {
-      await authorize({scopes: []});
+      await authorize({ scopes: [] });
     }
   },
 });
 
 export const userState = selector({
   key: "user",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     get(authorizedState);
     const zaloUser = await getUserInfo({}).then((res) => res.userInfo);
     try {
@@ -53,7 +60,7 @@ export const userState = selector({
 
 const userRequestStatusSelector = selector({
   key: "userRequestStatusSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const user = get(userState);
     return user.requestCTVStatus;
   },
@@ -64,17 +71,26 @@ export const userRequestStatusState = atom({
   default: userRequestStatusSelector,
 });
 
-const totalPointSelector = selector({
-  key: "totalPointSelector",
-  get: ({get}) => {
+const userTotalPointSelector = selector({
+  key: "userPointSelector",
+  get: ({ get }) => {
     const user = get(userState);
     return user.totalPoint;
   },
 });
 
+
+const userPointSelector = selector({
+  key: "userPointSelector",
+  get: ({ get }) => {
+    const user = get(userState);
+    return user.point;
+  },
+});
+
 const unCheckedPointSelector = selector({
   key: "unCheckedPointSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const user = get(userState);
     return user.uncheckedPoint;
   },
@@ -82,15 +98,20 @@ const unCheckedPointSelector = selector({
 
 const checkedPointSelector = selector({
   key: "checkedPointSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const user = get(userState);
     return user.checkedPoint;
   },
 });
 
-export const userTotalPointState = atom({
-  key: "userTotalPointState",
-  default: totalPointSelector,
+export const useTotalPointState = atom({
+  key: "useTotalPointState",
+  default: userTotalPointSelector,
+});
+
+export const userPointState = atom({
+  key: "userPointState",
+  default: userPointSelector,
 });
 
 export const userUncheckedPointState = atom({
@@ -106,14 +127,14 @@ export const userCheckedPointState = atom({
 export const settingState = selector({
   key: "settings",
   get: async () => {
-    const {data, error} = await supabase.from("settings").select();
+    const { data, error } = await supabase.from("settings").select();
     return data;
   },
 });
 
 export const minOrderItemSelector = selector({
   key: "minOrderItemSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return Number(setting.find((item) => item.name === "min").value) || 5;
   },
@@ -121,7 +142,7 @@ export const minOrderItemSelector = selector({
 
 export const qrImageSelector = selector({
   key: "qrImageSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return setting.find((item) => item.name === "qr_image").value || "";
   },
@@ -129,7 +150,7 @@ export const qrImageSelector = selector({
 
 export const minOrderDeliveryTimeSelector = selector({
   key: "minOrderDeliveryTime",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(setting.find((item) => item.name === "min_delivery_time").value) ||
@@ -140,7 +161,7 @@ export const minOrderDeliveryTimeSelector = selector({
 
 export const shippingFeeState = selector({
   key: "shippingFee",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(setting.find((item) => item.name === "shippingFee").value) || 0
@@ -150,7 +171,7 @@ export const shippingFeeState = selector({
 
 export const userPointTodayOrderSettingSelector = selector({
   key: "userPointTodayOrderSettingSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(setting.find((item) => item.name === "in_day_order").value) || 0
@@ -160,7 +181,7 @@ export const userPointTodayOrderSettingSelector = selector({
 
 export const userPointTomorrowOrderSettingSelector = selector({
   key: "userPointTomorrowOrderSettingSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(setting.find((item) => item.name === "tomorrow_order").value) || 0
@@ -170,7 +191,7 @@ export const userPointTomorrowOrderSettingSelector = selector({
 
 export const ctvPointOrderSelector = selector({
   key: "ctvPointOrderSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(
@@ -182,7 +203,7 @@ export const ctvPointOrderSelector = selector({
 
 export const ctvPointWhenCustomerOrderSelector = selector({
   key: "ctvPointWhenCustomerOrderSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(
@@ -195,7 +216,7 @@ export const ctvPointWhenCustomerOrderSelector = selector({
 
 export const shipperPointSelector = selector({
   key: "shipperPointSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     return (
       Number(setting.find((item) => item.name === "shipper_point").value) || 0
@@ -205,7 +226,7 @@ export const shipperPointSelector = selector({
 
 export const bankState = selector({
   key: "bankState",
-  get: ({get}) => {
+  get: ({ get }) => {
     const setting = get(settingState);
     const bankInfoArr = setting.filter((item) => item.type === "bank");
     const bankInfo = {};
@@ -224,32 +245,30 @@ export const appInfoState = selector({
 
 export const categoriesState = selector<Category[]>({
   key: "categories",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const user = get(userState);
-    const {data} = await supabase.from("categories")
-      .select();
-    return data?.filter(category => {
-      return category.proviceTo.split(', ').includes(user.role);
+    const { data } = await supabase.from("categories").select();
+    return data?.filter((category) => {
+      return category.proviceTo.split(", ").includes(user.role);
     });
   },
 });
 
 export const categoriesReturnState = selector<Category[]>({
   key: "returnCategories",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const user = get(userState);
-    const {data} = await supabase.from("categories")
-      .select();
-    return data?.filter(category => {
-      return category.proviceTo.split(', ').includes(user.role);
+    const { data } = await supabase.from("categories").select();
+    return data?.filter((category) => {
+      return category.proviceTo.split(", ").includes(user.role);
     });
   },
 });
 
 export const hotProductsState = selector<Product[]>({
   key: "hotProducts",
-  get: async ({get}) => {
-    const {data, error} = await supabase
+  get: async ({ get }) => {
+    const { data, error } = await supabase
       .from("products")
       .select(`*, inventories: product_inventories(*)`)
       .eq("level", "Hot")
@@ -259,17 +278,18 @@ export const hotProductsState = selector<Product[]>({
 });
 export const productsState = selector<Product[]>({
   key: "products",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const user = get(userState);
-    const {data, error} = await supabase
+    const { data, error } = await supabase
       .from("products")
-      .select(`*, inventories: product_inventories(*), categories: categories(*)`)
+      .select(
+        `*, inventories: product_inventories(*), categories: categories(*)`
+      )
       .eq("active", true);
 
-    const filteredData = data?.filter(product =>
-      product.categories.proviceTo.split(', ').includes(user.role)
+    const filteredData = data?.filter((product) =>
+      product.categories.proviceTo.split(", ").includes(user.role)
     );
-
 
     return filteredData?.map((item) => mapProduct(item));
   },
@@ -277,7 +297,7 @@ export const productsState = selector<Product[]>({
 
 export const recommendProductsState = selector<Product[]>({
   key: "recommendProducts",
-  get: ({get}) => {
+  get: ({ get }) => {
     const products = get(productsState);
     return products.filter((p) => p.sale);
   },
@@ -297,19 +317,19 @@ export const productsByCategoryState = selectorFamily<Product[], string>({
   key: "productsByCategory",
   get:
     (categoryId) =>
-      ({get}) => {
-        const allProducts = get(productsState);
-        return allProducts.filter((product) => product.categoryId === categoryId);
-      },
+    ({ get }) => {
+      const allProducts = get(productsState);
+      return allProducts.filter((product) => product.categoryId === categoryId);
+    },
 });
 export const productsByCategoryReturnState = selectorFamily<Product[], string>({
   key: "productsByCategoryReturn",
   get:
     (categoryId) =>
-      ({get}) => {
-        const allProducts = get(productsState);
-        return allProducts.filter((product) => product.categoryId === categoryId);
-      },
+    ({ get }) => {
+      const allProducts = get(productsState);
+      return allProducts.filter((product) => product.categoryId === categoryId);
+    },
 });
 
 export const cartState = atom<Cart>({
@@ -338,7 +358,7 @@ export const discountEditCartState = atom({
 
 export const totalQuantityState = selector({
   key: "totalQuantity",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(cartState);
     return cart.reduce((total, item) => {
       if (!item.selected) {
@@ -351,7 +371,7 @@ export const totalQuantityState = selector({
 
 export const totalQuantityReturnState = selector({
   key: "totalQuantityReturn",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(returnState);
     return cart.reduce((total, item) => {
       return total + item.quantity;
@@ -361,14 +381,13 @@ export const totalQuantityReturnState = selector({
 
 export const totalQuantityEditCartState = selector({
   key: "totalQuantityEditCart",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(editCartState);
     return cart.reduce((total, item) => {
       return total + item.quantity;
     }, 0);
   },
 });
-
 
 export function calDiscount(discount, total) {
   switch (discount.discountBy) {
@@ -384,7 +403,7 @@ export function calDiscount(discount, total) {
 
 export const totalPriceState = selector({
   key: "totalPrice",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(cartState);
     const discount = get(discountState);
     const shippingFee = parseInt(get(shippingFeeState));
@@ -409,7 +428,7 @@ export const totalPriceState = selector({
 
 export const totalPriceEditCartState = selector({
   key: "totalPriceEditCart",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(editCartState);
     const discount = get(discountState);
     const shippingFee = parseInt(get(shippingFeeState));
@@ -429,21 +448,17 @@ export const totalPriceEditCartState = selector({
   },
 });
 
-
 export const totalPriceReturnState = selector({
   key: "totalPriceReturn",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(returnState);
     const discount = get(discountState);
     if (cart.length === 0) {
       return 0;
     }
-    const total =
-      cart.reduce((total, item) => {
-        return (
-          total + item.quantity * calcFinalPrice(item.product, item.options)
-        );
-      }, 0);
+    const total = cart.reduce((total, item) => {
+      return total + item.quantity * calcFinalPrice(item.product, item.options);
+    }, 0);
     if (discount) {
       return calDiscount(discount, total);
     }
@@ -451,10 +466,9 @@ export const totalPriceReturnState = selector({
   },
 });
 
-
 export const preTotalPriceState = selector({
   key: "preTotalPriceState",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(cartState);
     const total = cart.reduce((total, item) => {
       if (!item.selected) {
@@ -469,7 +483,7 @@ export const preTotalPriceState = selector({
 
 export const preTotalPriceEditCartState = selector({
   key: "preTotalPriceEditCartState",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(editCartState);
     const total = cart.reduce((total, item) => {
       return total + item.quantity * calcFinalPrice(item.product, item.options);
@@ -480,7 +494,7 @@ export const preTotalPriceEditCartState = selector({
 });
 export const preTotalPriceReturnState = selector({
   key: "preTotalPriceReturnCartState",
-  get: ({get}) => {
+  get: ({ get }) => {
     const cart = get(returnState);
     const total = cart.reduce((total, item) => {
       return total + item.quantity * calcFinalPrice(item.product, item.options);
@@ -497,14 +511,14 @@ export const forceOrderUpdate = atom({
 
 export const orderState = selector({
   key: "orders",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
-    const {data, error} = await supabase
+    const { data, error } = await supabase
       .from("orders")
       .select(`* , orderDetails: order_details(* , product:products(*))`)
       .eq("userId", user.id)
-      .order("createdAt", {ascending: false});
+      .order("createdAt", { ascending: false });
 
     return data;
   },
@@ -512,37 +526,16 @@ export const orderState = selector({
 
 export const returnHistoryState = selector({
   key: "returns",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     get(forceOrderUpdate);
     const user = get(userState);
-    const {data, error} = await supabase
+    const { data, error } = await supabase
       .from("returns")
       .select(`*, returnDetails: return_details(* , product:products(*))`)
       .eq("userId", user.id)
-      .order("createdAt", {ascending: false});
+      .order("createdAt", { ascending: false });
 
     return data;
-  },
-});
-const orderPointSelector = selector({
-  key: "orderPointSelector",
-  get: async ({get}) => {
-    get(forceOrderUpdate);
-    const user = get(userState);
-
-    const {data} = await supabase
-      .from("orders")
-      .select("*")
-      .or(`userId.eq.${user.id},ctvId.eq.${user.id},shipperId.eq.${user.id}`);
-    return data;
-  },
-});
-
-export const userPointSelector = selector({
-  key: "userPointSelector",
-  get: ({get}) => {
-    const orders = get(orderPointSelector);
-    return orders;
   },
 });
 
@@ -567,11 +560,11 @@ export const notificationsState = atom<Notification[]>({
 
 export const newNotificationState = selector({
   key: "newNotifications",
-  get: async ({get}) => {
-    const {data} = await supabase
+  get: async ({ get }) => {
+    const { data } = await supabase
       .from("notifications")
       .select()
-      .order("createdAt", {ascending: false});
+      .order("createdAt", { ascending: false });
     return data;
   },
 });
@@ -588,7 +581,7 @@ export const keywordState = atom({
 
 export const resultState = selector<Product[]>({
   key: "result",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const keyword = get(keywordState);
     if (!keyword.trim()) {
       return [];
@@ -648,7 +641,7 @@ export const storesState = atom<Store[]>({
 
 export const nearbyStoresState = selector({
   key: "nearbyStores",
-  get: ({get}) => {
+  get: ({ get }) => {
     // Get the current location from the locationState atom
     const location = get(locationState);
 
@@ -685,7 +678,7 @@ export const selectedStoreIndexState = atom({
 
 export const selectedStoreState = selector({
   key: "selectedStore",
-  get: ({get}) => {
+  get: ({ get }) => {
     const index = get(selectedStoreIndexState);
     const stores = get(nearbyStoresState);
     return stores[index];
@@ -711,14 +704,14 @@ export const locationState = selector<
   { latitude: string; longitude: string } | false
 >({
   key: "location",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const requested = get(requestLocationTriesState);
     if (requested) {
-      const {latitude, longitude, token} = await getLocation({
+      const { latitude, longitude, token } = await getLocation({
         fail: console.warn,
       });
       if (latitude && longitude) {
-        return {latitude, longitude};
+        return { latitude, longitude };
       }
       if (token) {
         console.warn(
@@ -742,10 +735,10 @@ export const locationState = selector<
 
 export const phoneState = selector<string | boolean>({
   key: "phone",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const requested = get(requestPhoneTriesState);
     if (requested) {
-      const {number, token} = await getPhoneNumber({fail: console.warn});
+      const { number, token } = await getPhoneNumber({ fail: console.warn });
       if (number) {
         return number;
       }
@@ -776,12 +769,12 @@ export const historySearchListState = atom<string[]>({
 
 export const searchResultState = selector({
   key: "searchResultState",
-  get: async ({get}) => {
+  get: async ({ get }) => {
     const search = get(searchState);
     const formattedQuery = search.split(" ").join(" & ");
 
     if (search) {
-      const {data, error} = await supabase
+      const { data, error } = await supabase
         .from("products")
         .select(`*, inventories: product_inventories(*)`)
         .eq("active", true)
@@ -797,8 +790,8 @@ export const searchResultState = selector({
 
 export const globalProductInventoriesSelector = selector({
   key: "globalProductInventoriesSelector",
-  get: async ({get}) => {
-    const {data} = await supabase
+  get: async ({ get }) => {
+    const { data } = await supabase
       .from("product_inventories")
       .select("*")
       .is("productId", null);
@@ -812,7 +805,7 @@ export const globalProductInventoriesSelector = selector({
 
 export const calPointUserSelector = selector({
   key: "calPointUserSelector",
-  get: ({get}) => {
+  get: ({ get }) => {
     const user = get(userState);
     const ctvPointOrder = get(ctvPointOrderSelector);
     const userPointInday = get(userPointTodayOrderSettingSelector);

@@ -1,3 +1,5 @@
+import { EOrderStatus } from "../constantsapp";
+
 export type TOrder = {
   id: string;
   thumbnail: string;
@@ -7,4 +9,5 @@ export type TOrder = {
   total: string;
   address_id: string;
   note: string;
+  status: EOrderStatus
 };

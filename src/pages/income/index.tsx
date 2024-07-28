@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { Box, Button, Header, Page, Text } from "zmp-ui";
 import {
   userCheckedPointState,
-  userTotalPointState,
+  userPointState,
   userUncheckedPointState,
 } from "../../state";
 import { DisplayPrice } from "../../components/display/price";
@@ -20,7 +20,7 @@ type Props = {};
 function Income({}: Props) {
   const navigate = useNavigate();
   const commissionRequest = useRecoilValue(ctvIncomeListRequestState);
-  const userTotalPoint = useRecoilValue(userTotalPointState);
+  const userTotalPoint = useRecoilValue(userPointState);
   const userUncheckedPoint = useRecoilValue(userUncheckedPointState);
   const userCheckedPoint = useRecoilValue(userCheckedPointState);
   const getStatusColor = (status) => {

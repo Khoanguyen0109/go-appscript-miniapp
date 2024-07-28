@@ -25,7 +25,7 @@ import {
   userPointTodayOrderSettingSelector,
   userPointTomorrowOrderSettingSelector,
   userState,
-  userTotalPointState,
+  userPointState,
   userUncheckedPointState,
 } from "../../state";
 import { ERoles } from "../../constants";
@@ -37,7 +37,7 @@ type Props = {};
 function ShippingDetail({}: Props) {
   const user = useRecoilValue(userState);
   const [userTotalPoint, setUserTotalPoint] =
-    useRecoilState(userTotalPointState);
+    useRecoilState(userPointState);
   const [userUncheckedPoint, setUserUncheckedPoint] = useRecoilState(
     userUncheckedPointState
   );

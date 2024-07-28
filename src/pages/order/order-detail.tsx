@@ -11,6 +11,8 @@ import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
 import supabase from "../../client/client";
 import OrderDetailList from "./order-detail-list";
 import OrderInfo from "./order-info";
+import { ERoles } from "../../constants";
+import { EOrderStatus } from "../../constantsapp";
 
 type Props = {};
 
@@ -68,15 +70,17 @@ function OrderDetail({}: Props) {
       <Box className="px-2 mt-4"></Box>
       <OrderDetailList detail={detail?.orderDetails || []} />
 
-      <Box className="px-4 py-2">
-        <Button
-          size="large"
-          fullWidth
-          onClick={() => navigate(`/edit-cart/${id}`)}
-        >
-          Chỉnh sửa giỏ hàng
-        </Button>
-      </Box>
+      {user.role === ERoles.COB && detail?.status === EOrderStatus.WAITING && (
+        <Box className="px-4 py-2">
+          <Button
+            size="large"
+            fullWidth
+            onClick={() => navigate(`/edit-cart/${id}`)}
+          >
+            Chỉnh sửa giỏ hàng
+          </Button>
+        </Box>
+      )}
       <Box className="px-2 mt-4">
         <Box className=" bg-background p-4 rounded-lg mb-4">
           <Text>Phương thức thanh toán</Text>
@@ -93,7 +97,7 @@ function OrderDetail({}: Props) {
                   <Text.Header className="flex-1 items-center font-normal">
                     Tổng tiền
                   </Text.Header>
-                  <Text className={'text-nature-500 font-bold'}>
+                  <Text className={"text-nature-500 font-bold"}>
                     <DisplayPrice>{detail?.total}</DisplayPrice>
                   </Text>
                 </Box>

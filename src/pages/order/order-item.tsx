@@ -39,16 +39,23 @@ function OrderItem({ item, onOpenRating }: Props) {
           }
         />
         <Box className="flex-1">
-          <Text className="font-bold text-md mb-1">
-            {item?.orderDetails[0]?.product.name || ""}
-          </Text>
+          <Box className={'flex justify-between'}>
+            <Text className="font-bold text-md mb-1">
+              {item?.orderDetails[0]?.product.name || ""}
+            </Text>
+            <Text className={''}>
+              ID: <b>{item.id}</b>
+            </Text>
+          </Box>
           <Box className="flex justify-between mt-2">
             <Text className=" text-md">
               <DisplayPrice>{item?.total || "0"}</DisplayPrice>
             </Text>
-            <Text className="text-gray">
-              {item.orderDetails.length} sản phẩm
-            </Text>
+            <Box>
+              <Text className="text-gray">
+                {item.orderDetails.length} sản phẩm
+              </Text>
+            </Box>
           </Box>
 
           {item.status === EOrderStatus.DELIVERED && (

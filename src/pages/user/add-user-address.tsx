@@ -17,6 +17,7 @@ import {
   selectedWardId,
   wardState,
 } from "./state";
+import styled from "styled-components";
 import AppInput from "components/customize/Input";
 import ErrorText from "components/customize/ErrorText";
 import {
@@ -31,16 +32,22 @@ import supabase from "../../client/client";
 const { Option } = Select;
 
 type Props = {};
-
+const StyledSelect = styled(Select)`
+  .zaui-select-close-icon,
+  .zaui-select .zaui-btn.zaui-btn-icon-only.zaui-btn-medium.zaui-select-close-icon {
+    right: 75px;
+    top: 10px;
+  }
+`;
 function AddUserAddress({}: Props) {
   const navigate = useNavigate();
   useRecoilValue(provinceState);
   let [searchParams, setSearchParams] = useSearchParams();
   const routeFrom = searchParams.get("routeFrom");
 
-  const provinces = useRecoilValue(provinceState);
   const setProvinceId = useSetRecoilState(selectedProvinceId);
   const districts = useRecoilValue(districtState);
+  const provinces = useRecoilValue(provinceState);
   const setDistrictId = useSetRecoilState(selectedDistrictId);
   const wards = useRecoilValue(wardState);
   const setWardId = useSetRecoilState(selectedWardId);
@@ -164,7 +171,7 @@ function AddUserAddress({}: Props) {
           />
         </Box>
         <Box mt={4}>
-          <Select
+          <StyledSelect
             value={addressSelected?.province}
             label={getFieldName("province")}
             placeholder={`Nhập ${getFieldName("province")} `}
@@ -187,14 +194,14 @@ function AddUserAddress({}: Props) {
             {provinces.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </Select>
+          </StyledSelect>
           <ErrorText
             show={Boolean(errors?.province)}
             errorText={getErrorMessage("province")}
           />
         </Box>
         <Box mt={4}>
-          <Select
+          <StyledSelect
             value={addressSelected?.district}
             label={getFieldName("district")}
             placeholder={`Nhập ${getFieldName("district")} `}
@@ -210,14 +217,14 @@ function AddUserAddress({}: Props) {
             {districts.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </Select>
+          </StyledSelect>
           <ErrorText
             show={Boolean(errors?.district)}
             errorText={getErrorMessage("district")}
           />
         </Box>
         <Box mt={4}>
-          <Select
+          <StyledSelect
             value={addressSelected?.ward}
             label={getFieldName("ward")}
             placeholder={`Nhập ${getFieldName("ward")} `}
@@ -233,7 +240,7 @@ function AddUserAddress({}: Props) {
             {wards.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </Select>
+          </StyledSelect>
           <ErrorText
             show={Boolean(errors?.ward)}
             errorText={getErrorMessage("ward")}

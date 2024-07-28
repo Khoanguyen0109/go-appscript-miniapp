@@ -190,7 +190,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                   </Box>
                 </Box>
               </Box>
-              <Box className="space-y-5 overflow-y-auto h-[420px]">
+              <Box className="space-y-5 overflow-y-auto max-h-[40dvh]">
                 {!isEmpty(variants) &&
                   Object.keys(sortVariant).map((key) => {
                     return (
@@ -218,6 +218,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                       />
                     );
                   })}
+                <Text className={'font-semibold mb-4'}>Mô tả sản phẩm</Text>
+                {product.desc}
               </Box>
 
               {/* {product.variants &&
@@ -250,7 +252,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                  //   />
                  // )
                )} */}
-              <QuantityPicker value={quantity} onChange={setQuantity}/>
+              <Text className={'font-semibold mb-4'}>Số lượng</Text>
+              <QuantityPicker value={quantity} onChange={setQuantity} noTitle/>
               {selected ? (
                 <Button
                   variant={quantity > 0 ? "primary" : "secondary"}

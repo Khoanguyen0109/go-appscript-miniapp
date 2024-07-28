@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { getStorage, setStorage } from "zmp-sdk";
 import {
   Box,
   Button,
@@ -10,8 +11,12 @@ import {
   Text,
   useNavigate,
 } from "zmp-ui";
-import { getStorage, setStorage } from "zmp-sdk";
-import { historySearchListState, searchState } from "../state";
+import {
+  historySearchListState,
+  productsState,
+  returnHistoryState,
+  searchState,
+} from "../state";
 import { ROUTES } from "./route";
 
 type Props = {};
@@ -20,6 +25,7 @@ function Search({}: Props) {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [search, setSearch] = useRecoilState(searchState);
+  const products = useRecoilValue(productsState);
   const [historySearch, setHistory] = useRecoilState(historySearchListState);
   const submitSearch = () => {
     if (input) {
@@ -94,14 +100,32 @@ function Search({}: Props) {
       </Box>
 
       <Box className="mt-3 p-2">
+        <Text.Title className="mb-2">Lịch sử tìm kiếm</Text.Title>
         {historySearch.map(
           (item) =>
             item && (
-              <Text.Title className="mb-2" onClick={() => onItemClick(item)}>
+              <Text className="mb-2" onClick={() => onItemClick(item)}>
                 {item}{" "}
-              </Text.Title>
+              </Text>
             )
         )}
+        <Text.Title className="mt-4 mb-2">Gợi ý</Text.Title>
+        {products
+          .slice(0, 5)
+          .map((product) => (
+            <Box
+              key={product.id}
+              className="flex items-center mb-2"
+              onClick={() => onItemClick(product.name)}
+            >
+              <img
+                src={product.thumbnail}
+                alt={product.name}
+                className="w-10 h-10 object-cover rounded-md mr-2"
+              />
+              <Text>{product.name}</Text>
+            </Box>
+          ))}
       </Box>
     </Page>
   );

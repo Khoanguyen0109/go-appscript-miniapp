@@ -47,9 +47,14 @@ function ReturnItem({ item, onOpenRating }: Props) {
             <Text className=" text-md">
               <DisplayPrice>{item?.total || "0"}</DisplayPrice>
             </Text>
-            <Text className="text-gray">
-              {item.returnDetails.length} sản phẩm
-            </Text>
+            <Box>
+              <Text className={''}>
+                ID: <b>{item.id}</b>
+              </Text>
+              <Text className="text-gray">
+                {item.returnDetails.length} sản phẩm
+              </Text>
+            </Box>
           </Box>
         </Box>
       </Box>

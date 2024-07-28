@@ -3,7 +3,7 @@ import React, {FC, useEffect, useMemo, useState} from "react";
 import {useLocation, useNavigate} from "react-router";
 import {MenuItem} from "types/menu";
 import {BottomNavigation} from "zmp-ui";
-import {CartIcon} from "./cart-icon";
+import {CartIcon} from "./icon/cart-icon";
 import {BsFillCartFill} from "react-icons/bs";
 import {BiSolidUser, BiUser} from "react-icons/bi";
 import {ROUTES} from "pages/route";
@@ -17,40 +17,7 @@ import chatOaIcon from "static/icons/chatOa.svg";
 import cartIcon from "static/icons/cart.svg";
 import homeIcon from "static/icons/home.svg";
 
-const tabs: Record<string, MenuItem> = {
-  "/": {
-    label: "Trang chủ",
-    icon: <img src={homeIcon} alt="Home"/>,
-    activeIcon: <img src={homeIcon} alt="Home" className={'nav-primary-color'}/>,
-  },
-  "/return": {
-    label: "Hoàn đơn",
-    icon: <img src={returnIcon} alt="Return"/>,
-    activeIcon: <img src={returnIcon} alt="Return" className={'nav-primary-color'}/>,
-  },
-  "/search": {
-    label: "Tìm kiếm",
-    icon: <img src={searchIcon} alt="Search"/>,
-    activeIcon: <img src={searchIcon} alt="Search" className={'nav-primary-color'}/>,
-  },
-  "/cart": {
-    label: "Giỏ hàng",
-    icon: <img src={cartIcon} alt="Cart"/>,
-    activeIcon: <img src={cartIcon} alt="Cart" className={'nav-primary-color'}/>,
-  },
-  "/openChat": {
-    label: "Chat OA",
-    icon: <img src={chatOaIcon} alt="Chat OA"/>,
-    activeIcon: <img src={chatOaIcon} alt="Chat OA" className={'nav-primary-color'}/>,
-  },
-  "/profile": {
-    label: "Cá nhân",
-    icon: <img src={userCircleIcon} alt="User Circle"/>,
-    activeIcon: <img src={userCircleIcon} alt="User Circle" className={'nav-primary-color'}/>,
-  },
-};
 
-export type TabKeys = keyof typeof tabs;
 
 export const NO_BOTTOM_NAVIGATION_PAGES = [
   "/search",
@@ -76,6 +43,41 @@ export const Navigation: FC = () => {
   if (noBottomNav || keyboardVisible) {
     return <></>;
   }
+  const tabs: Record<string, MenuItem> = {
+    "/": {
+      label: "Trang chủ",
+      icon: <img src={homeIcon} alt="Home"/>,
+      activeIcon: <img src={homeIcon} alt="Home" className={'nav-primary-color'}/>,
+    },
+    ...(user.role === 'Đối tác' ? {
+      "/return": {
+        label: "Hoàn đơn",
+        icon: <img src={returnIcon} alt="Return"/>,
+        activeIcon: <img src={returnIcon} alt="Return" className={'nav-primary-color'}/>,
+      },
+    } : {}),
+    // "/search": {
+    //   label: "Tìm kiếm",
+    //   icon: <img src={searchIcon} alt="Search"/>,
+    //   activeIcon: <img src={searchIcon} alt="Search" className={'nav-primary-color'}/>,
+    // },
+    "/cart": {
+      label: "Giỏ hàng",
+      icon: <CartIcon/>,
+      activeIcon: <CartIcon active/>,
+    },
+    "/openChat": {
+      label: "Chat OA",
+      icon: <img src={chatOaIcon} alt="Chat OA"/>,
+      activeIcon: <img src={chatOaIcon} alt="Chat OA" className={'nav-primary-color'}/>,
+    },
+    "/profile": {
+      label: "Cá nhân",
+      icon: <img src={userCircleIcon} alt="User Circle"/>,
+      activeIcon: <img src={userCircleIcon} alt="User Circle" className={'nav-primary-color'}/>,
+    },
+  };
+  type TabKeys = keyof typeof tabs;
 
   if (user.role === ERoles.SHIPPER) {
     return (

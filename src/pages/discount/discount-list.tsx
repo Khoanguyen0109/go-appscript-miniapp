@@ -3,7 +3,7 @@ import { Box, Header, Modal, Page, Text } from "zmp-ui";
 import { DisplayCoinNoMoney } from "../../components/display/display-coin-with-no-money";
 import { CiDiscount1 } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
-import { userState, userTotalPointState } from "../../state";
+import { userState, userPointState } from "../../state";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   payableDiscountSelector,
@@ -28,7 +28,7 @@ function DiscountList({}: Props) {
 
   const [userVouchers, setUserVouchers] = useRecoilState(userVouchersState);
   const [userTotalPoint, setUserTotalPoint] =
-    useRecoilState(userTotalPointState);
+    useRecoilState(userPointState);
 
   const onClickRedeem = (item) => {
     if (userTotalPoint < item.point) {

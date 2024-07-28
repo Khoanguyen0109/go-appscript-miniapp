@@ -4,13 +4,9 @@ import { ROUTES } from "pages/route";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userState, userTotalPointState } from "state";
+import { userState, useTotalPointState } from "state";
 import badgeIcon from "static/icons/badge.svg";
-import diamond from "static/member-card/diamond.jpg";
-import gold from "static/member-card/gold.png";
-import silver from "static/member-card/silver.jpg";
-import newMember from "static/subscription-decor.svg";
-import { Box, Icon, Progress, Text } from "zmp-ui";
+import { Box, Progress, Text } from "zmp-ui";
 import { DisplayCoinNoMoney } from "../../../components/display/display-coin-with-no-money";
 import { Divider } from "../../../components/divider";
 import { formatDecimal } from "../../../utils/number";
@@ -21,21 +17,7 @@ function MemberCard({}: Props) {
   const navigate = useNavigate();
   const scoreRank = useRecoilValue(scoreRankState);
   const user = useRecoilValue(userState);
-  const userTotalPoint = useRecoilValue(userTotalPointState);
-  const backgroundCard = useMemo(() => {
-    switch (user.memberClass) {
-      case EScoreRank.NEW:
-        return newMember;
-      case EScoreRank.SILVER:
-        return silver;
-      case EScoreRank.GOLD:
-        return gold;
-      case EScoreRank.DIAMOND:
-        return diamond;
-      default:
-        return newMember;
-    }
-  }, []);
+  const userTotalPoint = useRecoilValue(useTotalPointState);;
 
   const maxScore = useMemo(() => {
     switch (user.memberClass) {

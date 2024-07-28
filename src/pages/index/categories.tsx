@@ -35,6 +35,7 @@ export const Categories: FC = () => {
               className="w-12 max-w-none h-12 rounded-full object-contain bg-[#F3F5F7]"
               src={category.image}
               alt={category.name}
+              referrerPolicy="no-referrer"
             />
             <Text
               size="xxSmall"

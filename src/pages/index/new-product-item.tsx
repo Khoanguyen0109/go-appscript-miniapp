@@ -27,6 +27,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
             className="w-full h-40 object-cover object-center"
             src={product.thumbnail}
             alt={product.name}
+            referrerPolicy="no-referrer"
           />
           <div className="p-2 border-[#E2E8F0]">
             <Text className="font-semibold text-base h-14 line-clamp-2">

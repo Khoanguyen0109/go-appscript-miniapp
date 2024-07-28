@@ -46,6 +46,11 @@ import AllCategoriesPage from "../pages/category/all-category";
 import EditCart from "../pages/edit-cart/edit-cart";
 import EditCartPage from "../pages/edit-cart/edit-cart";
 import Return from "../pages/return/return";
+import {ReturnReview} from "../pages/return/preview";
+import CreateReturnPage from "../pages/return/create";
+import ReturnSuccess from "../pages/return/success";
+import ReturnHistory from "../pages/return/history";
+import ReturnDetail from "../pages/return/return-detail";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -144,6 +149,13 @@ export const Layout: FC = () => {
             ></Route>
             <Route path={ROUTES.ORDER} element={<Order />}></Route>
             <Route path={ROUTES.RETURN} element={<Return />}></Route>
+            <Route path={ROUTES.RETURN_REVIEW} element={<CreateReturnPage />}></Route>
+            <Route path={ROUTES.RETURN_HISTORY} element={<ReturnHistory />}></Route>
+            <Route path={ROUTES.RETURN_SUCCESS} element={<ReturnSuccess />}></Route>
+            <Route
+              path={ROUTES.RETURN_DETAIL(":id")}
+              element={<ReturnDetail />}
+            ></Route>
             <Route
               path={ROUTES.ORDER_DETAIL(":id")}
               element={<OrderDetail />}

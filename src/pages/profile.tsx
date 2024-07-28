@@ -110,8 +110,8 @@ const Personal: FC = () => {
   const navigateToOrder = () => {
     navigate(ROUTES.ORDER);
   };
-  const navigateToReturn = () => {
-    navigate(ROUTES.RETURN);
+  const navigateToReturnHistory = () => {
+    navigate(ROUTES.RETURN_HISTORY);
   };
 
   const navigateToUserAddress = () => {
@@ -162,7 +162,7 @@ const Personal: FC = () => {
           {
             left: <img src={returnIcon} alt="return" className={'filter-white'} />,
             right: (
-              <Box flex onClick={navigateToReturn}>
+              <Box flex onClick={navigateToReturnHistory}>
                 <Text.Header className="flex-1 items-center font-normal">
                   Lịch sử hoàn đơn
                 </Text.Header>

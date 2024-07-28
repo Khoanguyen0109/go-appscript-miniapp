@@ -4,6 +4,10 @@ export const ROUTES = {
   PAYMENT_SUCCESS: "/payment-success",
   ORDER: "/orders",
   RETURN: "/return",
+  RETURN_REVIEW: "/return-preview",
+  RETURN_HISTORY: "/return-history",
+  RETURN_SUCCESS: "/return-success",
+  RETURN_DETAIL: (id: string) => `/return/${id}`,
   ORDER_DETAIL: (id) => `/orders/${id}`,
   PRODUCT_DETAIL: (id) => `/products/${id}`,
   USER_ADDRESS: "/addresses",
@@ -22,7 +26,6 @@ export const ROUTES = {
   SHIPPING_DETAIL: "/shipping-detail",
   CTV_USER_LIST: "/ctv-user-list",
 
-  BUY_VOUCHER: '/buy-voucher',
-  USER_VOUCHER:'/user-voucher',
-  
+  BUY_VOUCHER: "/buy-voucher",
+  USER_VOUCHER: "/user-voucher",
 };

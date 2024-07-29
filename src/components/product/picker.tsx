@@ -50,6 +50,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         : {},
     [visible]
   );
+  console.log('variants', variants)
   const sortVariant = useMemo(() => {
     const newVariants = {
       "Món phụ": [],
@@ -67,6 +68,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
 
     return newVariants;
   }, [variants]);
+  console.log('sortVariant', sortVariant)
 
   useEffect(() => {
     if (selected) {
@@ -190,7 +192,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                       <ProductVariant
                         variant={key}
                         value={options[key] as string[]}
-                        values={variants[key]}
+                        values={sortVariant[key]}
                         onChange={(selectedOption) => {
                           if (key === "Món thêm") {
                             setOptions((prevOptions) => ({

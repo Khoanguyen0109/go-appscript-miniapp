@@ -6,12 +6,10 @@ import { ProductList } from "./product-list";
 import { Divider } from "components/divider";
 
 import BannerHome from "./banner";
-import ProductHotItemList from "./product-hot-item-list";
 import { Categories } from "./categories";
 import { useRecoilValueLoadable } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
 import DiscountPanel from "./discount-panel";
-import {VoucherList} from "../../components/voucher-list/voucher-list";
 import VoucherHome from "./voucher-list";
 
 const HomePage: React.FunctionComponent = () => {

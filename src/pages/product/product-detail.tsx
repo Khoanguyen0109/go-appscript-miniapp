@@ -140,8 +140,11 @@ function ProductDetail({}: Props) {
           {productSelected.name}
         </Text.Header>
         <Box className="flex justify-between items-center">
-          <Text size="xLarge" className=" mt-2 pb-2 text-blue-500 font-bold">
+          <Text size="xLarge" className=" mt-2 pb-2 text-blue-500 font-bold flex items-center gap-2">
             <DisplayPrice>{productSelected.price}</DisplayPrice>
+            <Text className="text-xs">
+              / {productSelected.unit}
+            </Text>
           </Text>
           <Box className="flex items-center">
             <Box

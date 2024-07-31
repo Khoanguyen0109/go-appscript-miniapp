@@ -6,6 +6,8 @@ import { Box } from "zmp-ui";
 import { ImageSkeleton } from "components/skeletons";
 import { VoucherList } from "../../components/voucher-list/voucher-list";
 import { ROUTES } from "../route";
+import {userState} from "../../state";
+import {ERoles} from "../../constants";
 
 export const VoucherHomeContent: FC = () => {
   const errorRef = useRef(null);
@@ -39,6 +41,10 @@ export const VoucherHomeFallback: FC = () => {
 };
 
 const VoucherHome: FC = () => {
+  const user = useRecoilValue(userState);
+  if (user.role !== ERoles.COB){
+    return <></>
+  }
   return (
     <Suspense fallback={<VoucherHomeFallback />}>
       <VoucherHomeContent />

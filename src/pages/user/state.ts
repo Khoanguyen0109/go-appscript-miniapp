@@ -8,7 +8,7 @@ export const provinceState = selector({
   key: "provinces",
   get: async () => {
     const res = await axios(`${PROVINCE_API}/p`);
-    return res.data.sort((a, b) => a.name.localeCompare(b.name)) || [];
+    return res.data || [];
   },
 });
 export const selectedProvinceId = atom({
@@ -24,7 +24,7 @@ export const districtState = selector({
     const code = provinces.find((item) => item.name === provinceId)?.code;
     if (provinceId) {
       const res = await axios(`${PROVINCE_API}/p/${code}?depth=2`);
-      return res.data.districts.sort((a, b) => a.name.localeCompare(b.name));
+      return res.data.districts;
     }
     return [];
   },
@@ -44,8 +44,11 @@ export const wardState = selector({
     if (!districtId) {
       return [];
     }
+    if (!code) {
+      return [];
+    }
     const res = await axios(`${PROVINCE_API}/d/${code}?depth=2`);
-    return res.data.wards.sort((a, b) => a.name.localeCompare(b.name));
+    return res.data.wards;
   },
 });
 

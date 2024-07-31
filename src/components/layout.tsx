@@ -28,12 +28,21 @@ import supabase from "../client/client";
 import { ERoles } from "../constants";
 import CheckoutResultPage from "../pages/cart/result";
 import { addressSelectedState } from "../pages/cart/state";
+import AllCategoriesPage from "../pages/category/all-category";
 import Search from "../pages/custom-search";
 import DiscountList from "../pages/discount/discount-list";
 import UserDiscount from "../pages/discount/user-discount";
+import EditCart from "../pages/edit-cart/edit-cart";
+import EditCartPage from "../pages/edit-cart/edit-cart";
 import Income from "../pages/income";
 import AllProductPage from "../pages/product/all-product";
 import RequestCommission from "../pages/request-commission";
+import CreateReturnPage from "../pages/return/create";
+import ReturnHistory from "../pages/return/history";
+import { ReturnReview } from "../pages/return/preview";
+import Return from "../pages/return/return";
+import ReturnDetail from "../pages/return/return-detail";
+import ReturnSuccess from "../pages/return/success";
 import SearchResult from "../pages/search-result";
 import Shipping from "../pages/shipping";
 import ShippingDetail from "../pages/shipping/shipping-detail";
@@ -42,15 +51,6 @@ import CTVUserList from "../pages/user/ctv-user-list";
 import LoadingScreenOverLay from "./loading-screen";
 import { Navigation } from "./navigation";
 import { ScrollRestoration } from "./scroll-restoration";
-import AllCategoriesPage from "../pages/category/all-category";
-import EditCart from "../pages/edit-cart/edit-cart";
-import EditCartPage from "../pages/edit-cart/edit-cart";
-import Return from "../pages/return/return";
-import {ReturnReview} from "../pages/return/preview";
-import CreateReturnPage from "../pages/return/create";
-import ReturnSuccess from "../pages/return/success";
-import ReturnHistory from "../pages/return/history";
-import ReturnDetail from "../pages/return/return-detail";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -149,9 +149,18 @@ export const Layout: FC = () => {
             ></Route>
             <Route path={ROUTES.ORDER} element={<Order />}></Route>
             <Route path={ROUTES.RETURN} element={<Return />}></Route>
-            <Route path={ROUTES.RETURN_REVIEW} element={<CreateReturnPage />}></Route>
-            <Route path={ROUTES.RETURN_HISTORY} element={<ReturnHistory />}></Route>
-            <Route path={ROUTES.RETURN_SUCCESS} element={<ReturnSuccess />}></Route>
+            <Route
+              path={ROUTES.RETURN_REVIEW}
+              element={<CreateReturnPage />}
+            ></Route>
+            <Route
+              path={ROUTES.RETURN_HISTORY}
+              element={<ReturnHistory />}
+            ></Route>
+            <Route
+              path={ROUTES.RETURN_SUCCESS}
+              element={<ReturnSuccess />}
+            ></Route>
             <Route
               path={ROUTES.RETURN_DETAIL(":id")}
               element={<ReturnDetail />}
@@ -164,6 +173,10 @@ export const Layout: FC = () => {
             <Route
               path={ROUTES.USER_ADDRESS_ADD}
               element={<AddUserAddress />}
+            ></Route>
+            <Route
+              path={ROUTES.USER_ADDRESS_EDIT}
+              element={<AddUserAddress mode={'edit'} />}
             ></Route>
             {/* <Route
               path={ROUTES.USER_ADDRESS_ADD}

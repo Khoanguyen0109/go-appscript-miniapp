@@ -17,3 +17,10 @@
 .filter-bg-nature-900 {
     filter: brightness(0) saturate(100%) invert(20%) sepia(17%) saturate(1701%) hue-rotate(92deg) brightness(91%) contrast(86%);
 }
+.zaui-select-close-icon, .zaui-select .zaui-btn.zaui-btn-icon-only.zaui-btn-medium.zaui-select-close-icon{
+    right: 75px;
+    top: 10px;
+}
+.zaui-sheet-content{
+    max-height: 90dvh;
+}

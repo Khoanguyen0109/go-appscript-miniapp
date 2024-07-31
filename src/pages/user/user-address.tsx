@@ -31,7 +31,7 @@ function UserAddress({}: Props) {
       navigate(ROUTES.CART);
     } else {
       setAddressSelected(item);
-      navigate(ROUTES.USER_ADDRESS_ADD);
+      navigate(ROUTES.USER_ADDRESS_EDIT);
     }
   };
 

@@ -3,8 +3,10 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { forceOrderUpdate, orderState } from "state";
 import { Header, Page, Tabs } from "zmp-ui";
 import "./index.css";
-import OrderList from "./order-list";
 import { EOrderStatus } from "constantsapp";
+import styled from "styled-components";
+import OrderList from "./order-list";
+
 type Props = {};
 
 function Order({}: Props) {
@@ -31,24 +33,29 @@ function Order({}: Props) {
       forceUpdate();
     };
   }, []);
-
+  const StyledTabs = styled(Tabs)`
+      .zaui-tabs-tabbar{
+          position: fixed;
+          top: 3rem;
+      }
+  `;
   return (
     <Page className="bg-background">
       <Header title="Lịch sử đặt hàng" showBackIcon={true} />
-      <Tabs className="w-full" id="contact-list">
-        <Tabs.Tab key="waiting" label="Chờ xác nhận">
+      <StyledTabs className="" id="contact-list">
+        <StyledTabs.Tab key="waiting" label="Chờ xác nhận">
           <OrderList orders={orderWaiting} />
-        </Tabs.Tab>
-        <Tabs.Tab key="delivering" label="Đang vận chuyển">
+        </StyledTabs.Tab>
+        <StyledTabs.Tab key="delivering" label="Đang vận chuyển">
           <OrderList orders={orderDelivering} />
-        </Tabs.Tab>
-        <Tabs.Tab key="delivered" label="Đã giao hàng">
+        </StyledTabs.Tab>
+        <StyledTabs.Tab key="delivered" label="Đã giao hàng">
           <OrderList orders={orderDelivered} />
-        </Tabs.Tab>
-        <Tabs.Tab key="cancel" label="Đã huỷ">
+        </StyledTabs.Tab>
+        <StyledTabs.Tab key="cancel" label="Đã huỷ">
           <OrderList orders={orderCancel} />
-        </Tabs.Tab>
-      </Tabs>
+        </StyledTabs.Tab>
+      </StyledTabs>
     </Page>
   );
 }

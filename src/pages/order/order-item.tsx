@@ -43,8 +43,8 @@ function OrderItem({ item, onOpenRating }: Props) {
             <Text className="font-bold text-md mb-1">
               {item?.orderDetails[0]?.product.name || ""}
             </Text>
-            <Text className={''}>
-              ID: <b>{item.id}</b>
+            <Text className={'flex items-center'}>
+              <span className={'text-gray'}>Mã đơn hàng: </span> <b>{item.id}</b>
             </Text>
           </Box>
           <Box className="flex justify-between mt-2">

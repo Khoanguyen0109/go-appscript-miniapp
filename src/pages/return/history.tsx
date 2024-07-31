@@ -4,6 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { forceOrderUpdate, returnHistoryState } from "state";
 import { Header, Page, Tabs } from "zmp-ui";
 import ReturnHistoryList from "./list";
+import styled from "styled-components";
 
 // import OrderList from "./order-list";
 
@@ -35,38 +36,43 @@ function ReturnHistory({}: Props) {
       forceUpdate();
     };
   }, []);
-
+  const StyledTabs = styled(Tabs)`
+      .zaui-tabs-tabbar{
+          position: fixed;
+          top: 3rem;
+      }
+  `;
   return (
     <Page className="bg-background">
       <Header title="Lịch sử hoàn đơn" showBackIcon={true} />
-      <Tabs className="w-full" id="contact-list">
-        <Tabs.Tab
+      <StyledTabs className="w-full" id="contact-list">
+        <StyledTabs.Tab
           key={EOrderReturnStatus.WAITING_CONFIRMATION}
           label={getOrderReturnStatusLabel(
             EOrderReturnStatus.WAITING_CONFIRMATION
           )}
         >
           <ReturnHistoryList orders={orderWaitingConfirm} />
-        </Tabs.Tab>
-        <Tabs.Tab
+        </StyledTabs.Tab>
+        <StyledTabs.Tab
           key={EOrderReturnStatus.ACCEPT_RETURN}
           label={getOrderReturnStatusLabel(EOrderReturnStatus.ACCEPT_RETURN)}
         >
           <ReturnHistoryList orders={orderAcceptAccept} />
-        </Tabs.Tab>
-        <Tabs.Tab
+        </StyledTabs.Tab>
+        <StyledTabs.Tab
           key={EOrderReturnStatus.REJECT_RETURN}
           label={getOrderReturnStatusLabel(EOrderReturnStatus.REJECT_RETURN)}
         >
           <ReturnHistoryList orders={orderRejectReturn} />
-        </Tabs.Tab>
-        <Tabs.Tab
+        </StyledTabs.Tab>
+        <StyledTabs.Tab
           key={EOrderReturnStatus.COMPLETED}
           label={getOrderReturnStatusLabel(EOrderReturnStatus.COMPLETED)}
         >
           <ReturnHistoryList orders={orderComplete} />
-        </Tabs.Tab>
-      </Tabs>
+        </StyledTabs.Tab>
+      </StyledTabs>
     </Page>
   );
 }

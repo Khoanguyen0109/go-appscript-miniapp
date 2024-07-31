@@ -100,15 +100,15 @@ function Search({}: Props) {
       </Box>
 
       <Box className="mt-3 p-2">
-        <Text.Title className="mb-2">Lịch sử tìm kiếm</Text.Title>
-        {historySearch.map(
-          (item) =>
-            item && (
-              <Text className="mb-2" onClick={() => onItemClick(item)}>
-                {item}{" "}
-              </Text>
-            )
-        )}
+        {/*<Text.Title className="mb-2">Lịch sử tìm kiếm</Text.Title>*/}
+        {/*{historySearch.map(*/}
+        {/*  (item) =>*/}
+        {/*    item && (*/}
+        {/*      <Text className="mb-2" onClick={() => onItemClick(item)}>*/}
+        {/*        {item}{" "}*/}
+        {/*      </Text>*/}
+        {/*    )*/}
+        {/*)}*/}
         <Text.Title className="mt-4 mb-2">Gợi ý</Text.Title>
         {products
           .slice(0, 5)

@@ -52,7 +52,7 @@ function OrderList({ orders }: Props) {
 
   if (orders.length === 0) {
     return (
-      <Box className="text-center">
+      <Box className="text-center mt-4">
         <Text
           className="bg-background rounded-xl py-8 px-2 text-center text-gray"
           size="xxSmall"
@@ -69,7 +69,7 @@ function OrderList({ orders }: Props) {
   };
 
   return (
-    <Box className="bg-devider_1 min-h-screen overflow-y-auto">
+    <Box className="bg-devider_1 min-h-screen overflow-y-auto mt-[2rem]">
       {orders.map((item) => (
         <OrderItem key={item.id} item={item} onOpenRating={onOpenRating} />
       ))}

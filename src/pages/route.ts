@@ -12,6 +12,7 @@ export const ROUTES = {
   PRODUCT_DETAIL: (id) => `/products/${id}`,
   USER_ADDRESS: "/addresses",
   USER_ADDRESS_ADD: "/addresses-add",
+  USER_ADDRESS_EDIT: `/addresses-edit`,
   NOT_FOUND: "*",
   NOTIFICATION: (id) => `/notification/${id}`,
   COMMISSION: "/commission",

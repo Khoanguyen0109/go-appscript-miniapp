@@ -252,7 +252,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                  //   />
                  // )
                )} */}
-              <Text className={'font-semibold mb-4'}>Số lượng</Text>
+              <Text className={'font-semibold mb-4'}>Số lượng: {product.unit}</Text>
               <QuantityPicker value={quantity} onChange={setQuantity} noTitle/>
               {selected ? (
                 <Button

@@ -53,6 +53,11 @@ export interface Product {
   costdown?: string;
   discount?: string;
   rating?: number;
+  unit?: string;
+  totalQuantity?: number;
+  shippingBy?: string;
+  detail?: string;
+  supplier_name?: string;
 }
 
 export type TProductInventory = {};

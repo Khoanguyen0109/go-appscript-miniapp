@@ -7,6 +7,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAddress } from "utils";
 import { Box, Icon, Text } from "zmp-ui";
+import { ERoles } from "../../constants";
 import { discountState, userState } from "../../state";
 import locationIcon from "../../static/icons/location.svg";
 import noteIcon from "../../static/icons/note.svg";
@@ -22,7 +23,7 @@ export const Delivery: FC<{ isShowVoucher?: boolean }> = ({
   const discount = useRecoilValue(discountState);
   const user = useRecoilValue(userState);
   const showVoucherBasedOnRole =
-    (user?.role === "CTV" || user?.role === "Khách hàng") && isShowVoucher;
+    (user?.role === ERoles.CTV || user?.role === ERoles.USER) && isShowVoucher;
 
   const navigateFromCart = (route) => {
     navigate({

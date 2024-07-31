@@ -1,13 +1,24 @@
+import ErrorText from "components/customize/ErrorText";
+import AppInput from "components/customize/Input";
 import { Divider } from "components/divider";
-import React, { useState } from "react";
+import { addressSelectedState } from "pages/cart/state";
+import { ROUTES } from "pages/route";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import {
   useRecoilRefresher_UNSTABLE,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
+import { userState } from "state";
 import { Box, Button, Header, Icon, Page, Select } from "zmp-ui";
+import supabase from "../../client/client";
 import {
   addressesState,
   districtState,
@@ -17,29 +28,12 @@ import {
   selectedWardId,
   wardState,
 } from "./state";
-import styled from "styled-components";
-import AppInput from "components/customize/Input";
-import ErrorText from "components/customize/ErrorText";
-import {
-  createSearchParams,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
-import { ROUTES } from "pages/route";
-import { userState } from "state";
-import { addressSelectedState } from "pages/cart/state";
-import supabase from "../../client/client";
+
 const { Option } = Select;
 
-type Props = {};
-const StyledSelect = styled(Select)`
-  .zaui-select-close-icon,
-  .zaui-select .zaui-btn.zaui-btn-icon-only.zaui-btn-medium.zaui-select-close-icon {
-    right: 75px;
-    top: 10px;
-  }
-`;
-function AddUserAddress({}: Props) {
+type Props = { mode?: "add" | "edit" };
+
+function AddUserAddress({ mode = "add" }: Props) {
   const navigate = useNavigate();
   useRecoilValue(provinceState);
   let [searchParams, setSearchParams] = useSearchParams();
@@ -65,7 +59,6 @@ function AddUserAddress({}: Props) {
     mode: "onSubmit",
     defaultValues: addressSelected || { type: "home" },
   });
-
   const navigateBack = () => {
     navigate({
       pathname: ROUTES.USER_ADDRESS,
@@ -77,15 +70,27 @@ function AddUserAddress({}: Props) {
   const onSubmit = async (value) => {
     try {
       setLoading(true);
-      // await upsertUser(user);
-      const { error } = await supabase
-        .from("user_addresses")
-        .insert({ userId: user.id, ...value });
+      if (mode === "edit") {
+        const { error } = await supabase
+          .from("user_addresses")
+          .update({ ...value })
+          .eq("id", addressSelected.id);
+      } else {
+        const { error } = await supabase.from("user_addresses").insert({
+          userId: user.id,
+          createdAt: new Date().toISOString(),
+          ...value,
+        });
+      }
       refresh();
       setWardId(null);
       setDistrictId(null);
       navigateBack();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error updating/inserting address:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getFieldName = (field: string) => {
@@ -118,6 +123,24 @@ function AddUserAddress({}: Props) {
     }
     return "";
   };
+  useEffect(() => {
+    if (addressSelected?.province) {
+      setProvinceId(addressSelected.province);
+    }
+  }, [addressSelected?.province, setProvinceId]);
+
+  useEffect(() => {
+    if (addressSelected?.district) {
+      setDistrictId(addressSelected.district);
+    }
+  }, [addressSelected?.district, setDistrictId]);
+
+  useEffect(() => {
+    if (addressSelected?.ward) {
+      setWardId(addressSelected.ward);
+    }
+  }, [addressSelected?.ward, setWardId]);
+
   return (
     <Page>
       <Header title="Thêm địa chỉ" showBackIcon={true} />
@@ -127,6 +150,7 @@ function AddUserAddress({}: Props) {
           <AppInput
             placeholder={`Nhập ${getFieldName("phone")} `}
             label={getFieldName("phone")}
+            defaultValue={addressSelected?.phone}
             type="number"
             errorText={getErrorMessage("phone")}
             {...register("phone", { required: true })}
@@ -136,6 +160,7 @@ function AddUserAddress({}: Props) {
         <Box mt={4}>
           <AppInput
             placeholder={`Nhập ${getFieldName("name")} `}
+            defaultValue={addressSelected?.name}
             label={getFieldName("name")}
             errorText={getErrorMessage("name")}
             {...register("name", { required: true })}
@@ -147,6 +172,7 @@ function AddUserAddress({}: Props) {
             label={getFieldName("address")}
             placeholder={`Nhập ${getFieldName("address")} `}
             errorText={getErrorMessage("address")}
+            defaultValue={addressSelected?.address}
             {...register("address", { required: true })}
             status={errors?.address ? "error" : "default"}
           />
@@ -155,7 +181,7 @@ function AddUserAddress({}: Props) {
           <Select
             value={addressSelected?.type}
             label={getFieldName("type")}
-            defaultValue="home"
+            defaultValue={addressSelected?.type ?? "home"}
             {...register("type", { required: true })}
             onChange={(value) => {
               setValue("type", value, { shouldValidate: true });
@@ -171,16 +197,20 @@ function AddUserAddress({}: Props) {
           />
         </Box>
         <Box mt={4}>
-          <StyledSelect
-            value={addressSelected?.province}
+          <Select
+            value={addressSelected?.province || ""}
             label={getFieldName("province")}
             placeholder={`Nhập ${getFieldName("province")} `}
-            defaultValue=""
+            defaultValue={addressSelected?.province}
             {...register("province", { required: true })}
             onChange={(value) => {
               setProvinceId(value);
-
               setValue("province", value, { shouldValidate: true });
+              setAddressSelected((prev) =>
+                addressSelected
+                  ? { ...addressSelected, province: value }
+                  : { province: value }
+              );
             }}
             closeOnSelect={true}
           >
@@ -194,22 +224,28 @@ function AddUserAddress({}: Props) {
             {provinces.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </StyledSelect>
+          </Select>
           <ErrorText
             show={Boolean(errors?.province)}
             errorText={getErrorMessage("province")}
           />
         </Box>
         <Box mt={4}>
-          <StyledSelect
-            value={addressSelected?.district}
+          <Select
+            value={addressSelected?.district || ""}
             label={getFieldName("district")}
             placeholder={`Nhập ${getFieldName("district")} `}
-            defaultValue=""
+            defaultValue={addressSelected?.district}
             closeOnSelect={true}
             {...register("district", { required: true })}
             onChange={(value) => {
               setDistrictId(value);
+              setAddressSelected((prev) => {
+                console.log("prev", prev);
+                return addressSelected
+                  ? { ...addressSelected, district: value }
+                  : { district: value };
+              });
               setValue("district", value, { shouldValidate: true });
             }}
           >
@@ -217,22 +253,27 @@ function AddUserAddress({}: Props) {
             {districts.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </StyledSelect>
+          </Select>
           <ErrorText
             show={Boolean(errors?.district)}
             errorText={getErrorMessage("district")}
           />
         </Box>
         <Box mt={4}>
-          <StyledSelect
+          <Select
             value={addressSelected?.ward}
             label={getFieldName("ward")}
             placeholder={`Nhập ${getFieldName("ward")} `}
-            defaultValue=""
+            defaultValue={addressSelected?.ward ?? ""}
             closeOnSelect={true}
             {...register("ward", { required: true })}
             onChange={(value) => {
               setWardId(value);
+              setAddressSelected((prev) =>
+                addressSelected
+                  ? { ...addressSelected, ward: value }
+                  : { ward: value }
+              );
               setValue("ward", value, { shouldValidate: true });
             }}
           >
@@ -240,7 +281,7 @@ function AddUserAddress({}: Props) {
             {wards.map((item) => (
               <Option value={item.name} title={item.name} />
             ))}
-          </StyledSelect>
+          </Select>
           <ErrorText
             show={Boolean(errors?.ward)}
             errorText={getErrorMessage("ward")}
@@ -257,7 +298,7 @@ function AddUserAddress({}: Props) {
           // className="w-full"
           suffixIcon={<Icon icon="zi-add-user" />}
         >
-          {addressSelected ? "Cập nhật địa chỉ" : " Thêm địa chỉ"}
+          {mode === 'edit' ? "Cập nhật địa chỉ" : " Thêm địa chỉ"}
         </Button>
       </form>
     </Page>

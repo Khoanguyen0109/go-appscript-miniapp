@@ -3,6 +3,7 @@ import { Box, Text } from "zmp-ui";
 import { DisplayPrice } from "../../components/display/price";
 import { useRecoilValue } from "recoil";
 import { globalProductInventoriesSelector } from "../../state";
+import { getSelectedInventories } from "../../utils/getSelectedInventories";
 
 function OrderDetailList({ detail }) {
   const imgSize = "w-24 h-24";
@@ -10,16 +11,7 @@ function OrderDetailList({ detail }) {
   return (
     <Box className="px-2">
       {detail.map((item) => {
-        const selectedInventories = item.inventoryIds.split(",");
-        const options = [...item.product.inventories, ...globalInventories].reduce(
-          (acc, value) => {
-            if (selectedInventories.includes(value.id.toString())) {
-              acc.push(value);
-            }
-            return acc;
-          },
-          []
-        );
+        const options = getSelectedInventories(item, globalInventories);
 
         return (
           <Box key={item.id} flex className=" bg-background rounded-lg p-3">

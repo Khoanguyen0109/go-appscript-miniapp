@@ -27,7 +27,7 @@ import { EUserCTVRequestStatus } from "../constantsapp";
 import { ROUTES } from "./route";
 import MemberCard from "./user/components/member-card";
 import UserInfoBlock from "./user/user-info";
-import {ListRendererUser} from "../components/user/list-renderer-user";
+import { ListRendererUser } from "../components/user/list-renderer-user";
 import returnIcon from "static/icons/return.svg";
 const { Option } = Select;
 
@@ -117,6 +117,7 @@ const Personal: FC = () => {
   const navigateToUserAddress = () => {
     navigate(ROUTES.USER_ADDRESS);
   };
+  console.log("user", user);
   return (
     <Box className="m-4">
       <ListRendererUser
@@ -159,17 +160,27 @@ const Personal: FC = () => {
               </Box>
             ),
           },
-          {
-            left: <img src={returnIcon} alt="return" className={'filter-white'} />,
-            right: (
-              <Box flex onClick={navigateToReturnHistory}>
-                <Text.Header className="flex-1 items-center font-normal">
-                  Lịch sử hoàn đơn
-                </Text.Header>
-                <Icon icon="zi-chevron-right" />
-              </Box>
-            ),
-          },
+          ...(user.role === ERoles.COB
+            ? [
+                {
+                  left: (
+                    <img
+                      src={returnIcon}
+                      alt="return"
+                      className={"filter-white"}
+                    />
+                  ),
+                  right: (
+                    <Box flex onClick={navigateToReturnHistory}>
+                      <Text.Header className="flex-1 items-center font-normal">
+                        Lịch sử hoàn đơn
+                      </Text.Header>
+                      <Icon icon="zi-chevron-right" />
+                    </Box>
+                  ),
+                },
+              ]
+            : []),
           {
             left: <Icon icon="zi-check-circle" />,
             right: (

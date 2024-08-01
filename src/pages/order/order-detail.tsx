@@ -3,8 +3,8 @@ import { ListRenderer } from "components/list-renderer";
 import LoadingScreenOverLay from "components/loading-screen";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userState } from "state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { orderDetailState, userState } from "state";
 import { TOrder } from "types/order";
 import { getAddress } from "utils";
 import { Box, Button, Header, Icon, Page, Text } from "zmp-ui";
@@ -23,13 +23,13 @@ function OrderDetail({}: Props) {
   const { id } = params;
   const user = useRecoilValue(userState);
   const [loading, setLoading] = useState(true);
-  const [detail, setDetail] = useState<TOrder | undefined>();
+  const [detail, setDetail] = useRecoilState(orderDetailState);
   const fetchDetail = async () => {
     try {
       setLoading(true);
       const { data } = await supabase
         .from("orders")
-        .select(
+        .select( 
           `* , address: user_addresses(*), orderDetails: order_details(* , product:products(* , inventories:product_inventories(*)))`
         )
         .eq("userId", user.id)

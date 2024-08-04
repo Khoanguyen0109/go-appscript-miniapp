@@ -54,9 +54,10 @@ export const TimePicker: FC = () => {
     <Picker
       mask
       maskClosable
-      onVisibilityChange={(visbile) => {
-        matchStatusBarColor(visbile);
-        if (!visbile) {
+      onVisibilityChange={(visible) => {
+        console.log("onVisibilityChange called with:", visible);
+        matchStatusBarColor(visible);
+        if (!visible) {
           const newDate = new Date(date);
           const hours = new Date(time).getHours();
           const minutes = new Date(time).getMinutes();
@@ -74,14 +75,16 @@ export const TimePicker: FC = () => {
           ? time
           : +availableTimes[0],
       }}
-      formatPickedValueDisplay={({ date, time }) =>
-        date && time
+      formatPickedValueDisplay={({ date, time }) => {
+        console.log("formatPickedValueDisplay called with:", { date, time });
+        return date && time
           ? `${displayHalfAnHourTimeRange(new Date(time.value))}, ${displayDate(
               new Date(date.value)
             )}`
-          : `Chọn thời gian`
-      }
+          : `Chọn thời gian`;
+      }}
       onChange={({ date, time }) => {
+        console.log("onChange called with:", { date, time });
         if (date) {
           setDate(+date.value);
         }
@@ -91,17 +94,25 @@ export const TimePicker: FC = () => {
       }}
       data={[
         {
-          options: availableDates.map((date, i) => ({
-            displayName: displayDate(date, true),
-            value: +date,
-          })),
+          options: availableDates.map((date) => {
+            const option = {
+              displayName: displayDate(date, true),
+              value: +date,
+            };
+            console.log("Date option:", option);
+            return option;
+          }),
           name: "date",
         },
         {
-          options: availableTimes.map((time, i) => ({
-            displayName: displayHalfAnHourTimeRange(time),
-            value: +time,
-          })),
+          options: availableTimes.map((time) => {
+            const option = {
+              displayName: displayHalfAnHourTimeRange(time),
+              value: +time,
+            };
+            console.log("Time option:", option);
+            return option;
+          }),
           name: "time",
         },
       ]}

@@ -42,7 +42,7 @@ export const VoucherHomeFallback: FC = () => {
 
 const VoucherHome: FC = () => {
   const user = useRecoilValue(userState);
-  if (user.role !== ERoles.COB){
+  if (user.role === ERoles.COB){
     return <></>
   }
   return (

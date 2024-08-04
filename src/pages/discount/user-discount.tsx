@@ -44,7 +44,7 @@ function UserDiscount({}: Props) {
         {userVoucherList.map((item) => (
           <DiscountItem
             key={item.id}
-            item={item.discounts}
+            item={item}
             onChoose={isRouteFromCart ? onChoose : undefined}
             onUpdateItem={() => {
               setVoucherSelected(item);

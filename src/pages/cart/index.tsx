@@ -13,7 +13,7 @@ import { TimePicker } from "./time-picker";
 const CartPage: FC = () => {
   const keyboardVisible = useVirtualKeyboardVisible();
   const cart = useRecoilValue(cartState);
-
+  console.log('cart', cart)
   const quantity = useRecoilValue(totalQuantityState);
 
   const calPointUser = useRecoilValue(calPointUserSelector);

@@ -17,20 +17,22 @@ import { Store } from "types/delivery";
 import { calcFinalPrice } from "utils/product";
 import { wait } from "utils/async";
 import supabase from "./client/client";
-import { groupBy } from "lodash";
+import { cloneDeep, groupBy } from "lodash";
 import { upsertUser } from "./api/addUser";
 import { isToday, isTomorrow } from "date-fns";
 import { dateSelectedState } from "./pages/cart/state";
 import { ERoles } from "./constants";
+import { TOrder } from "./types/order";
 
 export const mapProduct = (item) => {
+  const detail = cloneDeep(item);
   return {
-    ...item,
+    ...detail,
     costdown: item.discount
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
     variants: groupBy([...item.inventories], "group"),
-    image: item.image.split(",").map((item) => ({ image: item })),
+    image: item.image.split(",").map((img) => ({ image: img })),
   };
 };
 
@@ -78,7 +80,6 @@ const userTotalPointSelector = selector({
     return user.totalPoint;
   },
 });
-
 
 const userPointSelector = selector({
   key: "userPointSelector",
@@ -383,6 +384,7 @@ export const totalQuantityEditCartState = selector({
   key: "totalQuantityEditCart",
   get: ({ get }) => {
     const cart = get(editCartState);
+    console.log("cart", cart);
     return cart.reduce((total, item) => {
       return total + item.quantity;
     }, 0);
@@ -823,4 +825,9 @@ export const calPointUserSelector = selector({
       }
     }
   },
+});
+
+export const orderDetailState = atom<TOrder | null>({
+  key: "orderDetailState",
+  default: null,
 });

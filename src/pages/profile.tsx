@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { qrImageSelector, userRequestStatusState, userState } from "state";
 import backIcon from "static/icons/back.svg";
-import returnIcon from "static/icons/return.svg";
 import logo from "static/logo.jpg";
 import subscriptionDecor from "static/subscription-decor.svg";
 import styled, { createGlobalStyle } from "styled-components";
@@ -23,13 +22,13 @@ import {
   useSnackbar,
 } from "zmp-ui";
 import supabase from "../client/client";
-import { ListRendererUser } from "../components/user/list-renderer-user";
 import { ERoles } from "../constants";
 import { EUserCTVRequestStatus } from "../constantsapp";
 import { ROUTES } from "./route";
 import MemberCard from "./user/components/member-card";
 import UserInfoBlock from "./user/user-info";
-
+import { ListRendererUser } from "../components/user/list-renderer-user";
+import returnIcon from "static/icons/return.svg";
 const { Option } = Select;
 
 const Subscription: FC = () => {
@@ -118,6 +117,7 @@ const Personal: FC = () => {
   const navigateToUserAddress = () => {
     navigate(ROUTES.USER_ADDRESS);
   };
+  console.log("user", user);
   return (
     <Box className="m-4">
       <ListRendererUser
@@ -160,27 +160,20 @@ const Personal: FC = () => {
               </Box>
             ),
           },
-          {
-            left: (
-              <img src={returnIcon} alt="return" className={"filter-white"} />
-            ),
-            right: (
-              <Box flex onClick={navigateToReturnHistory}>
-                <Text.Header className="flex-1 items-center font-normal">
-                  Lịch sử hoàn đơn
-                </Text.Header>
-                <Icon icon="zi-chevron-right" />
-              </Box>
-            ),
-          },
-          ...(user.role !== ERoles.COB
+          ...(user.role === ERoles.COB
             ? [
                 {
-                  left: <Icon icon="zi-check-circle" />,
+                  left: (
+                    <img
+                      src={returnIcon}
+                      alt="return"
+                      className={"filter-white"}
+                    />
+                  ),
                   right: (
-                    <Box flex onClick={() => navigate(ROUTES.USER_VOUCHER)}>
+                    <Box flex onClick={navigateToReturnHistory}>
                       <Text.Header className="flex-1 items-center font-normal">
-                        Ưu đãi của tôi
+                        Lịch sử hoàn đơn
                       </Text.Header>
                       <Icon icon="zi-chevron-right" />
                     </Box>
@@ -188,6 +181,17 @@ const Personal: FC = () => {
                 },
               ]
             : []),
+          {
+            left: <Icon icon="zi-check-circle" />,
+            right: (
+              <Box flex onClick={() => navigate(ROUTES.USER_VOUCHER)}>
+                <Text.Header className="flex-1 items-center font-normal">
+                  Ưu đãi của tôi
+                </Text.Header>
+                <Icon icon="zi-chevron-right" />
+              </Box>
+            ),
+          },
           {
             onClick: () => navigateToUserAddress(),
             left: <Icon icon="zi-home" />,

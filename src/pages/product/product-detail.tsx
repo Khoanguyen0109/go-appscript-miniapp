@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useRecoilState, useRecoilValue} from "recoil";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   Box,
   Button,
@@ -9,26 +9,26 @@ import {
   Text,
   useNavigate,
 } from "zmp-ui";
-import {truncate} from "lodash";
-import {Banner} from "components/banner/banner";
-import {DisplayPrice} from "components/display/price";
-import {Divider} from "components/divider";
-import {ProductPicker} from "components/product/picker";
+import { truncate } from "lodash";
+import { Banner } from "components/banner/banner";
+import { DisplayPrice } from "components/display/price";
+import { Divider } from "components/divider";
+import { ProductPicker } from "components/product/picker";
 
-import {productsState, userState} from "state";
-import {openChat, openShareSheet} from "zmp-sdk";
-import {FaShare} from "react-icons/fa";
-import {IoChatboxEllipses} from "react-icons/io5";
-import {OA_ID} from "enviroment";
+import { productsState, userState } from "state";
+import { openChat, openShareSheet } from "zmp-sdk";
+import { FaShare } from "react-icons/fa";
+import { IoChatboxEllipses } from "react-icons/io5";
+import { OA_ID } from "enviroment";
 import LoadingScreenOverLay from "components/loading-screen";
-import {useLocation, useParams} from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import supabase from "../../client/client";
-import {selectedProductState} from "./state";
-import {formatPrice} from "../../utils/price";
+import { selectedProductState } from "./state";
+import { formatPrice } from "../../utils/price";
 
 import shareIcon from "../../static/icons/share.svg";
 import chatOaIcon from "../../static/icons/chatOaFilled.svg";
-import {BannerProduct} from "../../components/banner/bannerProduct";
+import { BannerProduct } from "../../components/banner/bannerProduct";
 
 type Props = {};
 
@@ -51,9 +51,13 @@ function ProductDetail({}: Props) {
         const data = await openShareSheet({
           type: "zmp_deep_link",
           data: {
-            title:
+            title: truncate(
               productSelected?.name + " " + formatPrice(productSelected?.price),
-            description: productSelected?.descThumbnail || "",
+              { length: 100 }
+            ),
+            description: truncate(productSelected?.descThumbnail || "", {
+              length: 100,
+            }),
             thumbnail: productSelected?.thumbnail,
             path: user?.ctv
               ? `${location.pathname}?id_ctv_shared=${user.id}`
@@ -80,8 +84,7 @@ function ProductDetail({}: Props) {
       type: "oa",
       id: OA_ID,
       message: `Tư vấn mua: ${productSelected?.name}`,
-      success: () => {
-      },
+      success: () => {},
       fail: (err) => {
         console.log("err", err);
       },
@@ -92,7 +95,7 @@ function ProductDetail({}: Props) {
     try {
       await supabase
         .from("users")
-        .update({idCTVShared: ctvId})
+        .update({ idCTVShared: ctvId })
         .eq("id", user.id);
     } catch (error) {
       console.log("error", error);
@@ -106,19 +109,19 @@ function ProductDetail({}: Props) {
   }, []);
 
   if (!productSelected) {
-    return <LoadingScreenOverLay/>;
+    return <LoadingScreenOverLay />;
   }
   return (
     <Page className="flex flex-col bg-background">
       <Header
-        title={truncate(productSelected.name, {length: 24})}
+        title={truncate(productSelected.name, { length: 24 })}
         showBackIcon={true}
         onBackClick={() => navigate(-1)}
       />
       <ImageViewer
         onClose={() => setVisible(false)}
         activeIndex={activeIndex}
-        images={productSelected?.image.map((item) => ({src: item.image}))}
+        images={productSelected?.image.map((item) => ({ src: item.image }))}
         visible={visible}
       />
       <BannerProduct
@@ -151,19 +154,19 @@ function ProductDetail({}: Props) {
               className="mr-3 p-2 rounded-full"
               onClick={() => shareCurrentPage()}
             >
-              <img src={shareIcon} alt="Share"/>
+              <img src={shareIcon} alt="Share" />
             </Box>
             <Box
               className="mr-3 p-2 rounded-full"
               onClick={() => openChatScreen()}
             >
-              <img src={chatOaIcon} alt="Chat OA"/>
+              <img src={chatOaIcon} alt="Chat OA" />
             </Box>
           </Box>
         </Box>
-        <Divider size={1} className="flex-1 bg-divider"/>
+        <Divider size={1} className="flex-1 bg-divider" />
         <Text className="mt-3 ">
-          <Text className={'font-semibold'}>Mô tả sản phẩm</Text>
+          <Text className={"font-semibold"}>Mô tả sản phẩm</Text>
           {productSelected.desc.indexOf("</") !== -1 ? (
             <div
               dangerouslySetInnerHTML={{
@@ -177,9 +180,9 @@ function ProductDetail({}: Props) {
             productSelected.desc
           )}
         </Text>
-        <Divider size={1} className="flex-1 my-2 bg-divider"/>
+        <Divider size={1} className="flex-1 my-2 bg-divider" />
         <Text className="mt-3 ">
-          <Text className={'font-semibold'}>Thông tin chi tiết</Text>
+          <Text className={"font-semibold"}>Thông tin chi tiết</Text>
 
           {productSelected.desc.indexOf("</") !== -1 ? (
             <div
@@ -195,17 +198,17 @@ function ProductDetail({}: Props) {
           )}
         </Text>
       </Box>
-      <Divider size={32} className="flex-1"/>
+      <Divider size={32} className="flex-1" />
 
       <Box
         flex
         className="sticky bottom-0 w-full bg-background  p-2 space-x-4 justify-end"
       >
         <ProductPicker product={productSelected}>
-          {({open, openRedirect}) => (
+          {({ open, openRedirect }) => (
             <>
               <Button
-                style={{borderColor: "#006af5ƒ"}}
+                style={{ borderColor: "#006af5ƒ" }}
                 className="w-full border border-solid text-xs"
                 onClick={() => open()}
               >

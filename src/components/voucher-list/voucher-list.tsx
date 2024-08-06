@@ -1,8 +1,16 @@
-import React, {FC} from "react";
+import React, {FC, useState} from "react";
 import {Autoplay, Pagination} from "swiper";
 import {Swiper, SwiperSlide} from "swiper/react";
-import {Box} from "zmp-ui";
+import {Box, Modal} from "zmp-ui";
 import styled from 'styled-components';
+import {TDiscount} from "../../types/discount";
+import useCustomSnackbar from "../../hooks/useCustomSnackbar";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {userPointState, userState} from "../../state";
+import {userVouchersState} from "../../state/discount-state";
+import supabase from "../../client/client";
+import {EUserVoucherStatus} from "../../constantsapp";
+import logo from "static/logo.jpg";
 
 type TVoucherList = {
   image: string;
@@ -43,6 +51,61 @@ const StyledSwiper = styled(Swiper)`
     }
 `;
 export const VoucherList: FC<TVoucherListProps> = ({banners, onClick, padding}) => {
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [selectDiscount, setSelectDiscount] = useState<null | TDiscount>(null);
+  const { openSnackbar } = useCustomSnackbar();
+  const [userVouchers, setUserVouchers] = useRecoilState(userVouchersState);
+  const user = useRecoilValue(userState);
+  const [userTotalPoint, setUserTotalPoint] =
+    useRecoilState(userPointState);
+  const onClickRedeem = (item) => {
+    if (userTotalPoint < item.point) {
+      return openSnackbar({
+        text: "Bạn không đủ điểm cho voucher này!",
+        type: "error",
+        icon: true,
+        duration: 2000,
+      });
+    }
+    setSelectDiscount(item);
+    setConfirmModalVisible(true);
+  };
+  console.log('selectDiscount',selectDiscount)
+  const handleRedeem = async () => {
+    if (selectDiscount) {
+      try {
+        const pointLess = userTotalPoint - selectDiscount.point;
+        setUserTotalPoint(pointLess);
+
+        const { data } = await supabase
+          .from("user_vouchers")
+          .insert({
+            userId: user.id,
+            discountId: selectDiscount.id,
+            status: EUserVoucherStatus.UNUSED,
+          })
+          .select("*, discounts(*)");
+        if (data?.length) {
+          setUserVouchers([...userVouchers, data[0]]);
+        }
+        await supabase
+          .from("users")
+          .update({ totalPoint: pointLess })
+          .eq("id", user.id);
+        setConfirmModalVisible(false);
+        setSelectDiscount(null);
+        return openSnackbar({
+          text: "Bạn đã thu thập cho voucher này!",
+          type: "success",
+          icon: true,
+          duration: 2000,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+  };
+
   return (
     <Box className="bg-white w-full max-h-96" pb={padding ?? 0} onClick={onClick}>
       <StyledSwiper
@@ -61,13 +124,36 @@ export const VoucherList: FC<TVoucherListProps> = ({banners, onClick, padding}) 
             <Box
               className="w-full aspect-[2/1] bg-no-repeat bg-center bg-skeleton rounded-xl"
               style={{
-                backgroundImage: `url(${banner?.value || banner?.image})`,
+                backgroundImage: `url(${banner?.value || banner?.thumbnail})`,
                 backgroundSize: "cover",
               }}
+              onClick={() => onClickRedeem(banner)}
             />
           </SwiperSlide>
         ))}
       </StyledSwiper>
+      <Modal
+        visible={confirmModalVisible}
+        title="Đổi voucher"
+        coverSrc={logo}
+        description={`Bạn xác nhận đổi voucher ${selectDiscount?.title}`}
+        actions={[
+          {
+            text: "Huỷ",
+            onClick: () => {
+              setConfirmModalVisible(false);
+              setSelectDiscount(null);
+            },
+          },
+          {
+            highLight: true,
+            text: "Đồng ý",
+            onClick: () => {
+              handleRedeem();
+            },
+          },
+        ]}
+      />
     </Box>
   );
 };

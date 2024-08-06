@@ -20,7 +20,7 @@ const HomePage: React.FunctionComponent = () => {
       <Box className="flex-1 overflow-auto mt-2">
         <BannerHome />
         <Categories />
-        <DiscountPanel />
+        {/*<DiscountPanel />*/}
         <ProductList />
         <Divider />
         <VoucherHome/>

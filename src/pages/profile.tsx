@@ -117,7 +117,6 @@ const Personal: FC = () => {
   const navigateToUserAddress = () => {
     navigate(ROUTES.USER_ADDRESS);
   };
-  console.log("user", user);
   return (
     <Box className="m-4">
       <ListRendererUser

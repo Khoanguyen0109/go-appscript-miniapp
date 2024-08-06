@@ -1,6 +1,6 @@
 import React from "react";
-import { TDiscount } from "../types/discount";
 import { Box, Button, Text } from "zmp-ui";
+import { TDiscount } from "../types/discount";
 
 type Props = {
   item: TDiscount;
@@ -12,7 +12,11 @@ type Props = {
 function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
   return (
     <Box className="w-full  rounded-md shadow-lg mb-3 overflow-hidden">
-      <img src={item?.thumbnail} className="w-full h-36 object-cover" alt={'voucher'}/>
+      <img
+        src={item?.thumbnail}
+        className="w-full h-36 object-cover"
+        alt={"voucher"}
+      />
       <Box className="p-2 flex justify-between items-end">
         <Box className="">
           <Text className="text-lg font-bold">{item?.title}</Text>

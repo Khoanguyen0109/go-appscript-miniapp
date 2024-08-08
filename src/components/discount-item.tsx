@@ -16,6 +16,7 @@ function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
         src={item?.thumbnail}
         className="w-full h-36 object-cover"
         alt={"voucher"}
+        referrerPolicy="no-referrer"
       />
       <Box className="p-2 flex justify-between items-end">
         <Box className="">

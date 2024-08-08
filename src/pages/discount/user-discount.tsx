@@ -9,7 +9,7 @@ import DiscountItem from "../../components/discount-item";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { voucherSelectedState } from "../cart/state";
 import { ROUTES } from "../route";
-import { discountState } from "../../state";
+import {discountState, userState} from "../../state";
 
 type Props = {};
 
@@ -17,12 +17,15 @@ function UserDiscount({}: Props) {
   const navigate = useNavigate();
   const userVoucherList = useRecoilValue(userVouchersState);
   const publicVoucher = useRecoilValue(publicDiscountSelector);
+  const user = useRecoilValue(userState);
   const [voucherSelected, setVoucherSelected] =
     useRecoilState(voucherSelectedState);
   let [searchParams, setSearchParams] = useSearchParams();
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const [discount, setDiscount] = useRecoilState(discountState);
-
+  console.log('userVoucherList',userVoucherList)
+  const voucherParsed = userVoucherList?.filter(discount => discount.memberClass !== user.memberClass) || [];
+  const memberClassVoucher = userVoucherList?.filter(discount => discount.memberClass === user.memberClass) || [];
   const onChoose = (item) => {
     if (isRouteFromCart) {
       setDiscount(item);
@@ -41,7 +44,7 @@ function UserDiscount({}: Props) {
     <Page>
       <Header title="Ưu đãi của tôi" showBackIcon={true} onBackClick={onBack} />
       <Box className="p-2 mt-4">
-        {userVoucherList.map((item) => (
+        {voucherParsed.map((item) => (
           <DiscountItem
             key={item.id}
             item={item}
@@ -56,6 +59,14 @@ function UserDiscount({}: Props) {
         <Box className="p-2 mt-4">
           <Text className="font-bold mb-3">Mã khuyến mãi của cửa hàng</Text>
           {publicVoucher.map((item) => (
+            <DiscountItem key={item.id} item={item} onChoose={onChoose} />
+          ))}
+        </Box>
+      )}
+      {isRouteFromCart && publicVoucher.length > 0 && (
+        <Box className="p-2 mt-4">
+          <Text className="font-bold mb-3">Mã khuyến mãi của Thứ hạng</Text>
+          {memberClassVoucher.map((item) => (
             <DiscountItem key={item.id} item={item} onChoose={onChoose} />
           ))}
         </Box>

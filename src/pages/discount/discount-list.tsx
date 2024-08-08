@@ -47,6 +47,23 @@ function DiscountList({}: Props) {
     if (selectDiscount) {
       try {
         const pointLess = userTotalPoint - selectDiscount.point;
+        const { data: existingVoucher } = await supabase
+          .from("user_vouchers")
+          .select()
+          .eq("userId", user.id)
+          .eq("discountId", selectDiscount.id)
+          .single();
+
+        if (existingVoucher) {
+          setConfirmModalVisible(false);
+          setSelectDiscount(null);
+          return openSnackbar({
+            text: "Bạn đã đổi voucher này rồi!",
+            type: "warning",
+            icon: true,
+            duration: 2000,
+          });
+        }
         setUserTotalPoint(pointLess);
 
         const { data } = await supabase
@@ -55,6 +72,9 @@ function DiscountList({}: Props) {
             userId: user.id,
             discountId: selectDiscount.id,
             status: EUserVoucherStatus.UNUSED,
+            thumbnail: selectDiscount.thumbnail,
+            discountBy: selectDiscount.discountBy,
+            discount: selectDiscount.discount,
           })
           .select("*, discounts(*)");
         if (data?.length) {

@@ -1,8 +1,8 @@
-import { createOrder } from "zmp-sdk";
-import { Product } from "types/product";
-import { getConfig } from "./config";
-import { SelectedOptions } from "types/cart";
 import { capitalize, isEqual } from "lodash";
+import { SelectedOptions } from "types/cart";
+import { Product } from "types/product";
+import { createOrder } from "zmp-sdk";
+import { getConfig } from "./config";
 
 export const findVariant = (product, options) => {
   return product?.inventories?.find((item) => {
@@ -12,17 +12,25 @@ export const findVariant = (product, options) => {
 };
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
-  let finalPrice = product.costdown || product.price;
-  const totalOptionPrice = options
-    ? Object.keys(options).reduce((acc, key) => {
-        const totalOption = options[key].reduce(
-          (child, item) => child + item.price,
-          0
-        );
-        return acc + totalOption;
-      }, 0)
-    : 0;
-  return finalPrice + totalOptionPrice;
+  console.log("options", options);
+  console.log("product", product);
+  if (!options || typeof options !== "object" || Object.keys(options).length === 0 ||
+    (Object.keys(options).length === 1 && options["Phân loại"]?.length === 0)) {
+    return product.costdown || product.price;
+  }
+  
+  if (!options || typeof options !== "object" || Object.keys(options).length === 0) {
+    return product.costdown || product.price;
+  }
+
+  const totalOptionPrice = Object.values(options).reduce((acc, optionArray) => {
+    if (Array.isArray(optionArray)) {
+      return acc + optionArray.reduce((sum, item) => sum + (item.price || 0), 0);
+    }
+    return acc;
+  }, 0);
+
+  return totalOptionPrice;
 }
 
 export function getDummyImage(filename: string) {

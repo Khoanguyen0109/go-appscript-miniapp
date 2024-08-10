@@ -76,7 +76,6 @@ export const VoucherList: FC<TVoucherListProps> = ({
     setSelectDiscount(item);
     setConfirmModalVisible(true);
   };
-  console.log("selectDiscount", selectDiscount);
   const handleRedeem = async () => {
     if (selectDiscount) {
       try {

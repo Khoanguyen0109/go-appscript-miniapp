@@ -44,6 +44,7 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
             onChange={() => {
               onChange(option);
             }}
+            key={option.id}
           >
             <Box key={option.id} className="flex ">
               {option.image && (

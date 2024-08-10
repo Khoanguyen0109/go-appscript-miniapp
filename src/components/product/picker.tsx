@@ -1,19 +1,19 @@
 import { Sheet } from "components/fullscreen-sheet";
+import { groupBy, includes, isEmpty } from "lodash";
+import { ROUTES } from "pages/route";
 import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { cartState, globalProductInventoriesSelector } from "state";
 import { SelectedOptions } from "types/cart";
 import { Product } from "types/product";
 import { isIdenticalV2 } from "utils/product";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "pages/route";
 import { Box, Button, Icon, Text } from "zmp-ui";
 import { FinalPrice } from "../display/final-price";
+import { DisplaySelectedOptions } from "../display/selected-options";
 import ProductVariant from "./component/product-variant";
 import { QuantityPicker } from "./quantity-picker";
-import { groupBy, includes, isEmpty } from "lodash";
-import { DisplaySelectedOptions } from "../display/selected-options";
 
 export interface ProductPickerProps {
   product?: Product;
@@ -29,10 +29,10 @@ export interface ProductPickerProps {
 }
 
 export const ProductPicker: FC<ProductPickerProps> = ({
-                                                        children,
-                                                        product,
-                                                        selected,
-                                                      }) => {
+  children,
+  product,
+  selected,
+}) => {
   const globalInventories = useRecoilValue(globalProductInventoriesSelector);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -44,26 +44,24 @@ export const ProductPicker: FC<ProductPickerProps> = ({
     () =>
       visible
         ? {
-          ...(product?.variants ? product?.variants : {}),
-          ...groupBy(globalInventories, "group"),
-        }
+            ...(product?.variants ? product?.variants : {}),
+            ...groupBy(globalInventories, "group"),
+          }
         : {},
     [visible]
   );
-  console.log('product.variants',product)
   const sortVariant = useMemo(() => {
-  if (!product || !product.variants) return {};
+    if (!product || !product.variants) return {};
 
-  const newVariants = { ...product.variants };
-  Object.keys(variants).forEach((key) => {
-    if (newVariants.hasOwnProperty(key)) {
-      newVariants[key] = variants[key];
-    }
-  });
+    const newVariants = { ...product.variants };
+    Object.keys(variants).forEach((key) => {
+      if (newVariants.hasOwnProperty(key)) {
+        newVariants[key] = variants[key];
+      }
+    });
 
-  return newVariants;
-}, [variants, product]);
-  console.log('product', product);
+    return newVariants;
+  }, [variants, product]);
 
   useEffect(() => {
     if (selected) {
@@ -194,6 +192,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                       <ProductVariant
                         variant={key}
                         value={options[key] as string[]}
+                        key={key}
                         values={variants[key]}
                         onChange={(selectedOption) => {
                           if (key === "Phân loại") {
@@ -201,8 +200,8 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                               ...prevOptions,
                               [key]: includes(prevOptions[key], selectedOption)
                                 ? prevOptions[key].filter(
-                                  (item) => item.id !== selectedOption.id
-                                )
+                                    (item) => item.id !== selectedOption.id
+                                  )
                                 : [...(prevOptions[key] ?? []), selectedOption],
                             }));
                           } else {
@@ -215,42 +214,14 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                       />
                     );
                   })}
-                <Text className={'font-semibold mb-4'}>Mô tả sản phẩm</Text>
+                <Text className={"font-semibold mb-4"}>Mô tả sản phẩm</Text>
                 {product.desc}
               </Box>
 
-              {/* {product.variants &&
-               product.variants.map((variant) =>
-               <ProductVariant variant={variant}/>
-                 // variant.type === "single" ? (
-                 //   <SingleOptionPicker
-                 //     key={variant.key}
-                 //     variant={variant}
-                 //     value={options[variant.key] as string}
-                 //     onChange={(selectedOption) =>
-                 //       setOptions((prevOptions) => ({
-                 //         ...prevOptions,
-                 //         [variant.key]: selectedOption,
-                 //       }))
-                 //     }
-                 //   />
-                 // ) : (
-                 //   <MultipleOptionPicker
-                 //     key={variant.key}
-                 //     product={product}
-                 //     variant={variant}
-                 //     value={options[variant.key] as string[]}
-                 //     onChange={(selectedOption) =>
-                 //       setOptions((prevOptions) => ({
-                 //         ...prevOptions,
-                 //         [variant.key]: selectedOption,
-                 //       }))
-                 //     }
-                 //   />
-                 // )
-               )} */}
-              <Text className={'font-semibold mb-4'}>Số lượng: {product.unit}</Text>
-              <QuantityPicker value={quantity} onChange={setQuantity} noTitle/>
+              <Text className={"font-semibold mb-4"}>
+                Số lượng: {product.unit}
+              </Text>
+              <QuantityPicker value={quantity} onChange={setQuantity} noTitle />
               {selected ? (
                 <Button
                   variant={quantity > 0 ? "primary" : "secondary"}

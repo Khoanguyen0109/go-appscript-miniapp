@@ -16,7 +16,7 @@ export const NewProductItem: FC<{ product: Product }> = ({ product }) => {
     navigate(ROUTES.PRODUCT_DETAIL(product.id));
   };
   return (
-    <ProductPicker product={product}>
+    <ProductPicker product={product} key={product.id}>
       {({ open }) => (
         <div
           className="flex flex-col shadow-md rounded-md mb-3 overflow-hidden"

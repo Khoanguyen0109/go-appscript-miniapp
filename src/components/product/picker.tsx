@@ -195,21 +195,21 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                         key={key}
                         values={variants[key]}
                         onChange={(selectedOption) => {
-                          if (key === "Phân loại") {
-                            setOptions((prevOptions) => ({
-                              ...prevOptions,
-                              [key]: includes(prevOptions[key], selectedOption)
-                                ? prevOptions[key].filter(
-                                    (item) => item.id !== selectedOption.id
-                                  )
-                                : [...(prevOptions[key] ?? []), selectedOption],
-                            }));
-                          } else {
+                          // if (key === "Phân loại") {
+                          //   setOptions((prevOptions) => ({
+                          //     ...prevOptions,
+                          //     [key]: includes(prevOptions[key], selectedOption)
+                          //       ? prevOptions[key].filter(
+                          //           (item) => item.id !== selectedOption.id
+                          //         )
+                          //       : [...(prevOptions[key] ?? []), selectedOption],
+                          //   }));
+                          // } else {
                             setOptions((prevOptions) => ({
                               ...prevOptions,
                               [key]: [selectedOption],
                             }));
-                          }
+                          // }
                         }}
                       />
                     );

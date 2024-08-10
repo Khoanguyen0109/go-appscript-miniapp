@@ -1,4 +1,15 @@
+import { isToday, isTomorrow } from "date-fns";
+import { cloneDeep, groupBy } from "lodash";
 import { atom, selector, selectorFamily } from "recoil";
+import logo from "static/logo.jpg";
+import { Cart, CartItem } from "types/cart";
+import { Category } from "types/category";
+import { Store } from "types/delivery";
+import { Notification } from "types/notification";
+import { Product } from "types/product";
+import { wait } from "utils/async";
+import { calculateDistance } from "utils/location";
+import { calcFinalPrice } from "utils/product";
 import {
   authorize,
   getAppInfo,
@@ -7,21 +18,10 @@ import {
   getSetting,
   getUserInfo,
 } from "zmp-sdk";
-import logo from "static/logo.jpg";
-import { Category } from "types/category";
-import { Product } from "types/product";
-import { Cart, CartItem } from "types/cart";
-import { Notification } from "types/notification";
-import { calculateDistance } from "utils/location";
-import { Store } from "types/delivery";
-import { calcFinalPrice } from "utils/product";
-import { wait } from "utils/async";
-import supabase from "./client/client";
-import { cloneDeep, groupBy } from "lodash";
 import { upsertUser } from "./api/addUser";
-import { isToday, isTomorrow } from "date-fns";
-import { dateSelectedState } from "./pages/cart/state";
+import supabase from "./client/client";
 import { ERoles } from "./constants";
+import { dateSelectedState } from "./pages/cart/state";
 import { TOrder } from "./types/order";
 
 export const mapProduct = (item) => {
@@ -31,7 +31,13 @@ export const mapProduct = (item) => {
     costdown: item.discount
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
-    variants: groupBy([...item.inventories].map(inv => ({...inv, group: inv.group || "Phân loại"})), "group"),
+    variants: groupBy(
+      [...item.inventories].map((inv) => ({
+        ...inv,
+        group: inv.group || "Phân loại",
+      })),
+      "group"
+    ),
     image: item.image.split(",").map((img) => ({ image: img })),
   };
 };
@@ -154,8 +160,9 @@ export const minOrderDeliveryTimeSelector = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return (
-      Number(setting.find((item) => item.name === "min_delivery_time").value) ||
-      null
+      Number(
+        setting.find((item) => item.name === "min_delivery_time")?.value
+      ) || null
     );
   },
 });
@@ -165,7 +172,7 @@ export const shippingFeeState = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return (
-      Number(setting.find((item) => item.name === "shippingFee").value) || 0
+      Number(setting.find((item) => item.name === "shippingFee")?.value) || 0
     );
   },
 });
@@ -175,7 +182,7 @@ export const userPointTodayOrderSettingSelector = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return (
-      Number(setting.find((item) => item.name === "in_day_order").value) || 0
+      Number(setting?.find((item) => item.name === "in_day_order")?.value) || 0
     );
   },
 });
@@ -185,7 +192,7 @@ export const userPointTomorrowOrderSettingSelector = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return (
-      Number(setting.find((item) => item.name === "tomorrow_order").value) || 0
+      Number(setting.find((item) => item.name === "tomorrow_order")?.value) || 0
     );
   },
 });
@@ -196,7 +203,7 @@ export const ctvPointOrderSelector = selector({
     const setting = get(settingState);
     return (
       Number(
-        setting.find((item) => item.name === "ctv_commission_order").value
+        setting.find((item) => item.name === "ctv_commission_order")?.value
       ) || 0
     );
   },
@@ -209,7 +216,7 @@ export const ctvPointWhenCustomerOrderSelector = selector({
     return (
       Number(
         setting.find((item) => item.name === "ctv_commission_customer_order")
-          .value
+          ?.value
       ) || 0
     );
   },
@@ -220,7 +227,7 @@ export const shipperPointSelector = selector({
   get: ({ get }) => {
     const setting = get(settingState);
     return (
-      Number(setting.find((item) => item.name === "shipper_point").value) || 0
+      Number(setting.find((item) => item.name === "shipper_point")?.value) || 0
     );
   },
 });
@@ -250,7 +257,7 @@ export const categoriesState = selector<Category[]>({
     const user = get(userState);
     const { data } = await supabase.from("categories").select();
     return data?.filter((category) => {
-      return category.proviceTo.split(", ").includes(user.role);
+      return category;
     });
   },
 });
@@ -261,7 +268,7 @@ export const categoriesReturnState = selector<Category[]>({
     const user = get(userState);
     const { data } = await supabase.from("categories").select();
     return data?.filter((category) => {
-      return category.proviceTo.split(", ").includes(user.role);
+      return category;
     });
   },
 });
@@ -289,7 +296,9 @@ export const productsState = selector<Product[]>({
       .eq("active", true);
 
     const filteredData = data?.filter((product) =>
-      product.categories.proviceTo.split(", ").includes(user.role)
+      product.proviceTo !== null
+        ? product.proviceTo.split(", ").includes(user.role)
+        : true
     );
 
     return filteredData?.map((item) => mapProduct(item));
@@ -800,7 +809,7 @@ export const globalProductInventoriesSelector = selector({
     // if (data?.length) {
     //   return data;
     // } else {
-      return [];
+    return [];
     // }
   },
 });

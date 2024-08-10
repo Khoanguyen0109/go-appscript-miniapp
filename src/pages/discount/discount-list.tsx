@@ -54,16 +54,16 @@ function DiscountList({}: Props) {
           .eq("discountId", selectDiscount.id)
           .single();
 
-        if (existingVoucher) {
-          setConfirmModalVisible(false);
-          setSelectDiscount(null);
-          return openSnackbar({
-            text: "Bạn đã đổi voucher này rồi!",
-            type: "warning",
-            icon: true,
-            duration: 2000,
-          });
-        }
+        // if (existingVoucher) {
+        //   setConfirmModalVisible(false);
+        //   setSelectDiscount(null);
+        //   return openSnackbar({
+        //     text: "Bạn đã đổi voucher này rồi!",
+        //     type: "warning",
+        //     icon: true,
+        //     duration: 2000,
+        //   });
+        // }
         setUserTotalPoint(pointLess);
 
         const { data } = await supabase

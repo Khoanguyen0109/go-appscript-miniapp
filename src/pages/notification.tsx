@@ -29,7 +29,7 @@ const NotificationList: FC = () => {
             className="flex bg-background mb-2 px-2 py-4 rounded-lg"
           >
             <img
-              className="w-12 h-12 rounded-full mr-3"
+              className="size-16 rounded-full mr-3"
               src={item?.thumbnail || logo}
             />
             <Box>

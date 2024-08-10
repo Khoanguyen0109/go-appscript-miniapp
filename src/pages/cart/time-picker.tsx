@@ -55,7 +55,7 @@ export const TimePicker: FC = () => {
       mask
       maskClosable
       onVisibilityChange={(visible) => {
-        console.log("onVisibilityChange called with:", visible);
+        // console.log("onVisibilityChange called with:", visible);
         matchStatusBarColor(visible);
         if (!visible) {
           const newDate = new Date(date);
@@ -76,7 +76,7 @@ export const TimePicker: FC = () => {
           : +availableTimes[0],
       }}
       formatPickedValueDisplay={({ date, time }) => {
-        console.log("formatPickedValueDisplay called with:", { date, time });
+        // console.log("formatPickedValueDisplay called with:", { date, time });
         return date && time
           ? `${displayHalfAnHourTimeRange(new Date(time.value))}, ${displayDate(
               new Date(date.value)
@@ -84,7 +84,7 @@ export const TimePicker: FC = () => {
           : `Chọn thời gian`;
       }}
       onChange={({ date, time }) => {
-        console.log("onChange called with:", { date, time });
+        // console.log("onChange called with:", { date, time });
         if (date) {
           setDate(+date.value);
         }
@@ -99,7 +99,7 @@ export const TimePicker: FC = () => {
               displayName: displayDate(date, true),
               value: +date,
             };
-            console.log("Date option:", option);
+            // console.log("Date option:", option);
             return option;
           }),
           name: "date",

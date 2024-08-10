@@ -14,7 +14,7 @@ function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
     <Box className="w-full  rounded-md shadow-lg mb-3 overflow-hidden">
       <img
         src={item?.thumbnail}
-        className="w-full h-36 object-cover"
+        className="w-full h-40 object-cover"
         alt={"voucher"}
         referrerPolicy="no-referrer"
       />

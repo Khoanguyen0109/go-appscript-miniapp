@@ -1,6 +1,6 @@
 import { capitalize, includes } from "lodash";
 import React from "react";
-import { Box, Checkbox, Text } from "zmp-ui";
+import { Box, Button, Checkbox, Text } from "zmp-ui";
 import { DisplayPrice } from "../../display/price";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 function ProductVariant({ variant, value, values, onChange }: Props) {
   const variantLabel = capitalize(variant);
   return (
-    <Box my={8} className="space-y-2">
+    <Box my={2} className="space-y-2">
       <Text.Title size="small" className="font-bold mb-1">
         {variantLabel}
       </Text.Title>
@@ -37,28 +37,29 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
           // >
           //   {option.name}
           // </Button>
-          <Checkbox
-            value=""
-            className={'w-full'}
-            checked={isActive}
-            onChange={() => {
-              onChange(option);
-            }}
+          <Button
             key={option.id}
+            className={`w-full h-20 flex items-center ${
+              isActive
+                ? "bg-blue-100 border-blue-500"
+                : "bg-white border-gray-300"
+            } border rounded-lg p-2`}
+            onClick={() => {
+              onChange(isActive ? {} : option);
+            }}
           >
-            <Box key={option.id} className="flex ">
+            <Box className="flex w-full ">
               {option.image && (
-                <img className="w-12 h-12 mr-2" src={option.image} alt={""} />
+                <img className="size-16 mr-2 rounded-md" src={option.image} alt={""} />
               )}
-              <Box className="flex-1">
-                <Text>{option.name}</Text>
-                <Text>
-                  {" "}
-                  <DisplayPrice>{option.price}</DisplayPrice>{" "}
+              <Box className="flex flex-col justify-between">
+                <Text className={`${isActive ? 'text-white': 'text-black'}`}>{option.name}</Text>
+                <Text className={`text-left ${isActive ? 'text-white': 'text-black'}`}>
+                  <DisplayPrice>{option.price}</DisplayPrice>
                 </Text>
               </Box>
             </Box>
-          </Checkbox>
+          </Button>
         );
       })}
     </Box>

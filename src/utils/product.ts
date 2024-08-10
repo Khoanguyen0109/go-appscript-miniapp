@@ -14,18 +14,32 @@ export const findVariant = (product, options) => {
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
   console.log("options", options);
   console.log("product", product);
-  if (!options || typeof options !== "object" || Object.keys(options).length === 0 ||
-    (Object.keys(options).length === 1 && options["Phân loại"]?.length === 0)) {
+
+  if (
+    !options ||
+    typeof options !== "object" ||
+    Object.keys(options).length === 0 ||
+    (Object.keys(options).length === 1 &&
+      (options["Phân loại"]?.length === 0 ||
+        (options["Phân loại"]?.length === 1 &&
+          Object.keys(options["Phân loại"][0]).length === 0)))
+  ) {
     return product.costdown || product.price;
   }
-  
-  if (!options || typeof options !== "object" || Object.keys(options).length === 0) {
+
+  if (
+    !options ||
+    typeof options !== "object" ||
+    Object.keys(options).length === 0
+  ) {
     return product.costdown || product.price;
   }
 
   const totalOptionPrice = Object.values(options).reduce((acc, optionArray) => {
     if (Array.isArray(optionArray)) {
-      return acc + optionArray.reduce((sum, item) => sum + (item.price || 0), 0);
+      return (
+        acc + optionArray.reduce((sum, item) => sum + (item.price || 0), 0)
+      );
     }
     return acc;
   }, 0);

@@ -8,12 +8,12 @@ import { VoucherList } from "../../components/voucher-list/voucher-list";
 import { ROUTES } from "../route";
 import {userState} from "../../state";
 import {ERoles} from "../../constants";
-import {discountBannersSelector} from "../../state/discount-state";
+import {discountBannersSelector, payableDiscountSelector} from "../../state/discount-state";
 
 export const VoucherHomeContent: FC = () => {
   const errorRef = useRef(null);
   // const banners = useRecoilValue(bannerState);
-  const banners = useRecoilValue(discountBannersSelector);
+  const banners = useRecoilValue(payableDiscountSelector);
 
   if (banners.length <= 0) {
     return <></>;

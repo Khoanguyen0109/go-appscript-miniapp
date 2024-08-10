@@ -81,23 +81,23 @@ export const VoucherList: FC<TVoucherListProps> = ({
       try {
         const pointLess = userTotalPoint - selectDiscount.point;
 
-        const { data: existingVoucher } = await supabase
-          .from("user_vouchers")
-          .select()
-          .eq("userId", user.id)
-          .eq("discountId", selectDiscount.id)
-          .single();
+        // const { data: existingVoucher } = await supabase
+        //   .from("user_vouchers")
+        //   .select()
+        //   .eq("userId", user.id)
+        //   .eq("discountId", selectDiscount.id)
+        //   .single();
 
-        if (existingVoucher) {
-          setConfirmModalVisible(false);
-          setSelectDiscount(null);
-          return openSnackbar({
-            text: "Bạn đã đổi voucher này rồi!",
-            type: "warning",
-            icon: true,
-            duration: 2000,
-          });
-        }
+        // if (existingVoucher) {
+        //   setConfirmModalVisible(false);
+        //   setSelectDiscount(null);
+        //   return openSnackbar({
+        //     text: "Bạn đã đổi voucher này rồi!",
+        //     type: "warning",
+        //     icon: true,
+        //     duration: 2000,
+        //   });
+        // }
 
         setUserTotalPoint(pointLess);
 
@@ -135,6 +135,7 @@ export const VoucherList: FC<TVoucherListProps> = ({
       }
     }
   };
+  const isAutoPlay = !confirmModalVisible;
 
   return (
     <Box
@@ -145,11 +146,16 @@ export const VoucherList: FC<TVoucherListProps> = ({
       <StyledSwiper
         modules={[Pagination, Autoplay]}
         pagination={{
-          clickable: false,
+          clickable: true,
         }}
-        slidesPerView={1.25}
+        slidesPerView={1}
         spaceBetween={30}
-        autoplay
+        autoplay={{
+          delay: isAutoPlay ? 20000 : 2000,
+          waitForTransition: true,
+          disableOnInteraction: true,
+          pauseOnMouseEnter: true,
+        }}
         loop
         cssMode
       >

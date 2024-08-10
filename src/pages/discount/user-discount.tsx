@@ -1,15 +1,17 @@
 import React from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Box, Header, Page, Text } from "zmp-ui";
+import { Box, Header, Page, Text, useSnackbar } from "zmp-ui";
+import supabase from "../../client/client";
+import DiscountItem from "../../components/discount-item";
+import { EUserVoucherStatus } from "../../constantsapp";
+import { discountState, userState } from "../../state";
 import {
   publicDiscountSelector,
   userVouchersState,
 } from "../../state/discount-state";
-import DiscountItem from "../../components/discount-item";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import { voucherSelectedState } from "../cart/state";
 import { ROUTES } from "../route";
-import {discountState, userState} from "../../state";
 
 type Props = {};
 
@@ -23,13 +25,60 @@ function UserDiscount({}: Props) {
   let [searchParams, setSearchParams] = useSearchParams();
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const [discount, setDiscount] = useRecoilState(discountState);
-  console.log('userVoucherList',userVoucherList)
-  const voucherParsed = userVoucherList?.filter(discount => discount.memberClass !== user.memberClass) || [];
-  const memberClassVoucher = userVoucherList?.filter(discount => discount.memberClass === user.memberClass) || [];
-  const onChoose = (item) => {
+  console.log("voucherSelected", voucherSelected);
+  const voucherParsed =
+    userVoucherList?.filter(
+      (discount) =>
+        discount.memberClass === null ||
+        discount.memberClass !== user.memberClass
+    ) || [];
+  const memberClassVoucher =
+    userVoucherList?.filter(
+      (discount) => discount.memberClass === user.memberClass
+    ) || [];
+  const { openSnackbar } = useSnackbar();
+  const onChoose = async (item) => {
     if (isRouteFromCart) {
-      setDiscount(item);
-      navigate(ROUTES.CART);
+      if (item.public) {
+        const { data: existingVoucher } = await supabase
+          .from("user_vouchers")
+          .select()
+          .eq("userId", user.id)
+          .eq("discountId", item.id)
+          .maybeSingle();
+
+        if (
+          existingVoucher &&
+          existingVoucher.status === EUserVoucherStatus.USED
+        ) {
+          return openSnackbar({
+            text: "Bạn đã đổi voucher này rồi!",
+            type: "warning",
+            icon: true,
+            duration: 2000,
+          });
+        } else {
+          const { data } = await supabase
+            .from("user_vouchers")
+            .insert({
+              userId: user.id,
+              discountId: item.id,
+              status: EUserVoucherStatus.UNUSED,
+              thumbnail: item.thumbnail,
+              discountBy: item.discountBy,
+              discount: item.discount,
+            })
+            .select("*, discounts(*)");
+
+          setDiscount(item);
+          setVoucherSelected(item);
+          navigate(ROUTES.CART);
+        }
+      } else {
+        setDiscount(item);
+        setVoucherSelected(item);
+        navigate(ROUTES.CART);
+      }
     }
   };
   const onBack = () => {
@@ -59,7 +108,14 @@ function UserDiscount({}: Props) {
         <Box className="p-2 mt-4">
           <Text className="font-bold mb-3">Mã khuyến mãi của cửa hàng</Text>
           {publicVoucher.map((item) => (
-            <DiscountItem key={item.id} item={item} onChoose={onChoose} />
+            <DiscountItem
+              key={item.id}
+              item={item}
+              onChoose={onChoose}
+              onUpdateItem={() => {
+                setVoucherSelected(item);
+              }}
+            />
           ))}
         </Box>
       )}
@@ -67,7 +123,14 @@ function UserDiscount({}: Props) {
         <Box className="p-2 mt-4">
           <Text className="font-bold mb-3">Mã khuyến mãi của Thứ hạng</Text>
           {memberClassVoucher.map((item) => (
-            <DiscountItem key={item.id} item={item} onChoose={onChoose} />
+            <DiscountItem
+              key={item.id}
+              item={item}
+              onChoose={onChoose}
+              onUpdateItem={() => {
+                setVoucherSelected(item);
+              }}
+            />
           ))}
         </Box>
       )}

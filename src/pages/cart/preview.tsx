@@ -92,7 +92,20 @@ export const CartPreview: FC = () => {
           // ctvPoint: user.idCTVShared ? ctvCommissionPoint : 0,
         })
         .select();
-      if (discount && !discount?.public && voucherSelected) {
+      if (voucherSelected && discount && discount?.public) {
+        const newUserVoucher = userVoucher.filter(
+          (item) => item.id!== voucherSelected?.id
+        );
+        debugger
+        setUserVoucher(newUserVoucher);
+        await supabase
+          .from("user_vouchers")
+          .update({
+            status: EUserVoucherStatus.USED,
+            userId: user.id
+          })
+          .eq("discountId", discount?.id);
+      } else if (discount && !discount?.public && voucherSelected) {
         const newUserVoucher = userVoucher.filter(
           (item) => item.id !== voucherSelected?.id
         );

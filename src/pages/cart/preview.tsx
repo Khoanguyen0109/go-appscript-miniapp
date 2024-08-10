@@ -105,6 +105,13 @@ export const CartPreview: FC = () => {
             userId: user.id
           })
           .eq("discountId", discount?.id);
+      } else if (voucherSelected && discount && discount?.memberClass) {
+        // const newUserVoucher = userVoucher.filter(
+        //   (item) => item.id!== voucherSelected?.id
+        // );
+        // debugger
+        // setUserVoucher(newUserVoucher);
+        // Dùng mãi mãi đối với voucher theo hạng. các loại khác dùng 1 lần
       } else if (discount && !discount?.public && voucherSelected) {
         const newUserVoucher = userVoucher.filter(
           (item) => item.id !== voucherSelected?.id

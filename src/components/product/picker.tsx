@@ -50,23 +50,20 @@ export const ProductPicker: FC<ProductPickerProps> = ({
         : {},
     [visible]
   );
+  console.log('product.variants',product)
   const sortVariant = useMemo(() => {
-    const newVariants = {
-      "Món phụ": [],
-      "Món canh": [],
-      "Món tráng miệng": [],
-      "Món thêm": [],
-    };
-    Object.keys(variants).forEach((key) => {
-      Object.keys(newVariants).forEach((newKey) => {
-        if (key === newKey) {
-          newVariants[newKey] = variants[key];
-        }
-      });
-    });
+  if (!product || !product.variants) return {};
 
-    return newVariants;
-  }, [variants]);
+  const newVariants = { ...product.variants };
+  Object.keys(variants).forEach((key) => {
+    if (newVariants.hasOwnProperty(key)) {
+      newVariants[key] = variants[key];
+    }
+  });
+
+  return newVariants;
+}, [variants, product]);
+  console.log('product', product);
 
   useEffect(() => {
     if (selected) {
@@ -199,7 +196,7 @@ export const ProductPicker: FC<ProductPickerProps> = ({
                         value={options[key] as string[]}
                         values={variants[key]}
                         onChange={(selectedOption) => {
-                          if (key === "Món thêm") {
+                          if (key === "Phân loại") {
                             setOptions((prevOptions) => ({
                               ...prevOptions,
                               [key]: includes(prevOptions[key], selectedOption)

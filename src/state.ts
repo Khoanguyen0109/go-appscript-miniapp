@@ -31,7 +31,7 @@ export const mapProduct = (item) => {
     costdown: item.discount
       ? Number(item.price) - (Number(item.price) * Number(item.discount)) / 100
       : Number(item.price),
-    variants: groupBy([...item.inventories], "group"),
+    variants: groupBy([...item.inventories].map(inv => ({...inv, group: inv.group || "Phân loại"})), "group"),
     image: item.image.split(",").map((img) => ({ image: img })),
   };
 };
@@ -793,15 +793,15 @@ export const searchResultState = selector({
 export const globalProductInventoriesSelector = selector({
   key: "globalProductInventoriesSelector",
   get: async ({ get }) => {
-    const { data } = await supabase
-      .from("product_inventories")
-      .select("*")
-      .is("productId", null);
-    if (data?.length) {
-      return data;
-    } else {
+    // const { data } = await supabase
+    //   .from("product_inventories")
+    //   .select("*")
+    //   .is("productId", null);
+    // if (data?.length) {
+    //   return data;
+    // } else {
       return [];
-    }
+    // }
   },
 });
 

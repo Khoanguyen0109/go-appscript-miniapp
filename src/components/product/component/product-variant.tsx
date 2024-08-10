@@ -37,25 +37,27 @@ function ProductVariant({ variant, value, values, onChange }: Props) {
           // >
           //   {option.name}
           // </Button>
-          <Box key={option.id} className="flex ">
-            {option.image && (
-              <img className="w-12 h-12 mr-2" src={option.image} />
-            )}
-            <Box className="flex-1">
-              <Text>{option.name}</Text>
-              <Text>
-                {" "}
-                <DisplayPrice>{option.price}</DisplayPrice>{" "}
-              </Text>
+          <Checkbox
+            value=""
+            className={'w-full'}
+            checked={isActive}
+            onChange={() => {
+              onChange(option);
+            }}
+          >
+            <Box key={option.id} className="flex ">
+              {option.image && (
+                <img className="w-12 h-12 mr-2" src={option.image} alt={""} />
+              )}
+              <Box className="flex-1">
+                <Text>{option.name}</Text>
+                <Text>
+                  {" "}
+                  <DisplayPrice>{option.price}</DisplayPrice>{" "}
+                </Text>
+              </Box>
             </Box>
-            <Checkbox
-              value=""
-              checked={isActive}
-              onChange={() => {
-                onChange(option);
-              }}
-            ></Checkbox>
-          </Box>
+          </Checkbox>
         );
       })}
     </Box>

@@ -19,7 +19,7 @@ export const discountBannersSelector = selector({
   key: "discountBannersSelector",
   get: ({ get }) => {
     const discounts = get(discountListSelector);
-    return discounts.filter((item) => !isNull(item.panel));
+    return discounts.filter((item) => !isNull(item.thumbnail));
   },
 });
 

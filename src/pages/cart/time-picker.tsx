@@ -110,7 +110,7 @@ export const TimePicker: FC = () => {
               displayName: displayHalfAnHourTimeRange(time),
               value: +time,
             };
-            console.log("Time option:", option);
+            // console.log("Time option:", option);
             return option;
           }),
           name: "time",

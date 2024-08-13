@@ -96,7 +96,6 @@ export const CartPreview: FC = () => {
         const newUserVoucher = userVoucher.filter(
           (item) => item.id!== voucherSelected?.id
         );
-        debugger
         setUserVoucher(newUserVoucher);
         await supabase
           .from("user_vouchers")

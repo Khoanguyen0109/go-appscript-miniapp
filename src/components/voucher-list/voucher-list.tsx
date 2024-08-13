@@ -156,7 +156,7 @@ export const VoucherList: FC<TVoucherListProps> = ({
           disableOnInteraction: true,
           pauseOnMouseEnter: true,
         }}
-        loop
+        // loop
         cssMode
       >
         {banners.map((banner, i) => (

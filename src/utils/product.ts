@@ -12,8 +12,6 @@ export const findVariant = (product, options) => {
 };
 
 export function calcFinalPrice(product: Product, options?: SelectedOptions) {
-  console.log("options", options);
-  console.log("product", product);
 
   if (
     !options ||

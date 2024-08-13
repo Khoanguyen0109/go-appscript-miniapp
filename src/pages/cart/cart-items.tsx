@@ -167,7 +167,7 @@ export const CartItems: FC<TCartItemProps> = ({ disableClick = true }) => {
 
                   {!disableClick && (
                     <Box
-                      className="cursor-pointer"
+                      className="cursor-pointer h-5"
                       onClick={(e) => {
                         e.stopPropagation();
                         onRemoveProduct(item);

@@ -39,7 +39,7 @@ function Shipping({}: Props) {
       >
         {Object.values(EOrderStatus).map((key) => (
           <Tabs.Tab key={key} label={getOrderStatusLabel(key)}>
-            {orderList.map((order) => {
+            {orderList?.map((order) => {
               const address = `${order.address}, ${order.ward}, ${order.district}, ${order.province}`;
               return (
                 <Box className="bg-white p-3 rounded-xl mt-4 mx-2 shadow-md">

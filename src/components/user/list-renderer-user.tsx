@@ -28,7 +28,7 @@ export function ListRendererUser<T>({
 }: ListRendererUserProps<T>) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const collapsedItems = useMemo(() => {
-    return items.slice(0, limit);
+    return items?.slice(0, limit);
   }, [items]);
 
   return (
@@ -48,7 +48,7 @@ export function ListRendererUser<T>({
           </div>
         ))}
       </Box>
-      {isCollapsed && collapsedItems.length < items.length ? (
+      {isCollapsed && collapsedItems.length < items?.length ? (
         <Box className="p-2">
           <Button
             onClick={() => setIsCollapsed(false)}

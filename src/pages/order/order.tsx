@@ -14,16 +14,16 @@ function Order({}: Props) {
 
   const orders = useRecoilValue(orderState);
   const orderWaiting = orders.filter(
-    (item) => item.status === EOrderStatus.WAITING
+    (item) => item.status === EOrderStatus?.WAITING
   );
   const orderDelivering = orders.filter(
-    (item) => item.status === EOrderStatus.DELIVERING
+    (item) => item.status === EOrderStatus?.DELIVERING
   );
   const orderDelivered = orders.filter(
-    (item) => item.status === EOrderStatus.DELIVERED
+    (item) => item.status === EOrderStatus?.DELIVERED
   );
   const orderCancel = orders.filter(
-    (item) => item.status === EOrderStatus.CANCEL
+    (item) => item.status === EOrderStatus?.CANCEL
   );
 
   const forceUpdate = () => orderUpdate((n) => n + 1);

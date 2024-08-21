@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Box, Button, Icon, Text } from "zmp-ui";
+import { Box, Button, Icon, Input, Text } from "zmp-ui";
 
 export const QuantityPicker: FC<{
   value: number;
@@ -22,7 +22,7 @@ export const QuantityPicker: FC<{
           }}
           variant="tertiary"
           type="neutral"
-          className={'border-[1px] border-[#E2E2E2] border-solid'}
+          className={"border-[1px] border-[#E2E2E2] border-solid"}
           size="small"
           icon={
             <div className="py-2 px-1">
@@ -37,9 +37,18 @@ export const QuantityPicker: FC<{
           alignItems="center"
           className="flex-1"
         >
-          <Text size="large" className="font-medium">
+          {/* <Text size="large" className="font-medium">
             {value}
-          </Text>
+          </Text> */}
+          <Input
+            className="mx-2 w-32"
+            value={value}
+            type="number"
+            size="small"
+            onChange={(e) => {
+              onChange(Number(e.target.value));
+            }}
+          ></Input>
         </Box>
         <Button
           size="small"
@@ -48,9 +57,9 @@ export const QuantityPicker: FC<{
             onChange(value + 1);
           }}
           variant="tertiary"
-          className={'border-[1px] border-[#E2E2E2] border-solid'}
+          className={"border-[1px] border-[#E2E2E2] border-solid"}
           type="neutral"
-          icon={<Icon icon="zi-plus" className={'text-nature-500'} />}
+          icon={<Icon icon="zi-plus" className={"text-nature-500"} />}
         />
       </Box>
     </Box>

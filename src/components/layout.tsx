@@ -57,9 +57,11 @@ if (getSystemInfo().platform === "android") {
   //   (window as any).ZaloJavaScriptInterface.getStatusBarHeight() /
   //     window.devicePixelRatio
   // );
-  document.body.style.setProperty("--zaui-safe-area-inset-top", `${20}px`);
+  // document.body.style.setProperty(
+  //   "--zaui-safe-area-inset-top",
+  //   `${10}px`
+  // );
 }
-
 export const Layout: FC = () => {
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
@@ -176,7 +178,7 @@ export const Layout: FC = () => {
             ></Route>
             <Route
               path={ROUTES.USER_ADDRESS_EDIT}
-              element={<AddUserAddress mode={'edit'} />}
+              element={<AddUserAddress mode={"edit"} />}
             ></Route>
             {/* <Route
               path={ROUTES.USER_ADDRESS_ADD}

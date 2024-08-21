@@ -34,10 +34,10 @@ function Order({}: Props) {
     };
   }, []);
   const StyledTabs = styled(Tabs)`
-      .zaui-tabs-tabbar{
-          position: fixed;
-          top: 3rem;
-      }
+    .zaui-tabs-tabbar {
+      /* position: fixed;
+          top: 3rem; */
+    }
   `;
   return (
     <Page className="bg-background">

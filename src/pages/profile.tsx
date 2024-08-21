@@ -395,13 +395,12 @@ const ProfilePage: FC = () => {
             <MemberCard />
           </Box>
         )}
+        {user?.role !== ERoles.CTV && user?.role !== ERoles.SHIPPER && (
+          <Subscription />
+        )}
         <Personal />
         <Other />
       </div>
-
-      {/*{user?.role !== ERoles.CTV && user?.role !== ERoles.SHIPPER && (*/}
-      {/*  <Subscription />*/}
-      {/*)}*/}
 
       {/*<img src={qr_image} className="w-56 m-auto" />*/}
       {/*<Box className="flex justify-between w-1/2 m-auto mt-4 mb-4">*/}

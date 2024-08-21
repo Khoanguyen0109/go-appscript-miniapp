@@ -9,11 +9,12 @@ import { Delivery } from "./delivery";
 import { CartPreview } from "./preview";
 import PreviewInfo from "./previewInfo";
 import { TimePicker } from "./time-picker";
+import { isNumber } from "lodash";
 
 const CartPage: FC = () => {
   const keyboardVisible = useVirtualKeyboardVisible();
   const cart = useRecoilValue(cartState);
-  console.log('cart', cart)
+  console.log("cart", cart);
   const quantity = useRecoilValue(totalQuantityState);
 
   const calPointUser = useRecoilValue(calPointUserSelector);
@@ -31,7 +32,7 @@ const CartPage: FC = () => {
               <TimePicker />
             </Box>
           </Box>
-          {calPointUser && (
+          {isNumber(calPointUser) && (
             <Box>
               <Text className="m-2 text-sm font-bold text-green">
                 {`Bạn  nhận dc ${

@@ -11,4 +11,5 @@ export type TDiscount = {
   desc: string;
   point: number;
   title: string;
+  memberClass: string;
 };

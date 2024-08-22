@@ -69,7 +69,7 @@ function OrderList({ orders }: Props) {
   };
 
   return (
-    <Box className="bg-devider_1 min-h-screen overflow-y-auto mt-[2rem]">
+    <Box className="bg-devider_1 min-h-screen overflow-y-auto ">
       {orders.map((item) => (
         <OrderItem key={item.id} item={item} onOpenRating={onOpenRating} />
       ))}

@@ -10,6 +10,7 @@ type Props = {
 };
 
 function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
+  const notShowRedeem = item.public || item.memberClass;
   return (
     <Box className="w-full  rounded-md shadow-lg mb-3 overflow-hidden">
       <img
@@ -22,13 +23,13 @@ function DiscountItem({ item, onClickRedeem, onChoose, onUpdateItem }: Props) {
         <Box className="">
           <Text className="text-lg font-bold">{item?.title}</Text>
 
-          {!item?.public && (
+          {!notShowRedeem && (
             <Text className="font-semibold text-sm  text-green">
               {item?.point || 0} Xu
             </Text>
           )}
         </Box>
-        {onClickRedeem && (
+        {onClickRedeem && !notShowRedeem && (
           <Button size="small" onClick={() => onClickRedeem(item)}>
             Đổi voucher
           </Button>

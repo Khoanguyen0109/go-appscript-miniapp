@@ -193,3 +193,13 @@ $ratevalues: 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5;
 .zaui-bottom-navigation-item-label {
   font-size: 10px !important;
 }
+
+.zaui-tabs {
+  overflow: hidden;
+  height: calc(100vh - 130px);
+}
+.zaui-tab-content {
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: 30px;
+}

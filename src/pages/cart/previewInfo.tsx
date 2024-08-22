@@ -1,27 +1,19 @@
 import { DisplayPrice } from "components/display/price";
 import React, { useMemo } from "react";
 import { useRecoilValue } from "recoil";
-import { discountState, preTotalPriceState, shippingFeeState } from "state";
+import {
+  calDiscount,
+  discountState,
+  preTotalPriceState,
+  shippingFeeState,
+} from "state";
 import { Box, Text } from "zmp-ui";
 
 function PreviewInfo() {
   const preTotal = useRecoilValue(preTotalPriceState);
   const discount = useRecoilValue(discountState);
   const shippingFee = useRecoilValue(shippingFeeState);
-  const discountPrice = useMemo(() => {
-    if (discount) {
-      switch (discount.discountBy) {
-        case "percent":
-          return preTotal * (parseInt(discount.discount) / 100);
-        case "price":
-          return parseInt(discount.discount);
-        default:
-          return 0;
-      }
-    }
-    return 0;
-  }, [discount]);
-  
+
   return (
     <Box className="px-2">
       <Box className="flex justify-between items-center mb-2">
@@ -41,7 +33,7 @@ function PreviewInfo() {
       <Box className="flex justify-between items-center mb-2">
         <Text className="font-bold">Giảm giá</Text>
         <Text className="text-green">
-          -<DisplayPrice>{discountPrice}</DisplayPrice>
+          -<DisplayPrice>{calDiscount(discount, preTotal)}</DisplayPrice>
         </Text>
       </Box>
     </Box>

@@ -35,6 +35,7 @@ const PaymentSuccess: FC = () => {
   };
   const updateFollowed = async () => {
     const zaloUser = await getUserInfo().then((res) => res.userInfo);
+    console.log('zaloUserId', zaloUser)
     const { error } = await supabase
       .from("users")
       .update({ followed: true, idUserToNotification: zaloUser.idByOA })

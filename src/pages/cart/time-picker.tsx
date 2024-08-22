@@ -41,7 +41,6 @@ export const TimePicker: FC = () => {
       time = new Date(tomorrow);
       endTime = new Date(tomorrow);
     }
-    console.log("time", time);
 
     if (now.getDate() === new Date(date).getDate() && hour < minHour) {
       // Starting time is the current time rounded up to the nearest 30 minutes
@@ -55,7 +54,7 @@ export const TimePicker: FC = () => {
     }
     time.setSeconds(0);
     time.setMilliseconds(0);
-    endTime.setHours(8);
+    endTime.setHours(minHour);
     endTime.setMinutes(59);
     endTime.setSeconds(0);
     endTime.setMilliseconds(0);
@@ -65,6 +64,7 @@ export const TimePicker: FC = () => {
     }
     return times;
   }, [date]);
+  console.log("availableTimes", availableTimes);
   return (
     <Picker
       mask

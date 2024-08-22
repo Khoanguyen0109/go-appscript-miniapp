@@ -79,7 +79,7 @@ export const CartPreview: FC = () => {
           ctvId: user.idCTVShared,
           addressId: address?.id,
           total: totalPrice,
-          discount: discount ? calDiscount(discount, totalPrice) : 0,
+          discount: discount ? calDiscount(discount, preTotal) : 0,
           voucher: discount?.voucher || "",
           preTotal,
           quantity,

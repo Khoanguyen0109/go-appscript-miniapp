@@ -306,11 +306,14 @@ export const totalQuantityState = selector({
 });
 
 export function calDiscount(discount, total) {
+  if (!discount) {
+    return 0;
+  }
   switch (discount.discountBy) {
     case "percent":
-      return total - total * (parseInt(discount.discount) / 100);
+      return total * (parseInt(discount.discount) / 100);
     case "price":
-      return total - parseInt(discount.discount);
+      return parseInt(discount.discount);
 
     default:
       return 0;
@@ -320,6 +323,7 @@ export function calDiscount(discount, total) {
 export const totalPriceState = selector({
   key: "totalPrice",
   get: ({ get }) => {
+    const preTotal = get(preTotalPriceState);
     const cart = get(cartState);
     const discount = get(discountState);
     const shippingFee = parseInt(get(shippingFeeState));
@@ -336,7 +340,7 @@ export const totalPriceState = selector({
         );
       }, 0) + shippingFee;
     if (discount) {
-      return calDiscount(discount, total);
+      return total - calDiscount(discount, preTotal);
     }
     return total;
   },

@@ -5,11 +5,18 @@ import { Box, Header, Page, Text, useSnackbar } from "zmp-ui";
 import supabase from "../../client/client";
 import DiscountItem from "../../components/discount-item";
 import { EUserVoucherStatus } from "../../constantsapp";
-import { discountState, userState } from "../../state";
+import {
+  calDiscount,
+  discountState,
+  preTotalPriceState,
+  userState,
+} from "../../state";
 import {
   publicDiscountSelector,
   userVouchersState,
 } from "../../state/discount-state";
+import { TDiscount } from "../../types/discount";
+import { Formatter } from "../../utils/formatter";
 import { voucherSelectedState } from "../cart/state";
 import { ROUTES } from "../route";
 
@@ -21,7 +28,7 @@ function UserDiscount({}: Props) {
   const publicVoucher = useRecoilValue(publicDiscountSelector);
   const user = useRecoilValue(userState);
   const [voucherSelected, setVoucherSelected] =
-    useRecoilState(voucherSelectedState);
+    useRecoilState<TDiscount>(voucherSelectedState);
   let [searchParams, setSearchParams] = useSearchParams();
   const isRouteFromCart = searchParams.get("routeFrom") === "cart";
   const [discount, setDiscount] = useRecoilState(discountState);
@@ -37,6 +44,7 @@ function UserDiscount({}: Props) {
       (discount) => discount.memberClass === user.memberClass
     ) || [];
   const { openSnackbar } = useSnackbar();
+  const preTotal = useRecoilValue(preTotalPriceState);
   const onChoose = async (item) => {
     if (isRouteFromCart) {
       if (item.public) {
@@ -45,14 +53,45 @@ function UserDiscount({}: Props) {
           .select()
           .eq("userId", user.id)
           .eq("discountId", item.id)
-          .maybeSingle();
-
+          .maybeSingle<TDiscount>();
         if (
           existingVoucher &&
           existingVoucher.status === EUserVoucherStatus.USED
         ) {
+          console.info("User has already used this voucher!");
           return openSnackbar({
             text: "Bạn đã đổi voucher này rồi!",
+            type: "warning",
+            icon: true,
+            duration: 2000,
+          });
+        } else if (item && item.maxPrice !== 0 && preTotal > item.maxPrice) {
+          return openSnackbar({
+            text: `Giá trị Đơn hàng phải nhỏ hơn hoặc bằng ${Formatter.currency(
+              item.maxPrice
+            )}!`,
+            type: "warning",
+            icon: true,
+            duration: 2000,
+          });
+        } else if (item && item.minPrice !== 0 && preTotal < item.minPrice) {
+          return openSnackbar({
+            text: `Giá trị Đơn hàng phải lớn hơn ${Formatter.currency(
+              item.minPrice
+            )}!`,
+            type: "warning",
+            icon: true,
+            duration: 2000,
+          });
+        } else if (
+          item &&
+          item.discountBy == "price" &&
+          item.discount > preTotal
+        ) {
+          return openSnackbar({
+            text: `Voucher chỉ áp dụng cho đơn hàng trên ${Formatter.currency(
+              item.discount
+            )}`,
             type: "warning",
             icon: true,
             duration: 2000,

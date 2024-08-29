@@ -37,10 +37,10 @@ function ReturnHistory({}: Props) {
     };
   }, []);
   const StyledTabs = styled(Tabs)`
-      .zaui-tabs-tabbar{
+    /* .zaui-tabs-tabbar{
           position: fixed;
           top: 3rem;
-      }
+      } */
   `;
   return (
     <Page className="bg-background">

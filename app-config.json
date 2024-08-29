@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "DoiChoi Farm",
+    "title": "Hải sản An Tâm",
     "headerColor": "",
     "textColor": "black",
     "statusBarColor": "#ffffff",
@@ -17,7 +17,7 @@
   "listAsyncJS": [],
   "pages": ["/user", "/form", "/dynamic-route", "/about", "/404"],
   "template": {
-    "primaryColor": "#274630",
+    "primaryColor": "#fe8955",
     "prefixCurrencySymbol": false,
     "currencySymbol": "đ",
     "headerLogo": ""

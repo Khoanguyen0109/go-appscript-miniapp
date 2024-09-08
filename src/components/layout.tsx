@@ -51,6 +51,7 @@ import CTVUserList from "../pages/user/ctv-user-list";
 import LoadingScreenOverLay from "./loading-screen";
 import { Navigation } from "./navigation";
 import { ScrollRestoration } from "./scroll-restoration";
+import { useHandlePayment } from "../hooks";
 
 if (getSystemInfo().platform === "android") {
   // const androidSafeTop = Math.round(
@@ -63,6 +64,8 @@ if (getSystemInfo().platform === "android") {
   // );
 }
 export const Layout: FC = () => {
+  // useHandlePayment();
+
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);
   const addresses = useRecoilValueLoadable(addressesState);

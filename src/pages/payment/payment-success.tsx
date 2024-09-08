@@ -1,9 +1,9 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { Button, Header, Icon, Page, Text } from "zmp-ui";
 
-import { followOA, getUserInfo } from "zmp-sdk";
+import { followOA, getUserInfo, Payment } from "zmp-sdk";
 import { OA_ID } from "enviroment";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "pages/route";
 import Success from "assets/success.png";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
@@ -15,7 +15,9 @@ import {
 } from "pages/cart/state";
 import supabase from "../../client/client";
 import logo from "static/logo.jpg";
+import { isUndefined } from "lodash";
 const PaymentSuccess: FC = () => {
+  const { state } = useLocation();
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
   const [note, setNote] = useRecoilState(noteState);
@@ -35,13 +37,11 @@ const PaymentSuccess: FC = () => {
   };
   const updateFollowed = async () => {
     const zaloUser = await getUserInfo().then((res) => res.userInfo);
-    console.log('zaloUserId', zaloUser)
     const { error } = await supabase
       .from("users")
       .update({ followed: true, idUserToNotification: zaloUser.idByOA })
       .eq("id", user.id);
   };
-  const bankInfo = useRecoilValue(bankState);
   const onClick = async () => {
     if (!user?.followed) {
       return await followOA({
@@ -58,19 +58,42 @@ const PaymentSuccess: FC = () => {
     return backHome();
   };
 
-  const qrImage = useMemo(() => {
-    const { bank, account, name } = bankInfo;
-    return `https://img.vietqr.io/image/${bank}-${account}-compact2.jpg?amount=${totalPrice}&addInfo=${"Chuyen khoan app zalo"}&accountName=${name}`;
+  useEffect(() => {
+    let data = state;
+    if (data) {
+      if ("path" in data) {
+        data = data.path;
+      } else if ("data" in data) {
+        data = data.data;
+      }
+    } else {
+      data = new URL(window.location.href).searchParams.toString();
+    }
+    // gọi api checkTransaction để lấy thông tin giao dịch
+    Payment.checkTransaction({
+      data,
+      success: (rs) => {
+        // Kết quả giao dịch khi gọi api thành công
+        // const { id, resultCode, msg, transTime, createdAt } = rs;
+        console.log("rs", rs);
+        // // if(rs =)
+        console.log("", rs.resultCode);
+        if (isUndefined(rs?.resultCode) || rs.resultCode === -1) {
+          return navigate(ROUTES.CART);
+        }
+      },
+      fail: (err) => {
+        // Kết quả giao dịch khi gọi api thất bại
+        console.log(err);
+      },
+    });
   }, []);
 
   return (
     <Page className="flex flex-col bg-white">
       <div className="flex flex-1 flex-col justify-center align-middle p-10">
-        {paymentMethod?.value === "chuyen_khoan" ? (
-          <img src={qrImage} />
-        ) : (
-          <img src={logo} />
-        )}
+        <img src={logo} />
+
         <Text.Header className="mb-4 text-center mt-4 font-bold text-lg">
           Đặt hàng thành công
         </Text.Header>

@@ -64,7 +64,7 @@ if (getSystemInfo().platform === "android") {
   // );
 }
 export const Layout: FC = () => {
-  // useHandlePayment();
+  useHandlePayment();
 
   useRecoilValueLoadable(settingState);
   const userStateLoadable = useRecoilValueLoadable(userState);

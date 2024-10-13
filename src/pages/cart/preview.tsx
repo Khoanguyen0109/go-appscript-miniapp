@@ -34,7 +34,6 @@ export const CartPreview: FC = () => {
   const cart = useRecoilValue(cartState);
   const navigate = useNavigate();
   const [userVoucher, setUserVoucher] = useRecoilState(userVouchersState);
-
   const minOrderItems = useRecoilValue(minOrderItemSelector);
   const minOrderDeliveryTime = useRecoilValue(minOrderDeliveryTimeSelector);
 

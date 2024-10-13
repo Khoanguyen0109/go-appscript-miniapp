@@ -47,7 +47,6 @@ export const userVouchersSelector = selector({
       .from("users")
       .select(`*, user_vouchers(*, discounts(*))`)
       .eq("id", user.id)
-      .eq("memberClass", user.memberClass)
       .single();
     return data.user_vouchers.filter(
       (item) => item.status !== EUserVoucherStatus.USED
